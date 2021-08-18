@@ -4,9 +4,12 @@ import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.mongodb.BasicDBObject;
 
 import java.util.LinkedHashMap;
+import java.util.Random;
 
 public class Global
 {
+    public static final Random RANDOM = new Random();
+
     public static <E extends Enum<E>> E castEnum(String input, E[] values)
     {
         for(E e : values) if(input.trim().toUpperCase().equals(e.toString())) return e;
@@ -18,6 +21,11 @@ public class Global
         BasicDBObject data = new BasicDBObject();
         for(Stat s : Stat.values()) data.put(s.toString(), stats.get(s));
         return data;
+    }
+
+    public static int randomValue(int min, int max)
+    {
+        return RANDOM.nextInt(max - min + 1) + min;
     }
 
     public static String normalize(String input)

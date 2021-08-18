@@ -5,7 +5,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
 
-public class ServerDataQuery extends MongoQuery
+public class ServerDataQuery extends AbstractMongoQuery
 {
     public ServerDataQuery(String ID)
     {

@@ -7,13 +7,13 @@ import org.bson.conversions.Bson;
 
 import java.util.Arrays;
 
-public class MongoQuery
+public abstract class AbstractMongoQuery
 {
     protected MongoCollection<Document> database;
     protected Bson query;
     protected Document document;
 
-    public MongoQuery(String idKey, String idVal, MongoCollection<Document> database)
+    public AbstractMongoQuery(String idKey, String idVal, MongoCollection<Document> database)
     {
         this.database = database;
         this.query = Filters.eq(idKey, idVal);

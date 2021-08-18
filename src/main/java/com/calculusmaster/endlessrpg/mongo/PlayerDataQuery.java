@@ -9,7 +9,7 @@ import org.json.JSONArray;
 
 import java.util.List;
 
-public class PlayerDataQuery extends MongoQuery
+public class PlayerDataQuery extends AbstractMongoQuery
 {
     public PlayerDataQuery(String ID)
     {
