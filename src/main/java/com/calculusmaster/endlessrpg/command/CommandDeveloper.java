@@ -37,6 +37,7 @@ public class CommandDeveloper extends Command
                     c.setRPGClass(clazz);
                     c.updateRPGClass();
                 }
+                case "clearlootdb" -> Mongo.LootData.deleteMany(Filters.exists("lootID"));
                 case "addloot" -> {
                     LootItem loot = switch(this.msg[2]) {
                         case "sword" -> LootItem.createSword(new Random().nextInt(15) + 1);
