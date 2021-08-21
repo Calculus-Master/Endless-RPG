@@ -151,6 +151,26 @@ public class RPGCharacter
     }
 
     //Stats - Effective
+    public int getDamage(RPGCharacter other)
+    {
+        final Random r = new Random();
+
+        int attack = this.getStat(Stat.ATTACK);
+        int defense = other.getStat(Stat.DEFENSE);
+
+        double randomATK = 0.75 + (1.25 - 0.75) * r.nextDouble();
+        double randomDEF = 0.75 + (1.25 - 0.75) * r.nextDouble();
+
+        boolean critATK = r.nextInt(20) < 1;
+        boolean critDEF = r.nextInt(20) < 1;
+        double critVal = 1.8;
+
+        attack = (int)(attack * randomATK * (critATK ? critVal : 1.0));
+        defense = (int)(defense * randomDEF * (critDEF ? critVal : 1.0));
+
+        return attack - defense;
+    }
+
     public int getStat(Stat s)
     {
         int core = this.getCoreStat(s);
