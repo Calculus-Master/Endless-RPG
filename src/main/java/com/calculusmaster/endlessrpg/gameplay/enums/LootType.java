@@ -1,5 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.enums;
 
+import com.calculusmaster.endlessrpg.util.Global;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -11,6 +13,7 @@ public enum LootType
     private static final Random r = new Random();
 
     private final CoreLootType coreType;
+
     private final List<String> names;
 
     LootType(CoreLootType coreType, String... names)
@@ -37,6 +40,11 @@ public enum LootType
     public String getRandomName()
     {
         return this.names.isEmpty() ? "NOT NAMED LOOT ITEM" : this.names.get(r.nextInt(this.names.size()));
+    }
+
+    public static LootType cast(String input)
+    {
+        return Global.castEnum(input, values());
     }
 
     public enum CoreLootType

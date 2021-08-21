@@ -1,11 +1,18 @@
 package com.calculusmaster.endlessrpg.gameplay.enums;
 
+import com.calculusmaster.endlessrpg.util.Global;
+
 public enum Stat
 {
     HEALTH,
     ATTACK,
     DEFENSE,
     SPEED;
+
+    public static Stat cast(String input)
+    {
+        return Global.castEnum(input, values());
+    }
 
     public static class Pair
     {

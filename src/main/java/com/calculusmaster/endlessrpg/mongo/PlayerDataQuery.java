@@ -22,7 +22,8 @@ public class PlayerDataQuery extends AbstractMongoQuery
                 .append("playerID", ID)
                 .append("characters", new JSONArray())
                 .append("selected", 0)
-                .append("gold", 100);
+                .append("gold", 100)
+                .append("loot", new JSONArray());
 
         Mongo.PlayerData.insertOne(data);
     }
@@ -100,5 +101,21 @@ public class PlayerDataQuery extends AbstractMongoQuery
     public void removeGold(int amount)
     {
         this.changeGold(-1 * amount);
+    }
+
+    //key: "loot"
+    public List<String> getLoot()
+    {
+        return this.document.getList("loot", String.class);
+    }
+
+    public void addLootItem(String ID)
+    {
+        this.update(Updates.push("loot", ID));
+    }
+
+    public void removeLootItem(String ID)
+    {
+        this.update(Updates.pull("loot", ID));
     }
 }
