@@ -66,6 +66,8 @@ public abstract class Command
 
     public void send()
     {
+        if(this.response.isEmpty() && this.embed == null) return;
+
         if(!this.response.isEmpty()) this.event.getChannel().sendMessage(this.playerData.getMention() + ": " + this.response).queue();
         else this.event.getChannel().sendMessageEmbeds(this.buildResponseEmbed()).queue();
     }
