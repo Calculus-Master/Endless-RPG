@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg.gameplay.character;
 import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
+import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.mongodb.client.model.Filters;
@@ -10,7 +11,10 @@ import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Objects;
+import java.util.Random;
 
 public class RPGCharacter
 {
@@ -133,22 +137,36 @@ public class RPGCharacter
         this.equipment.setEquipmentID(type, lootID);
     }
 
+    public LinkedHashMap<Stat, Integer> getEquipmentBoosts()
+    {
+        LinkedHashMap<Stat, Integer> boosts = new LinkedHashMap<>();
+
+        for(EquipmentType type : EquipmentType.values())
+        {
+            LootItem loot = this.equipment.getEquipmentLoot(type);
+            if(!loot.isEmpty()) for(Stat s : Stat.values()) boosts.put(s, boosts.getOrDefault(s, 0) + loot.getBoost(s));
+        }
+
+        return boosts;
+    }
+
     //Stats - Effective
     public int getStat(Stat s)
     {
         int core = this.getCoreStat(s);
         int boost = this.classRPG.getBoosts().getOrDefault(s, 0);
+        int loot = this.getEquipmentBoosts().get(s);
         int level = this.level;
 
         boost *= level;
 
         if(s.equals(Stat.HEALTH))
         {
-            return 10 + (core * 10) + (boost * 5);
+            return 10 + (core * 10) + (boost * 5) + loot;
         }
         else
         {
-            return core + boost;
+            return core + boost + loot;
         }
     }
 
