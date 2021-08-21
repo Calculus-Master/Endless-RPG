@@ -44,11 +44,12 @@ public class CommandInfo extends Command
         {
             LootItem loot = c.getEquipment().getEquipmentLoot(e);
 
+            content.append("`").append(e.getStyledName()).append("`: ");
+
             if(loot.isEmpty()) content.append("None\n");
             else
             {
                 content
-                        .append("`").append(e.getStyledName()).append("`: ")
                         .append(loot.getName())
                         .append("(").append(loot.getLootType().toString())
                         .append("), Boosts: ").append(loot.getBoosts()).append("\n");
