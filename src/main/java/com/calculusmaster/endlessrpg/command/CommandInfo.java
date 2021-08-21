@@ -44,7 +44,7 @@ public class CommandInfo extends Command
         {
             LootItem loot = c.getEquipment().getEquipmentLoot(e);
 
-            if(loot.isEmpty()) content.append("None");
+            if(loot.isEmpty()) content.append("None\n");
             else
             {
                 content
