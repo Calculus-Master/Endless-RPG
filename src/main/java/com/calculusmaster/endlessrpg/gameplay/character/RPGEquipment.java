@@ -64,14 +64,4 @@ public class RPGEquipment
     {
         return LootItem.build(this.getEquipmentID(type));
     }
-
-    public void setEquipmentLoot(EquipmentType type, LootItem loot)
-    {
-        this.setEquipmentID(type, loot.getLootID());
-    }
-
-    public boolean isEmpty(EquipmentType type)
-    {
-        return this.getEquipmentID(type).equals(LootItem.EMPTY.getLootID());
-    }
 }

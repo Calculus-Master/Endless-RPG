@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import static com.calculusmaster.endlessrpg.gameplay.enums.LootType.CoreLootType.*;
+
 public enum LootType
 {
     NONE(null, ""),
@@ -29,12 +31,17 @@ public enum LootType
 
     public boolean isArmor()
     {
-        return this.coreType.equals(CoreLootType.ARMOR);
+        return Arrays.asList(HELMET, CHESTPLATE, GAUNTLETS, LEGGINGS, BOOTS).contains(this.coreType);
     }
 
     public boolean isTool()
     {
         return this.coreType.equals(CoreLootType.TOOL);
+    }
+
+    public CoreLootType getCore()
+    {
+        return this.coreType;
     }
 
     public String getRandomName()
@@ -51,6 +58,10 @@ public enum LootType
     {
         WEAPON,
         TOOL,
-        ARMOR;
+        HELMET,
+        CHESTPLATE,
+        GAUNTLETS,
+        LEGGINGS,
+        BOOTS;
     }
 }

@@ -45,6 +45,16 @@ public abstract class Command
     protected static final String INVALID = "Invalid Command!";
 
     //For Commands
+    protected boolean isNumeric(int index)
+    {
+        return this.msg[index].chars().allMatch(Character::isDigit);
+    }
+
+    protected int getInt(int index)
+    {
+        return Integer.parseInt(this.msg[index]);
+    }
+
     protected String rawMultiWordContent(int start)
     {
         return this.multiWordContent(this.raw, start);
