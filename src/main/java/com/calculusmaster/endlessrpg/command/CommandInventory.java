@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg.command;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class CommandInventory extends Command
@@ -22,7 +23,7 @@ public class CommandInventory extends Command
 
             list.append(i + 1).append(": ")
                     .append(loot.getName())
-                    .append(" | Type: ").append(loot.getLootType().toString())
+                    .append(" | Type: ").append(Global.normalize(loot.getLootType().toString()))
                     .append(" | Boosts: ").append(loot.getBoosts().toString())
                     .append("\n");
         }
