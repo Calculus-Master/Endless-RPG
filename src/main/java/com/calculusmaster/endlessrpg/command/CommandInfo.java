@@ -43,11 +43,16 @@ public class CommandInfo extends Command
         for(EquipmentType e : EquipmentType.values())
         {
             LootItem loot = c.getEquipment().getEquipmentLoot(e);
-            content
-                    .append("`").append(e.getStyledName()).append("`: ")
-                    .append(loot.getName())
-                    .append("(").append(loot.getLootType().toString())
-                    .append("), Boosts: ").append(loot.getBoosts()).append("\n");
+
+            if(loot.isEmpty()) content.append("None");
+            else
+            {
+                content
+                        .append("`").append(e.getStyledName()).append("`: ")
+                        .append(loot.getName())
+                        .append("(").append(loot.getLootType().toString())
+                        .append("), Boosts: ").append(loot.getBoosts()).append("\n");
+            }
         }
 
         content.deleteCharAt(content.length() - 1);

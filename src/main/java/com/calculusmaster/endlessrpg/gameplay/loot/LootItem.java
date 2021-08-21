@@ -8,7 +8,8 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Random;
 
 public class LootItem
 {
@@ -153,5 +154,10 @@ public class LootItem
     public String getLootID()
     {
         return this.lootID;
+    }
+
+    public boolean isEmpty()
+    {
+        return this.lootID.equals(EMPTY.getLootID());
     }
 }
