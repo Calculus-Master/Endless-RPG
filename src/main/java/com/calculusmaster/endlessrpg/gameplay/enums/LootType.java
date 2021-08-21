@@ -1,7 +1,10 @@
 package com.calculusmaster.endlessrpg.gameplay.enums;
 
+import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.util.Global;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -11,17 +14,17 @@ import static com.calculusmaster.endlessrpg.gameplay.enums.LootType.CoreLootType
 public enum LootType
 {
     NONE(null, ""),
-    SWORD(CoreLootType.WEAPON, "Omega", "Requiem of the Lost", "Persuasion", "Hopeless Reaver", "Twilight's Defender", "Barbarian Adamantite Sabre", "Knightly Adamantite Broadsword", "Silverlight, Executioner of the Corrupted", "Soul Reaper, Betrayer of Mourning", "Ragnarok, Memory of Eternal Bloodlust");
+    SWORD(CoreLootType.WEAPON, "sword_names");
 
     private static final Random r = new Random();
 
     private final CoreLootType coreType;
-    private final List<String> names;
+    private final String namesFile;
 
-    LootType(CoreLootType coreType, String... names)
+    LootType(CoreLootType coreType, String namesFile)
     {
         this.coreType = coreType;
-        this.names = Arrays.asList(names);
+        this.namesFile = namesFile;
     }
 
     public boolean isWeapon()
@@ -46,7 +49,15 @@ public enum LootType
 
     public String getRandomName()
     {
-        return this.names.isEmpty() ? "NOT NAMED LOOT ITEM" : this.names.get(r.nextInt(this.names.size()));
+        try
+        {
+            List<String> pool = Files.lines(Paths.get(EndlessRPG.class.getResource("/names/" + this.namesFile + ".txt").toURI())).toList();
+            return pool.get(r.nextInt(pool.size()));
+        }
+        catch (Exception e)
+        {
+            return "UNNAMED LOOT ITEM";
+        }
     }
 
     public static LootType cast(String input)
