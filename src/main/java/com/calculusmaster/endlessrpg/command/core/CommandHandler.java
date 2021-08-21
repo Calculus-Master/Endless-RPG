@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg.command.core;
 import com.calculusmaster.endlessrpg.command.CommandCreate;
 import com.calculusmaster.endlessrpg.command.CommandDeveloper;
 import com.calculusmaster.endlessrpg.command.CommandInfo;
+import com.calculusmaster.endlessrpg.command.CommandInventory;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -20,6 +21,9 @@ public class CommandHandler
 
         register("info")
                 .setCommand(CommandInfo::new);
+
+        register("inventory", "inv")
+                .setCommand(CommandInventory::new);
 
         register("dev")
                 .setCommand(CommandDeveloper::new);
