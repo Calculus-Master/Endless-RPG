@@ -206,6 +206,11 @@ public class RPGCharacter
         for(Stat s : Stat.values()) this.stats.put(s, 0);
     }
 
+    public void increaseCoreStat(Stat s, int amount)
+    {
+        this.stats.put(s, this.stats.get(s) + amount);
+    }
+
     //Experience
     public int getExp()
     {

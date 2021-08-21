@@ -1,5 +1,6 @@
 package com.calculusmaster.endlessrpg.mongo;
 
+import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.mongodb.client.model.Filters;
@@ -41,6 +42,11 @@ public class PlayerDataQuery extends AbstractMongoQuery
     public String getMention()
     {
         return "<@" + this.getID() + ">";
+    }
+
+    public void DM(String content)
+    {
+        EndlessRPG.BOT_JDA.openPrivateChannelById(this.getID()).flatMap(channel -> channel.sendMessage(content)).queue();
     }
 
     //key: "characters"

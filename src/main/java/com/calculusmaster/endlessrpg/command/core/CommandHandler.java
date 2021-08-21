@@ -25,6 +25,9 @@ public class CommandHandler
         register("equip")
                 .setCommand(CommandEquip::new);
 
+        register("adventure")
+                .setCommand(CommandAdventure::new);
+
         register("dev")
                 .setCommand(CommandDeveloper::new);
     }
