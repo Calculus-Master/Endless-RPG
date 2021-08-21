@@ -19,7 +19,7 @@ public class Global
     public static BasicDBObject coreStatsDB(LinkedHashMap<Stat, Integer> stats)
     {
         BasicDBObject data = new BasicDBObject();
-        for(Stat s : Stat.values()) data.put(s.toString(), stats.get(s));
+        for(Stat s : Stat.values()) data.put(s.toString(), stats.getOrDefault(s, 0));
         return data;
     }
 

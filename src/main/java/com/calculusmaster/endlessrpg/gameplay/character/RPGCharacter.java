@@ -1,5 +1,6 @@
 package com.calculusmaster.endlessrpg.gameplay.character;
 
+import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.util.Global;
@@ -21,6 +22,7 @@ public class RPGCharacter
     private int level;
     private int experience;
     private final LinkedHashMap<Stat, Integer> stats = new LinkedHashMap<>();
+    private RPGEquipment equipment;
 
     //Use Factory methods!
     private RPGCharacter() {}
@@ -36,6 +38,7 @@ public class RPGCharacter
         c.setLevel(1);
         c.setExp(0);
         c.setCoreStats();
+        c.setEquipment();
 
         return c;
     }
@@ -52,6 +55,7 @@ public class RPGCharacter
         c.setLevel(data.getInteger("level"));
         c.setExp(data.getInteger("exp"));
         c.setCoreStats(data.get("stats", Document.class));
+        c.setEquipment(data.get("equipment", Document.class));
 
         return c;
     }
@@ -66,7 +70,8 @@ public class RPGCharacter
                 .append("class", this.classRPG.toString())
                 .append("level", this.level)
                 .append("exp", this.experience)
-                .append("stats", Global.coreStatsDB(this.stats));
+                .append("stats", Global.coreStatsDB(this.stats))
+                .append("equipment", this.equipment.serialized());
 
         Mongo.CharacterData.insertOne(d);
     }
@@ -100,6 +105,32 @@ public class RPGCharacter
     public void updateExperience()
     {
         this.update(Updates.set("level", this.level), Updates.set("experience", this.experience));
+    }
+
+    public void updateEquipment()
+    {
+        this.update(Updates.set("equipment", this.equipment.serialized()));
+    }
+
+    //Equipment
+    public RPGEquipment getEquipment()
+    {
+        return this.equipment;
+    }
+
+    public void setEquipment()
+    {
+        this.equipment = new RPGEquipment();
+    }
+
+    public void setEquipment(Document equipment)
+    {
+        this.equipment = new RPGEquipment(equipment);
+    }
+
+    public void equipLoot(EquipmentType type, String lootID)
+    {
+        this.equipment.setEquipmentID(type, lootID);
     }
 
     //Stats - Effective

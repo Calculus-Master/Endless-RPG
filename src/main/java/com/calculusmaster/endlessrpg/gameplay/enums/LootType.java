@@ -8,12 +8,12 @@ import java.util.Random;
 
 public enum LootType
 {
+    NONE(null, ""),
     SWORD(CoreLootType.WEAPON, "Omega", "Requiem of the Lost", "Persuasion", "Hopeless Reaver", "Twilight's Defender", "Barbarian Adamantite Sabre", "Knightly Adamantite Broadsword", "Silverlight, Executioner of the Corrupted", "Soul Reaper, Betrayer of Mourning", "Ragnarok, Memory of Eternal Bloodlust");
 
     private static final Random r = new Random();
 
     private final CoreLootType coreType;
-
     private final List<String> names;
 
     LootType(CoreLootType coreType, String... names)

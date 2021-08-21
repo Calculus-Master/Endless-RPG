@@ -19,8 +19,20 @@ public class LootItem
 
     private LootItem() {}
 
+    public static final LootItem EMPTY = new LootItem();
+
+    static
+    {
+        EMPTY.setLootID("NONE");
+        EMPTY.setLootType(LootType.NONE);
+        EMPTY.setName("NONE");
+        EMPTY.setBoosts();
+    }
+
     public static LootItem build(String lootID)
     {
+        if(lootID.equals(EMPTY.getLootID())) return EMPTY;
+
         Document data = Mongo.LootData.find(Filters.eq("lootID", lootID)).first();
 
         LootItem loot = new LootItem();
@@ -49,7 +61,7 @@ public class LootItem
     {
         Document data = new Document()
                 .append("lootID", this.lootID)
-                .append("type", this.lootType)
+                .append("type", this.lootType.toString())
                 .append("name", this.name)
                 .append("boosts", Global.coreStatsDB(this.boosts));
 
@@ -64,6 +76,12 @@ public class LootItem
     public void updateBoosts()
     {
         Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("boosts", Global.coreStatsDB(this.boosts)));
+    }
+
+    //Create
+    public static LootItem createSword(int attack)
+    {
+        return LootItem.create(LootType.SWORD).withBoosts(Stat.Pair.of(Stat.ATTACK, attack));
     }
 
     //Boosts
