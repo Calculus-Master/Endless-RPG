@@ -1,5 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.enums;
 
+import com.calculusmaster.endlessrpg.util.Global;
+
 public enum EquipmentType
 {
     HELMET,
@@ -9,4 +11,9 @@ public enum EquipmentType
     BOOTS,
     LEFT_HAND,
     RIGHT_HAND;
+
+    public String getStyledName()
+    {
+        return Global.normalize(this.toString().replaceAll("_", " "));
+    }
 }
