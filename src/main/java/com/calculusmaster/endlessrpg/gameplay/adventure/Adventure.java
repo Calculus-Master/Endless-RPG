@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.adventure;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
@@ -75,7 +76,18 @@ public class Adventure
             case EARN_GOLD -> this.rewardGold += (new Random().nextInt(this.length) * 150 + this.length * 5);
             case EARN_XP -> this.rewardXP += (new Random().nextInt(this.length) * 100 + this.length * 10);
             case EARN_LOOT -> {
+                final Random r = new Random();
+                LootType lootType;
 
+                do { lootType = LootType.values()[LootType.values().length]; }
+                while(lootType.equals(LootType.NONE));
+
+                LootItem earned = switch(lootType) {
+                    case SWORD -> LootItem.createSword(r.nextInt(this.length * 2 - 2) + 2);
+                    case NONE -> throw new IllegalStateException("Unexpected Loot Type \"NONE\" in Adventure!");
+                };
+
+                this.rewardLoot.add(earned);
             }
             case EARN_CORE_STAT -> {
                 final Random r = new Random();
