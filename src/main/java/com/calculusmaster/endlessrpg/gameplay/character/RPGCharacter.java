@@ -11,15 +11,15 @@ import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class RPGCharacter
 {
+    //Core Fields
     private String characterID;
     private Bson query;
+
+    //Database Fields
 
     private String name;
     private RPGClass classRPG;
@@ -27,6 +27,10 @@ public class RPGCharacter
     private int experience;
     private final LinkedHashMap<Stat, Integer> stats = new LinkedHashMap<>();
     private RPGEquipment equipment;
+
+    //Battle Only Fields
+
+    private Optional<Integer> health = Optional.empty();
 
     //Use Factory methods!
     private RPGCharacter() {}
@@ -62,6 +66,14 @@ public class RPGCharacter
         c.setEquipment(data.get("equipment", Document.class));
 
         return c;
+    }
+
+    //Creates the object with necessary Battle fields
+    public RPGCharacter forBattle()
+    {
+        this.setMaxHealth();
+
+        return this;
     }
 
     //Updates
@@ -114,6 +126,22 @@ public class RPGCharacter
     public void updateEquipment()
     {
         this.update(Updates.set("equipment", this.equipment.serialized()));
+    }
+
+    //Health
+    public int getHealth()
+    {
+        return this.health.orElse(-1);
+    }
+
+    public void setMaxHealth()
+    {
+        this.setHealth(this.getStat(Stat.HEALTH));
+    }
+
+    public void setHealth(int health)
+    {
+        this.health = Optional.of(health);
     }
 
     //Equipment
