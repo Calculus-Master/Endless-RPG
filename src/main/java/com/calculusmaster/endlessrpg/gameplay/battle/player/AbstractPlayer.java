@@ -16,6 +16,8 @@ public abstract class AbstractPlayer
 
         this.team = new ArrayList<>();
         this.createTeam();
+
+        this.team.forEach(RPGCharacter::forBattle);
     }
 
     public abstract void createTeam();
