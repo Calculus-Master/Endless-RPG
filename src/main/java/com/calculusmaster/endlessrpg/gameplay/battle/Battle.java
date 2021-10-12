@@ -130,6 +130,8 @@ public class Battle
                 .setFooter("It's now " + this.battlers[!this.turnResults.isEmpty() ? (this.turn + 1 >= this.battlers.length ? 0 : this.turn + 1) : 0].getName() + "'s turn!");
 
         this.sendEmbed(embed);
+
+        if(this.turnResults.isEmpty()) this.submitAITurn();
     }
 
     private void sendEmbed(EmbedBuilder embed)
@@ -194,9 +196,9 @@ public class Battle
     //Misc. Setup and Initializations (Common)
     private void setup()
     {
-        this.setBattlerTurnOrder();
         this.turn = 0;
         this.turnResults = new ArrayList<>();
+        this.setBattlerTurnOrder();
     }
 
     private void setBattlerTurnOrder()
