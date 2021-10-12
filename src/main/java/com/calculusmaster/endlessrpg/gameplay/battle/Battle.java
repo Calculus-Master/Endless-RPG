@@ -117,8 +117,11 @@ public class Battle
             desc.append(overview).append("\n\n");
         }
 
-        desc.append("**Turn Outcome:**\n");
-        for(String s : this.turnResults) desc.append(s).append("\n");
+        if(!this.turnResults.isEmpty())
+        {
+            desc.append("**Turn Outcome:**\n");
+            for(String s : this.turnResults) desc.append(s).append("\n");
+        }
 
         embed
                 .setDescription(desc.toString())
