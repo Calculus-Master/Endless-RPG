@@ -25,7 +25,7 @@ public class CommandCreate extends Command
 
             if(!registered)
             {
-                PlayerDataQuery.register(this.player.getId());
+                PlayerDataQuery.register(this.player.getId(), this.player.getName());
                 this.playerData = new PlayerDataQuery(this.player.getId());
             }
 

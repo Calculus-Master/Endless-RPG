@@ -17,10 +17,11 @@ public class PlayerDataQuery extends AbstractMongoQuery
         super("playerID", ID, Mongo.PlayerData);
     }
 
-    public static void register(String ID)
+    public static void register(String ID, String username)
     {
         Document data = new Document()
                 .append("playerID", ID)
+                .append("username", username)
                 .append("characters", new JSONArray())
                 .append("selected", 0)
                 .append("gold", 100)
@@ -44,14 +45,15 @@ public class PlayerDataQuery extends AbstractMongoQuery
         return "<@" + this.getID() + ">";
     }
 
-    public String getUsername()
-    {
-        return EndlessRPG.BOT_JDA.getUserById(this.getID()).getName();
-    }
-
     public void DM(String content)
     {
         EndlessRPG.BOT_JDA.openPrivateChannelById(this.getID()).flatMap(channel -> channel.sendMessage(content)).queue();
+    }
+
+    //key: "username"
+    public String getUsername()
+    {
+        return this.document.getString("username");
     }
 
     //key: "characters"

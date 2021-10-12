@@ -131,7 +131,7 @@ public class Battle
 
         this.sendEmbed(embed);
 
-        if(this.turnResults.isEmpty()) this.submitAITurn();
+        if(this.turnResults.isEmpty() && this.battlers[0].isAI()) this.submitAITurn();
     }
 
     private void sendEmbed(EmbedBuilder embed)

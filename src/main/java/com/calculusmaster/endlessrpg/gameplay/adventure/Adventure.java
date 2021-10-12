@@ -5,12 +5,14 @@ import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
+import com.calculusmaster.endlessrpg.util.Global;
 
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class Adventure
 {
@@ -131,7 +133,7 @@ public class Adventure
         if(this.rewardGold > 0)
         {
             this.player.addGold(this.rewardGold);
-            results.add("**Gold Earnings:** `" + this.rewardGold + "`");
+            results.add("**Gold:** `" + this.rewardGold + "`");
         }
 
         if(this.rewardXP > 0)
@@ -159,7 +161,7 @@ public class Adventure
         if(!this.rewardCoreStat.isEmpty())
         {
             for(Map.Entry<Stat, Integer> e : this.rewardCoreStat.entrySet()) this.character.increaseCoreStat(e.getKey(), e.getValue());
-            results.add("**Improved Core Stats:** " + this.rewardCoreStat);
+            results.add("**Improved Core Stats:** " + this.rewardCoreStat.keySet().stream().map(s -> Global.normalize(s.toString())).collect(Collectors.joining(", ")));
         }
 
         this.character.completeUpdate();
