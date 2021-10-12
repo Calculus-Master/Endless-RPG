@@ -224,7 +224,7 @@ public class Adventure
             int minutes = (int)(nextEvent / 60);
             int seconds = (int)(nextEvent % 60);
 
-            return "Next Event in " + minutes + "M " + seconds + "S – Event Progress: " + this.progress + " / " + this.length + " (Total Time Required: " + (this.length * 15) + "M)!";
+            return "\nNext Event in **" + minutes + "M " + seconds + "S**\nEvent Progress: " + this.progress + " / " + this.length + "\nTotal Time Required: **" + (this.length * 15) + "**M!";
         }
         else return "Complete!";
     }
