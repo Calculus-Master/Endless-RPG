@@ -83,6 +83,12 @@ public class Battle
     public void sendEndEmbed()
     {
         this.sendTurnEmbed();
+
+        EmbedBuilder embed = new EmbedBuilder();
+
+        embed.setDescription(this.getWinner().getName() + " has defeated " + this.getLoser().getName());
+
+        //TODO: Battle win rewards
     }
 
     public void sendTurnEmbed()
@@ -116,6 +122,17 @@ public class Battle
     public boolean isComplete()
     {
         return this.players.stream().anyMatch(AbstractPlayer::isDefeated);
+    }
+
+    public AbstractPlayer getWinner()
+    {
+        if(!this.isComplete()) throw new IllegalStateException("Cannot find Battle Winner because Battle is not complete!");
+        else return this.players.get(0).isDefeated() ? this.players.get(1) : this.players.get(0);
+    }
+
+    public AbstractPlayer getLoser()
+    {
+        return this.getWinner().ID.equals(this.players.get(0).ID) ? this.players.get(1) : this.players.get(0);
     }
 
     private void advanceTurn()
