@@ -51,8 +51,8 @@ public class CommandInfo extends Command
             {
                 content
                         .append(loot.getName())
-                        .append("(").append(loot.getLootType().toString())
-                        .append("), Boosts: ").append(loot.getBoostsOverview()).append("\n");
+                        .append(" (").append(Global.normalize(loot.getLootType().toString()))
+                        .append(") | Boosts: ").append(loot.getBoostsOverview()).append("\n");
             }
         }
 
