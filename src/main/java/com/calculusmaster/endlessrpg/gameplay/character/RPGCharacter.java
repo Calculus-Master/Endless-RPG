@@ -303,9 +303,24 @@ public class RPGCharacter
             this.experience -= this.getExpRequired(this.level + 1);
             this.level++;
 
-            Stat s = Stat.values()[new Random().nextInt(Stat.values().length)];
-            this.stats.put(s, this.stats.get(s) + 1);
+            this.grantCoreStat();
         }
+    }
+
+    private void grantCoreStat()
+    {
+        List<Stat> coreStatPool = new ArrayList<>(Arrays.asList(Stat.values()));
+
+        if(!this.getRPGClass().equals(RPGClass.RECRUIT))
+        {
+            for(Map.Entry<Stat, Integer> e : this.getRPGClass().getBoosts().entrySet())
+            {
+                for(int i = 0; i < e.getValue(); i++) coreStatPool.add(e.getKey());
+            }
+        }
+
+        Stat s = coreStatPool.get(new Random().nextInt(coreStatPool.size()));
+        this.stats.put(s, this.stats.get(s) + 1);
     }
 
     public int getExpRequired(int targetLevel)
