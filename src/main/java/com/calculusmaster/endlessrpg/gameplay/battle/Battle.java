@@ -120,7 +120,9 @@ public class Battle
         desc.append("**Turn Outcome:**\n");
         for(String s : this.turnResults) desc.append(s).append("\n");
 
-        embed.setDescription(desc.toString());
+        embed
+                .setDescription(desc.toString())
+                .setFooter("It's now " + this.battlers[this.turn + 1].getName() + "'s turn!");
 
         this.sendEmbed(embed);
     }
