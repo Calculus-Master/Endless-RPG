@@ -31,6 +31,9 @@ public class CommandHandler
         register("battle")
                 .setCommand(CommandBattle::new);
 
+        register("attack")
+                .setCommand(CommandAttack::new);
+
         register("dev")
                 .setCommand(CommandDeveloper::new);
     }

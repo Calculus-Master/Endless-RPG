@@ -240,6 +240,16 @@ public class Battle
         return this.players;
     }
 
+    public RPGCharacter[] getBattlers()
+    {
+        return this.battlers;
+    }
+
+    public RPGCharacter getCurrentCharacter()
+    {
+        return this.battlers[this.turn];
+    }
+
     private enum BattleType
     {
         PVP,
