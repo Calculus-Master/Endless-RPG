@@ -6,6 +6,7 @@ import com.calculusmaster.endlessrpg.gameplay.battle.player.UserPlayer;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,6 +21,8 @@ public class Battle
     private RPGCharacter[] battlers;
     private int turn;
     private List<String> turnResults;
+
+    private Optional<MessageReceivedEvent> event = Optional.empty();
 
     //Creators
 
@@ -89,6 +92,8 @@ public class Battle
         embed.setDescription(this.getWinner().getName() + " has defeated " + this.getLoser().getName());
 
         //TODO: Battle win rewards
+
+        this.sendEmbed(embed);
     }
 
     public void sendTurnEmbed()
@@ -116,6 +121,13 @@ public class Battle
         for(String s : this.turnResults) desc.append(s).append("\n");
 
         embed.setDescription(desc.toString());
+
+        this.sendEmbed(embed);
+    }
+
+    private void sendEmbed(EmbedBuilder embed)
+    {
+        this.event.ifPresent(event -> event.getChannel().sendMessageEmbeds(embed.build()).queue());
     }
 
     //Common Utilities
@@ -208,6 +220,11 @@ public class Battle
     }
 
     //Accessors
+    public void setEvent(MessageReceivedEvent event)
+    {
+        this.event = Optional.of(event);
+    }
+
     public BattleType getBattleType()
     {
         return this.battleType;
