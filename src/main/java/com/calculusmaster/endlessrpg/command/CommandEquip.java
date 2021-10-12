@@ -17,7 +17,7 @@ public class CommandEquip extends Command
     @Override
     public Command run()
     {
-        boolean equip = this.msg.length == 3 && this.isNumeric(1) && EquipmentType.cast(this.msg[2]) != null;
+        boolean equip = this.msg.length >= 2 && this.isNumeric(1);
 
         if(Battle.isInBattle(this.player.getId())) this.response = "You cannot equip loot while in a battle!";
         else if(equip)
@@ -28,9 +28,34 @@ public class CommandEquip extends Command
             else
             {
                 LootItem loot = LootItem.build(this.playerData.getLoot().get(target - 1));
-                EquipmentType slot = EquipmentType.cast(this.msg[2]);
 
-                if(!slot.isValidLoot(loot.getLootType())) this.response = "Loot of type `" + loot.getLootType() + "` cannot be equipped to your Character's " + slot.getStyledName() + " Equipment Slot!";
+                EquipmentType slot;
+                if(this.msg.length == 3) slot = switch(this.msg[2]) {
+                    case "helmet", "helm", "h" -> EquipmentType.HELMET;
+                    case "chestplate", "chest", "c" -> EquipmentType.CHESTPLATE;
+                    case "gauntlets", "gloves", "g" -> EquipmentType.GAUNTLETS;
+                    case "leggings", "legs", "l" -> EquipmentType.LEGGINGS;
+                    case "boots", "b" -> EquipmentType.BOOTS;
+                    case "left_hand", "lh", "left" -> EquipmentType.LEFT_HAND;
+                    case "right_hand", "rh", "right" -> EquipmentType.RIGHT_HAND;
+                    default -> null;
+                };
+                else if(!loot.getLootType().isArmor())
+                {
+                    this.response = "Cannot infer loot slot! Please specify Left Hand or Right Hand";
+                    return this;
+                }
+                else slot = switch(loot.getLootType().getCore()) {
+                    case HELMET -> EquipmentType.HELMET;
+                    case CHESTPLATE -> EquipmentType.CHESTPLATE;
+                    case GAUNTLETS -> EquipmentType.GAUNTLETS;
+                    case LEGGINGS -> EquipmentType.LEGGINGS;
+                    case BOOTS -> EquipmentType.BOOTS;
+                    default -> throw new IllegalStateException("Cannot infer loot type destination for " + loot.getLootType().getCore() + "!");
+                };
+
+                if(slot == null) this.response = "Invalid slot!";
+                else if(!slot.isValidLoot(loot.getLootType())) this.response = "Loot of type `" + loot.getLootType() + "` cannot be equipped to your Character's " + slot.getStyledName() + " Equipment Slot!";
                 else if(loot.getRequiredLevel() > this.playerData.getActiveCharacter().getLevel()) this.response = "Your character needs to be Level " + loot.getRequiredLevel() + " to equip this item!";
                 else
                 {
