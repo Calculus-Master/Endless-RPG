@@ -52,7 +52,7 @@ public class CommandInfo extends Command
                 content
                         .append(loot.getName())
                         .append("(").append(loot.getLootType().toString())
-                        .append("), Boosts: ").append(loot.getBoosts()).append("\n");
+                        .append("), Boosts: ").append(loot.getBoostsOverview()).append("\n");
             }
         }
 

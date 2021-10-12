@@ -24,7 +24,7 @@ public class CommandInventory extends Command
             list.append(i + 1).append(": ")
                     .append(loot.getName())
                     .append(" | Type: ").append(Global.normalize(loot.getLootType().toString()))
-                    .append(" | Boosts: ").append(loot.getBoosts().toString())
+                    .append(" | Boosts: ").append(loot.getBoostsOverview())
                     .append(" | Min. Level: ").append(loot.getRequiredLevel())
                     .append("\n");
         }

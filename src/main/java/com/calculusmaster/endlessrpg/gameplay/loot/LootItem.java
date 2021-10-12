@@ -9,6 +9,7 @@ import com.mongodb.client.model.Updates;
 import org.bson.Document;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class LootItem
@@ -99,6 +100,14 @@ public class LootItem
     public LinkedHashMap<Stat, Integer> getBoosts()
     {
         return this.boosts;
+    }
+
+    public String getBoostsOverview()
+    {
+        StringBuilder sb = new StringBuilder();
+        for(Map.Entry<Stat, Integer> entry : this.getBoosts().entrySet()) if(entry.getValue() > 0) sb.append(Global.normalize(entry.getKey().toString())).append(" (").append(entry.getValue()).append("), ");
+        sb.delete(sb.length() - 2, sb.length());
+        return sb.toString();
     }
 
     public int getBoost(Stat s)
