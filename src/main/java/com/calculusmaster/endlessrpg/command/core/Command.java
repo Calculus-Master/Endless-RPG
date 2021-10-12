@@ -4,9 +4,12 @@ import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.mongo.ServerDataQuery;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+
+import java.util.List;
 
 public abstract class Command
 {
@@ -70,6 +73,11 @@ public abstract class Command
         StringBuilder s = new StringBuilder();
         for(int i = start; i < array.length; i++) s.append(array[i]).append(" ");
         return s.toString().trim();
+    }
+
+    protected List<Member> getMentions()
+    {
+        return this.event.getMessage().getMentionedMembers();
     }
 
     public abstract Command run();
