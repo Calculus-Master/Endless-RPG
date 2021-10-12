@@ -34,6 +34,7 @@ public class Battle
         b.createPlayers(p1ID, p2ID);
         b.setup();
 
+        BATTLES.add(b);
         return b;
     }
 
@@ -45,6 +46,7 @@ public class Battle
         b.createPlayers(userID);
         b.setup();
 
+        BATTLES.add(b);
         return b;
     }
 
@@ -89,7 +91,7 @@ public class Battle
 
         EmbedBuilder embed = new EmbedBuilder();
 
-        embed.setDescription(this.getWinner().getName() + " has defeated " + this.getLoser().getName());
+        embed.setDescription(this.getWinner().getName() + " has defeated " + this.getLoser().getName() + "!");
 
         //TODO: Battle win rewards
 
@@ -125,7 +127,7 @@ public class Battle
 
         embed
                 .setDescription(desc.toString())
-                .setFooter("It's now " + this.battlers[this.turn + 1].getName() + "'s turn!");
+                .setFooter("It's now " + this.battlers[!this.turnResults.isEmpty() ? this.turn + 1 : 0].getName() + "'s turn!");
 
         this.sendEmbed(embed);
     }

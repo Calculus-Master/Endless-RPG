@@ -35,6 +35,8 @@ public class CommandAttack extends Command
                 move = 1;
 
                 if(move == 1) b.submitTurn(target);
+
+                this.embed = null;
             }
         }
         else this.response = INVALID;

@@ -32,6 +32,7 @@ public class CommandBattle extends Command
                 b.setEvent(this.event);
 
                 b.sendTurnEmbed();
+                this.embed = null;
             }
         }
         else if(pve)
@@ -43,6 +44,7 @@ public class CommandBattle extends Command
                 b.setEvent(this.event);
 
                 b.sendTurnEmbed();
+                this.embed = null;
             }
         }
         else this.response = INVALID;
