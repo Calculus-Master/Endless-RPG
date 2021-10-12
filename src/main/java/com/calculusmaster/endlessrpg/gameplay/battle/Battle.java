@@ -5,6 +5,8 @@ import com.calculusmaster.endlessrpg.gameplay.battle.player.AbstractPlayer;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.UserPlayer;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
+import com.calculusmaster.endlessrpg.gameplay.spells.SimpleAttackSpell;
+import com.calculusmaster.endlessrpg.gameplay.spells.Spell;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -71,15 +73,13 @@ public class Battle
 
     //Battle
 
-    public void submitTurn(int target)
+    public void submitTurn(int target, Spell spell)
     {
         //TODO: Spell system (different types of attacks, different types of effects)
-        //TODO: Temporary just does damage
-        int damage = this.battlers[this.turn].getDamage(this.battlers[target]);
 
-        this.battlers[target].damage(damage);
+        String spellResult = spell.execute(this.battlers[this.turn], this.battlers[target], this.battlers, this);
 
-        this.turnResults.add(this.battlers[this.turn].getName() + " attacked " + this.battlers[target].getName() + " and dealt " + damage + " damage!");
+        this.turnResults.add(spellResult);
 
         this.advanceTurn();
     }
@@ -127,7 +127,7 @@ public class Battle
 
         embed
                 .setDescription(desc.toString())
-                .setFooter("It's now " + this.battlers[!this.turnResults.isEmpty() ? this.turn + 1 : 0].getName() + "'s turn!");
+                .setFooter("It's now " + this.battlers[!this.turnResults.isEmpty() ? (this.turn + 1 >= this.battlers.length ? 0 : this.turn + 1) : 0].getName() + "'s turn!");
 
         this.sendEmbed(embed);
     }
@@ -181,7 +181,8 @@ public class Battle
             if(!this.battlers[i].isDefeated() && this.turn != i && !this.battlers[i].isOwnedBy(this.battlers[this.turn].getOwnerID()) )
                 possibleTargets.add(i);
 
-        this.submitTurn(possibleTargets.get(new Random().nextInt(possibleTargets.size())));
+            //TODO: Random spell from list of spells
+        this.submitTurn(possibleTargets.get(new Random().nextInt(possibleTargets.size())), new SimpleAttackSpell());
     }
 
     //Battle Setup - Common

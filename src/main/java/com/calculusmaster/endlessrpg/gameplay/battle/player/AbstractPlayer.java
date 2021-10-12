@@ -26,6 +26,6 @@ public abstract class AbstractPlayer
 
     public boolean isDefeated()
     {
-        return this.team.stream().allMatch(c -> c.getHealth() < 0);
+        return this.team.stream().allMatch(c -> c.getHealth() <= 0);
     }
 }

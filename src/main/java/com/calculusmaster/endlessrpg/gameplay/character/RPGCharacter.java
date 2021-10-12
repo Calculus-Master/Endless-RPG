@@ -6,6 +6,7 @@ import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.spells.Spell;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.mongodb.client.model.Filters;
@@ -14,6 +15,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RPGCharacter
 {
@@ -29,6 +31,7 @@ public class RPGCharacter
     private int experience;
     private final LinkedHashMap<Stat, Integer> stats = new LinkedHashMap<>();
     private RPGEquipment equipment;
+    private List<String> spells;
 
     //Battle Only Fields
 
@@ -50,6 +53,7 @@ public class RPGCharacter
         c.setExp(0);
         c.setCoreStats();
         c.setEquipment();
+        c.setSpells();
 
         return c;
     }
@@ -67,6 +71,7 @@ public class RPGCharacter
         c.setExp(data.getInteger("exp"));
         c.setCoreStats(data.get("stats", Document.class));
         c.setEquipment(data.get("equipment", Document.class));
+        c.setSpells(data.getList("spells", String.class));
 
         return c;
     }
@@ -90,7 +95,8 @@ public class RPGCharacter
                 .append("level", this.level)
                 .append("exp", this.experience)
                 .append("stats", Global.coreStatsDB(this.stats))
-                .append("equipment", this.equipment.serialized());
+                .append("equipment", this.equipment.serialized())
+                .append("spells", this.spells);
 
         Mongo.CharacterData.insertOne(d);
     }
@@ -129,6 +135,11 @@ public class RPGCharacter
     public void updateEquipment()
     {
         this.update(Updates.set("equipment", this.equipment.serialized()));
+    }
+
+    public void updateSpells()
+    {
+        this.update(Updates.set("spells", this.spells));
     }
 
     //Owner
@@ -186,6 +197,43 @@ public class RPGCharacter
     public boolean isDefeated()
     {
         return this.getHealth() <= 0;
+    }
+
+    //Spells
+    public List<Spell> getSpells()
+    {
+        return this.spells.stream().map(Spell::parse).collect(Collectors.toList());
+    }
+
+    public Spell getSpell(int index)
+    {
+        return Spell.parse(this.spells.get(index));
+    }
+
+    public void addSpell(String spellID)
+    {
+        this.spells.add(spellID);
+    }
+
+    public void removeSpell(String spellID)
+    {
+        this.spells.remove(spellID);
+    }
+
+    public boolean knowsSpell(String spellID)
+    {
+        return this.spells.contains(spellID);
+    }
+
+    public void setSpells(List<String> spells)
+    {
+        this.spells = spells;
+    }
+
+    public void setSpells()
+    {
+        this.spells = new ArrayList<>();
+        this.spells.add(Spell.SIMPLE_ATTACK_SPELL_ID);
     }
 
     //Equipment

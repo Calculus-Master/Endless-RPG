@@ -2,6 +2,8 @@ package com.calculusmaster.endlessrpg.command;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
+import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+import com.calculusmaster.endlessrpg.gameplay.spells.Spell;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.Objects;
@@ -23,18 +25,18 @@ public class CommandAttack extends Command
         else if(attack)
         {
             Battle b = Objects.requireNonNull(Battle.instance(this.player.getId()));
+            RPGCharacter active = this.playerData.getActiveCharacter();
 
             int move = this.getInt(1);
             int target = this.getInt(2) - 1;
 
             if(target < 0 || target > b.getBattlers().length || b.getBattlers()[target].getCharacterID().equals(b.getCurrentCharacter().getCharacterID())) this.response = "Invalid target!";
-            //Spell system for move detection else if(move > Battle.getCurrentCharacter().moves().size() or something)
+            else if(move < 1 || move > active.getSpells().size())  this.response = "Invalid spell index!";
             else
             {
-                //Temporary, move = 1 for basic attack
-                move = 1;
+                Spell chosenSpell = active.getSpell(move - 1);
 
-                if(move == 1) b.submitTurn(target);
+                b.submitTurn(target, chosenSpell);
 
                 this.embed = null;
             }
