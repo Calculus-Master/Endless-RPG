@@ -29,7 +29,7 @@ public class CommandEquip extends Command
                 EquipmentType slot = EquipmentType.cast(this.msg[2]);
 
                 if(!slot.isValidLoot(loot.getLootType())) this.response = "Loot of type `" + loot.getLootType() + "` cannot be equipped to your Character's " + slot.getStyledName() + " Equipment Slot!";
-                else if(loot.getRequiredLevel() > this.playerData.getActiveCharacter().getLevel()) this.response = "Your character is not a high enough level to equip this item!";
+                else if(loot.getRequiredLevel() > this.playerData.getActiveCharacter().getLevel()) this.response = "Your character needs to be Level " + loot.getRequiredLevel() + " to equip this item!";
                 else
                 {
                     RPGCharacter active = this.playerData.getActiveCharacter();
