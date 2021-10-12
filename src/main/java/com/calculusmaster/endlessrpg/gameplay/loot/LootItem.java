@@ -16,6 +16,7 @@ public class LootItem
     private String lootID;
     private LootType lootType;
     private String name;
+    private int requiredLevel;
     protected LinkedHashMap<Stat, Integer> boosts;
 
     private LootItem() {}
@@ -41,6 +42,7 @@ public class LootItem
         loot.setLootID(lootID);
         loot.setLootType(LootType.cast(data.getString("type")));
         loot.setName(data.getString("name"));
+        loot.setRequiredLevel(data.getInteger("requiredLevel"));
         loot.setBoosts(data.get("boosts", Document.class));
 
         return loot;
@@ -53,6 +55,7 @@ public class LootItem
         loot.setLootID();
         loot.setLootType(type);
         loot.setName(type.getRandomName());
+        loot.setRequiredLevel(0);
         loot.setBoosts();
 
         return loot;
@@ -64,6 +67,7 @@ public class LootItem
                 .append("lootID", this.lootID)
                 .append("type", this.lootType.toString())
                 .append("name", this.name)
+                .append("requiredLevel", this.requiredLevel)
                 .append("boosts", Global.coreStatsDB(this.boosts));
 
         Mongo.LootData.insertOne(data);
@@ -123,6 +127,17 @@ public class LootItem
     public LootType getLootType()
     {
         return this.lootType;
+    }
+
+    //Required Level
+    private void setRequiredLevel(int requiredLevel)
+    {
+        this.requiredLevel = requiredLevel;
+    }
+
+    public int getRequiredLevel()
+    {
+	    return this.requiredLevel;
     }
 
     //Name
