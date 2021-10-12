@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.command;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
+import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
@@ -18,7 +19,8 @@ public class CommandEquip extends Command
     {
         boolean equip = this.msg.length == 3 && this.isNumeric(1) && EquipmentType.cast(this.msg[2]) != null;
 
-        if(equip)
+        if(Battle.isInBattle(this.player.getId())) this.response = "You cannot equip loot while in a battle!";
+        else if(equip)
         {
             int target = this.getInt(1);
 
