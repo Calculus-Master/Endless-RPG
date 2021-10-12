@@ -105,7 +105,7 @@ public class LootItem
     public String getBoostsOverview()
     {
         StringBuilder sb = new StringBuilder();
-        for(Map.Entry<Stat, Integer> entry : this.getBoosts().entrySet()) if(entry.getValue() > 0) sb.append(Global.normalize(entry.getKey().toString())).append(" (").append(entry.getValue()).append("), ");
+        for(Map.Entry<Stat, Integer> entry : this.getBoosts().entrySet()) if(entry.getValue() != 0) sb.append(Global.normalize(entry.getKey().toString())).append(" (").append(entry.getValue()).append("), ");
         sb.delete(sb.length() - 2, sb.length());
         return sb.toString();
     }
