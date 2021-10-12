@@ -2,20 +2,33 @@ package com.calculusmaster.endlessrpg.gameplay.battle.player;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class AIPlayer extends AbstractPlayer
 {
+    private Optional<List<RPGCharacter>> characterOverride = Optional.empty();
+
     public AIPlayer()
     {
         super(generateID());
+    }
+
+    public AIPlayer(RPGCharacter... override)
+    {
+        this();
+        this.characterOverride = Optional.of(Arrays.asList(override));
     }
 
     @Override
     public void createTeam()
     {
         //TODO: Temporary - AI team needs to have loot eventually and scale difficulty
-        this.team.add(RPGCharacter.create("AI"));
+        this.characterOverride.ifPresentOrElse(
+                        list -> this.team.addAll(list),
+                        () -> this.team.add(RPGCharacter.create("AI")));
     }
 
     @Override
