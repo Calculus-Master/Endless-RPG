@@ -17,10 +17,12 @@ public abstract class AbstractPlayer
         this.team = new ArrayList<>();
         this.createTeam();
 
-        this.team.forEach(RPGCharacter::forBattle);
+        this.team.forEach(c -> c.forBattle(this));
     }
 
     public abstract void createTeam();
+
+    public abstract String getName();
 
     public boolean isDefeated()
     {

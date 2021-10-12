@@ -44,6 +44,11 @@ public class PlayerDataQuery extends AbstractMongoQuery
         return "<@" + this.getID() + ">";
     }
 
+    public String getUsername()
+    {
+        return EndlessRPG.BOT_JDA.getUserById(this.getID()).getName();
+    }
+
     public void DM(String content)
     {
         EndlessRPG.BOT_JDA.openPrivateChannelById(this.getID()).flatMap(channel -> channel.sendMessage(content)).queue();

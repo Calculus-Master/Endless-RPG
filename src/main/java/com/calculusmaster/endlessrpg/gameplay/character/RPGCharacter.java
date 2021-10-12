@@ -1,5 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.character;
 
+import com.calculusmaster.endlessrpg.gameplay.battle.player.AIPlayer;
+import com.calculusmaster.endlessrpg.gameplay.battle.player.AbstractPlayer;
 import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
@@ -31,6 +33,7 @@ public class RPGCharacter
     //Battle Only Fields
 
     private Optional<Integer> health = Optional.empty();
+    private Optional<AbstractPlayer> owner = Optional.empty();
 
     //Use Factory methods!
     private RPGCharacter() {}
@@ -69,11 +72,11 @@ public class RPGCharacter
     }
 
     //Creates the object with necessary Battle fields
-    public RPGCharacter forBattle()
+    public void forBattle(AbstractPlayer owner)
     {
-        this.setMaxHealth();
+        this.setOwner(owner);
 
-        return this;
+        this.setMaxHealth();
     }
 
     //Updates
@@ -128,6 +131,32 @@ public class RPGCharacter
         this.update(Updates.set("equipment", this.equipment.serialized()));
     }
 
+    //Owner
+    public AbstractPlayer getOwner()
+    {
+        return this.owner.orElse(null);
+    }
+
+    public String getOwnerID()
+    {
+        return this.getOwner().ID;
+    }
+
+    public void setOwner(AbstractPlayer owner)
+    {
+        this.owner = Optional.of(owner);
+    }
+
+    public boolean isAI()
+    {
+        return this.getOwner() instanceof AIPlayer;
+    }
+
+    public boolean isOwnedBy(String owner)
+    {
+        return this.getOwnerID().equals(owner);
+    }
+
     //Health
     public int getHealth()
     {
@@ -142,6 +171,21 @@ public class RPGCharacter
     public void setHealth(int health)
     {
         this.health = Optional.of(health);
+    }
+
+    public void damage(int amount)
+    {
+        this.setHealth(this.getHealth() - amount);
+    }
+
+    public void heal(int amount)
+    {
+        this.setHealth(this.getHealth() + amount);
+    }
+
+    public boolean isDefeated()
+    {
+        return this.getHealth() <= 0;
     }
 
     //Equipment
@@ -203,7 +247,7 @@ public class RPGCharacter
     {
         int core = this.getCoreStat(s);
         int boost = this.classRPG.getBoosts().getOrDefault(s, 0);
-        int loot = this.getEquipmentBoosts().get(s);
+        int loot = this.getEquipmentBoosts().getOrDefault(s, 0);
         int level = this.level;
 
         boost *= level;

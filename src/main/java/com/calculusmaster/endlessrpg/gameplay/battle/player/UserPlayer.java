@@ -9,14 +9,19 @@ public class UserPlayer extends AbstractPlayer
     public UserPlayer(String ID)
     {
         super(ID);
-
-        this.data = new PlayerDataQuery(ID);
     }
 
     @Override
     public void createTeam()
     {
+        this.data = new PlayerDataQuery(ID);
         //TODO: This is temporary, need to implement a Team system and maybe altered size duels
         this.team.add(this.data.getActiveCharacter());
+    }
+
+    @Override
+    public String getName()
+    {
+        return this.data.getUsername();
     }
 }

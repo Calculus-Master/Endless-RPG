@@ -18,6 +18,13 @@ public class AIPlayer extends AbstractPlayer
         this.team.add(RPGCharacter.create("AI"));
     }
 
+    @Override
+    public String getName()
+    {
+        //TODO: Randomly picked RPG Character name
+        return "Bot";
+    }
+
     private static String generateID()
     {
         final StringBuilder s = new StringBuilder();
