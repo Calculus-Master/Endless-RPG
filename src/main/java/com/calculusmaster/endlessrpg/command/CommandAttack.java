@@ -16,7 +16,7 @@ public class CommandAttack extends Command
     @Override
     public Command run()
     {
-        //r!attack <target> <move>
+        //r!attack <move> <target>
         boolean attack = this.msg.length == 3 && this.isNumeric(1) && this.isNumeric(2);
 
         if(!Battle.isInBattle(this.player.getId())) this.response = "You are not in a battle!";
@@ -24,10 +24,10 @@ public class CommandAttack extends Command
         {
             Battle b = Objects.requireNonNull(Battle.instance(this.player.getId()));
 
-            int target = this.getInt(1);
-            int move = this.getInt(2);
+            int move = this.getInt(1);
+            int target = this.getInt(2) - 1;
 
-            if(target < 0 || target > b.getBattlers().length) this.response = "Invalid target!";
+            if(target < 0 || target > b.getBattlers().length || b.getBattlers()[target].getCharacterID().equals(b.getCurrentCharacter().getCharacterID())) this.response = "Invalid target!";
             //Spell system for move detection else if(move > Battle.getCurrentCharacter().moves().size() or something)
             else
             {
