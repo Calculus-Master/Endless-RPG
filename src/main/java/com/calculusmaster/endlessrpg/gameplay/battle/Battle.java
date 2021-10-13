@@ -96,6 +96,8 @@ public class Battle
         //TODO: Battle win rewards
 
         this.sendEmbed(embed);
+
+        BATTLES.remove(this);
     }
 
     public void sendTurnEmbed()
