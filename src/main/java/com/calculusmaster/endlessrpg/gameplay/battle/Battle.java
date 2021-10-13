@@ -127,7 +127,7 @@ public class Battle
 
         embed
                 .setDescription(desc.toString())
-                .setFooter("It's now " + this.battlers[!this.turnResults.isEmpty() ? (this.turn + 1 >= this.battlers.length ? 0 : this.turn + 1) : 0].getName() + "'s turn!");
+                .setFooter("It's now " + this.battlers[!this.turnResults.isEmpty() ? (this.nextValidCharacter()) : 0].getName() + "'s turn!");
 
         this.sendEmbed(embed);
 
@@ -162,17 +162,32 @@ public class Battle
         else
         {
             this.sendTurnEmbed();
-            if(++this.turn >= this.battlers.length)
-            {
-                this.setBattlerTurnOrder(); //Recalculate turn order if Speed stats changed during battle
-                this.turn = 0;
-            }
+
+            this.turn = this.nextValidCharacter();
 
             this.turnResults.clear();
 
             //TODO: AI Decisions made here
             if(this.battlers[this.turn].isAI()) this.submitAITurn();
         }
+    }
+
+    private int nextValidCharacter()
+    {
+        int turn = this.turn;
+
+        do
+        {
+            turn++;
+
+            if(turn >= this.battlers.length)
+            {
+                this.setBattlerTurnOrder();
+                turn = 0;
+            }
+        } while(this.battlers[turn].isDefeated());
+
+        return turn;
     }
 
     private void submitAITurn()
