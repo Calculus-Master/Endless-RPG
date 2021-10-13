@@ -18,7 +18,6 @@ public class CommandCreate extends Command
         boolean registered = PlayerDataQuery.isRegistered(this.player.getId());
 
         if(this.msg.length == 1) this.response = "You need to include the character name!";
-        else if(registered && !this.playerData.getCharacterList().isEmpty()) this.response = "You can have a maximum of 1 Character for now!";
         else
         {
             RPGCharacter c = RPGCharacter.create(this.rawMultiWordContent(1));
