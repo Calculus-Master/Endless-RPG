@@ -1,4 +1,4 @@
-package com.calculusmaster.endlessrpg.command;
+package com.calculusmaster.endlessrpg.command.character;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;

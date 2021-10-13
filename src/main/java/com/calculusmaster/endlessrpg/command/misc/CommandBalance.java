@@ -1,4 +1,4 @@
-package com.calculusmaster.endlessrpg.command;
+package com.calculusmaster.endlessrpg.command.misc;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

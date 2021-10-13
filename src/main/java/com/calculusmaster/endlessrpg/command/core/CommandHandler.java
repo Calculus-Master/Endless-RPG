@@ -1,6 +1,12 @@
 package com.calculusmaster.endlessrpg.command.core;
 
-import com.calculusmaster.endlessrpg.command.*;
+import com.calculusmaster.endlessrpg.command.activity.CommandAdventure;
+import com.calculusmaster.endlessrpg.command.activity.CommandAttack;
+import com.calculusmaster.endlessrpg.command.activity.CommandBattle;
+import com.calculusmaster.endlessrpg.command.character.*;
+import com.calculusmaster.endlessrpg.command.loot.CommandInventory;
+import com.calculusmaster.endlessrpg.command.misc.CommandBalance;
+import com.calculusmaster.endlessrpg.command.misc.CommandDeveloper;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;

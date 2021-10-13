@@ -1,4 +1,4 @@
-package com.calculusmaster.endlessrpg.command;
+package com.calculusmaster.endlessrpg.command.activity;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.adventure.Adventure;
