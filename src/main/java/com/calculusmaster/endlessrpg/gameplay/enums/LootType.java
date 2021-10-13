@@ -14,10 +14,10 @@ public enum LootType
     NONE(null, ""),
     SWORD(CoreLootType.WEAPON, "sword_names"),
     HELMET(CoreLootType.HELMET, "helmet_names"),
-    CHESTPLATE(CoreLootType.HELMET, "chestplate_names"),
-    GAUNTLETS(CoreLootType.HELMET, "gauntlets_names"),
-    LEGGINGS(CoreLootType.HELMET, "leggings_names"),
-    BOOTS(CoreLootType.HELMET, "boots_names");
+    CHESTPLATE(CoreLootType.CHESTPLATE, "chestplate_names"),
+    GAUNTLETS(CoreLootType.GAUNTLETS, "gauntlets_names"),
+    LEGGINGS(CoreLootType.LEGGINGS, "leggings_names"),
+    BOOTS(CoreLootType.BOOTS, "boots_names");
 
     private static final Random r = new Random();
 
