@@ -37,7 +37,7 @@ public enum LootType
 
     public boolean isArmor()
     {
-        return Arrays.asList(HELMET, CHESTPLATE, GAUNTLETS, LEGGINGS, BOOTS).contains(this.coreType);
+        return Arrays.asList(CoreLootType.HELMET, CoreLootType.CHESTPLATE, CoreLootType.GAUNTLETS, CoreLootType.LEGGINGS, CoreLootType.BOOTS).contains(this.coreType);
     }
 
     public boolean isTool()
