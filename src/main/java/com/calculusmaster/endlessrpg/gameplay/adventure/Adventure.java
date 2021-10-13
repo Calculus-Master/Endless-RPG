@@ -86,6 +86,11 @@ public class Adventure
 
                 LootItem earned = switch(lootType) {
                     case SWORD -> LootItem.createSword(r.nextInt(this.length * 2 - 2) + 2);
+                    case HELMET -> LootItem.createHelmet(r.nextInt(this.length) + 2);
+                    case CHESTPLATE -> LootItem.createChestplate(r.nextInt(this.length) + 2);
+                    case GAUNTLETS -> LootItem.createGauntlets(r.nextInt(this.length) + 2);
+                    case LEGGINGS -> LootItem.createLeggings(r.nextInt(this.length) + 2);
+                    case BOOTS -> LootItem.createBoots(r.nextInt(this.length) + 2);
                     case NONE -> throw new IllegalStateException("Unexpected Loot Type \"NONE\" in Adventure!");
                 };
 
