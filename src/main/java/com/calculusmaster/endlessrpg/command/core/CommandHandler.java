@@ -40,6 +40,9 @@ public class CommandHandler
         register("select")
                 .setCommand(CommandSelect::new);
 
+        register("balance", "bal", "gold", "g")
+                .setCommand(CommandBalance::new);
+
         register("dev")
                 .setCommand(CommandDeveloper::new);
     }
