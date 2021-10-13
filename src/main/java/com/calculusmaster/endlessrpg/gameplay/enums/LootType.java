@@ -9,12 +9,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static com.calculusmaster.endlessrpg.gameplay.enums.LootType.CoreLootType.*;
-
 public enum LootType
 {
     NONE(null, ""),
-    SWORD(CoreLootType.WEAPON, "sword_names");
+    SWORD(CoreLootType.WEAPON, "sword_names"),
+    HELMET(CoreLootType.HELMET, "helmet_names"),
+    CHESTPLATE(CoreLootType.HELMET, "chestplate_names"),
+    GAUNTLETS(CoreLootType.HELMET, "gauntlets_names"),
+    LEGGINGS(CoreLootType.HELMET, "leggings_names"),
+    BOOTS(CoreLootType.HELMET, "boots_names");
 
     private static final Random r = new Random();
 

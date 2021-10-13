@@ -90,6 +90,31 @@ public class LootItem
         return LootItem.create(LootType.SWORD).withBoosts(Stat.Pair.of(Stat.ATTACK, attack));
     }
 
+    public static LootItem createHelmet(int defense)
+    {
+        return LootItem.create(LootType.HELMET).withBoosts(Stat.Pair.of(Stat.DEFENSE, defense));
+    }
+
+    public static LootItem createChestplate(int defense)
+    {
+        return LootItem.create(LootType.CHESTPLATE).withBoosts(Stat.Pair.of(Stat.DEFENSE, defense));
+    }
+
+    public static LootItem createGauntlets(int defense)
+    {
+        return LootItem.create(LootType.GAUNTLETS).withBoosts(Stat.Pair.of(Stat.DEFENSE, defense));
+    }
+
+    public static LootItem createLeggings(int defense)
+    {
+        return LootItem.create(LootType.LEGGINGS).withBoosts(Stat.Pair.of(Stat.DEFENSE, defense));
+    }
+
+    public static LootItem createBoots(int defense)
+    {
+        return LootItem.create(LootType.BOOTS).withBoosts(Stat.Pair.of(Stat.DEFENSE, defense));
+    }
+
     //Boosts
     public LootItem withBoosts(Stat.Pair... boosts)
     {

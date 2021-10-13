@@ -41,6 +41,11 @@ public class CommandDeveloper extends Command
                 case "addloot" -> {
                     LootItem loot = switch(this.msg[2]) {
                         case "sword" -> LootItem.createSword(new Random().nextInt(15) + 1);
+                        case "helmet" -> LootItem.createHelmet(new Random().nextInt(15) + 1);
+                        case "chestplate" -> LootItem.createChestplate(new Random().nextInt(15) + 1);
+                        case "gauntlets" -> LootItem.createGauntlets(new Random().nextInt(15) + 1);
+                        case "leggings" -> LootItem.createLeggings(new Random().nextInt(15) + 1);
+                        case "boots" -> LootItem.createBoots(new Random().nextInt(15) + 1);
                         default -> throw new IllegalStateException("Invalid Loot Argument");
                     };
 
