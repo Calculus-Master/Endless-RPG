@@ -35,16 +35,13 @@ public class CommandAdventure extends Command
             else
             {
                 int activeLevel = this.playerData.getActiveCharacter().getLevel();
-                int max = activeLevel + (int)(activeLevel * 0.5);
-                int min = Math.max(activeLevel - (int)(activeLevel * 0.25), 0);
-                int size = new Random().nextInt(max - min + 1) + min;
 
-                if(size < 4) size = 4;
-                Adventure a = Adventure.create(this.playerData, size);
+                int length = new Random().nextInt(2) + 3;
+                Adventure a = Adventure.create(this.playerData, length);
 
                 a.start();
 
-                this.response = "Adventure started (Length %s)!".formatted(size);
+                this.response = "Adventure started (Length %s)!".formatted(length);
             }
         }
         else this.response = INVALID;
