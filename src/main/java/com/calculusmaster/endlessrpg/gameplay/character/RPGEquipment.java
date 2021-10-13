@@ -69,6 +69,20 @@ public class RPGEquipment
         return LootItem.build(this.getEquipmentID(type));
     }
 
+    public RPGElementalContainer combinedElementalDamage()
+    {
+        RPGElementalContainer damage = new RPGElementalContainer();
+        for(EquipmentType equipment : EquipmentType.values()) damage.combine(this.getEquipmentLoot(equipment).getElementalDamage());
+        return damage;
+    }
+
+    public RPGElementalContainer combinedElementalDefense()
+    {
+        RPGElementalContainer defense = new RPGElementalContainer();
+        for(EquipmentType equipment : EquipmentType.values()) defense.combine(this.getEquipmentLoot(equipment).getElementalDefense());
+        return defense;
+    }
+
     public List<String> asList()
     {
         return Arrays.stream(EquipmentType.values()).map(this::getEquipmentID).collect(Collectors.toList());

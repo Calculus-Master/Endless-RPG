@@ -1,5 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.loot;
 
+import com.calculusmaster.endlessrpg.gameplay.character.RPGElementalContainer;
+import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.util.Global;
@@ -18,7 +20,9 @@ public class LootItem
     private LootType lootType;
     private String name;
     private int requiredLevel;
-    protected LinkedHashMap<Stat, Integer> boosts;
+    private LinkedHashMap<Stat, Integer> boosts;
+    private RPGElementalContainer elementalDamage;
+    private RPGElementalContainer elementalDefense;
 
     private LootItem() {}
 
@@ -45,6 +49,8 @@ public class LootItem
         loot.setName(data.getString("name"));
         loot.setRequiredLevel(data.getInteger("requiredLevel"));
         loot.setBoosts(data.get("boosts", Document.class));
+        loot.setElementalDamage(data.get("elementalDamage", Document.class));
+        loot.setElementalDefense(data.get("elementalDefense", Document.class));
 
         return loot;
     }
@@ -58,6 +64,8 @@ public class LootItem
         loot.setName(type.getRandomName());
         loot.setRequiredLevel(0);
         loot.setBoosts();
+        loot.setElementalDamage();
+        loot.setElementalDefense();
 
         return loot;
     }
@@ -69,7 +77,9 @@ public class LootItem
                 .append("type", this.lootType.toString())
                 .append("name", this.name)
                 .append("requiredLevel", this.requiredLevel)
-                .append("boosts", Global.coreStatsDB(this.boosts));
+                .append("boosts", Global.coreStatsDB(this.boosts))
+                .append("elementalDamage", this.elementalDamage.serialized())
+                .append("elementalDefense", this.elementalDefense.serialized());
 
         Mongo.LootData.insertOne(data);
     }
@@ -82,6 +92,16 @@ public class LootItem
     public void updateBoosts()
     {
         Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("boosts", Global.coreStatsDB(this.boosts)));
+    }
+
+    public void updateElementalDamage()
+    {
+        Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("elementalDamage", this.elementalDamage.serialized()));
+    }
+
+    public void updateElementalDefense()
+    {
+        Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("elementalDefense", this.elementalDefense.serialized()));
     }
 
     //Create
@@ -113,6 +133,50 @@ public class LootItem
     public static LootItem createBoots(int defense)
     {
         return LootItem.create(LootType.BOOTS).withBoosts(Stat.Pair.of(Stat.DEFENSE, defense));
+    }
+
+    //Elemental Defense
+    public LootItem withElementalDefenseModifiers(ElementType.Pair... modifiers)
+    {
+        for(ElementType.Pair modifier : modifiers) this.elementalDefense.set(modifier.element, modifier.value);
+        return this;
+    }
+
+    public RPGElementalContainer getElementalDefense()
+    {
+        return this.elementalDefense;
+    }
+
+    public void setElementalDefense()
+    {
+        this.elementalDefense = new RPGElementalContainer();
+    }
+
+    public void setElementalDefense(Document serialized)
+    {
+        this.elementalDefense = new RPGElementalContainer(serialized);
+    }
+
+    //Elemental Damage
+    public LootItem withElementalDamageModifiers(ElementType.Pair... modifiers)
+    {
+        for(ElementType.Pair modifier : modifiers) this.elementalDamage.set(modifier.element, modifier.value);
+        return this;
+    }
+
+    public RPGElementalContainer getElementalDamage()
+    {
+        return this.elementalDamage;
+    }
+
+    public void setElementalDamage()
+    {
+        this.elementalDamage = new RPGElementalContainer();
+    }
+
+    public void setElementalDamage(Document serialized)
+    {
+        this.elementalDamage = new RPGElementalContainer(serialized);
     }
 
     //Boosts
