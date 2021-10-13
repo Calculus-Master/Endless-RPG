@@ -72,15 +72,20 @@ public class RPGEquipment
     public RPGElementalContainer combinedElementalDamage()
     {
         RPGElementalContainer damage = new RPGElementalContainer();
-        for(EquipmentType equipment : EquipmentType.values()) damage.combine(this.getEquipmentLoot(equipment).getElementalDamage());
+        for(EquipmentType equipment : EquipmentType.values()) if(!this.isEmpty(equipment)) damage.combine(this.getEquipmentLoot(equipment).getElementalDamage());
         return damage;
     }
 
     public RPGElementalContainer combinedElementalDefense()
     {
         RPGElementalContainer defense = new RPGElementalContainer();
-        for(EquipmentType equipment : EquipmentType.values()) defense.combine(this.getEquipmentLoot(equipment).getElementalDefense());
+        for(EquipmentType equipment : EquipmentType.values()) if(!this.isEmpty(equipment)) defense.combine(this.getEquipmentLoot(equipment).getElementalDefense());
         return defense;
+    }
+
+    public boolean isEmpty(EquipmentType slot)
+    {
+        return this.getEquipmentID(slot).equals(LootItem.EMPTY.getLootID());
     }
 
     public List<String> asList()
