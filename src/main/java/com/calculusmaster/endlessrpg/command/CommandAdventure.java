@@ -37,7 +37,8 @@ public class CommandAdventure extends Command
                 int activeLevel = this.playerData.getActiveCharacter().getLevel();
 
                 int length = new Random().nextInt(2) + 3;
-                Adventure a = Adventure.create(this.playerData, length);
+                int level = new Random().nextInt(100) < 25 ? activeLevel + 1 : activeLevel;
+                Adventure a = Adventure.create(this.playerData, length, level);
 
                 a.start();
 

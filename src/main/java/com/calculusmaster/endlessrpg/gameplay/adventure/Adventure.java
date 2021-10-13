@@ -25,6 +25,7 @@ public class Adventure
     private PlayerDataQuery player;
     private int length;
     private int progress;
+    private int level;
 
     private List<AdventureEvent> eventLog;
 
@@ -36,13 +37,13 @@ public class Adventure
 
     private Adventure() {}
 
-    public static Adventure create(PlayerDataQuery player, int length)
+    public static Adventure create(PlayerDataQuery player, int length, int level)
     {
         Adventure a = new Adventure();
 
         a.setCharacter(player.getActiveCharacter());
         a.setPlayer(player);
-        a.setup(length);
+        a.setup(length, level);
 
         ADVENTURES.add(a);
         return a;
@@ -75,8 +76,8 @@ public class Adventure
 
         switch(event)
         {
-            case EARN_GOLD -> this.rewardGold += (new Random().nextInt(this.length) * 150 + this.length * 5);
-            case EARN_XP -> this.rewardXP += (new Random().nextInt(this.length) * 100 + this.length * 10);
+            case EARN_GOLD -> this.rewardGold += (new Random().nextInt(this.level) * 150 + this.level * 5);
+            case EARN_XP -> this.rewardXP += (new Random().nextInt(this.level) * 100 + this.level * 10);
             case EARN_LOOT -> {
                 final Random r = new Random();
                 LootType lootType;
@@ -85,12 +86,12 @@ public class Adventure
                 while(lootType.equals(LootType.NONE));
 
                 LootItem earned = switch(lootType) {
-                    case SWORD -> LootItem.createSword(r.nextInt(this.length * 2 - 2) + 2);
-                    case HELMET -> LootItem.createHelmet(r.nextInt(this.length) + 2);
-                    case CHESTPLATE -> LootItem.createChestplate(r.nextInt(this.length) + 2);
-                    case GAUNTLETS -> LootItem.createGauntlets(r.nextInt(this.length) + 2);
-                    case LEGGINGS -> LootItem.createLeggings(r.nextInt(this.length) + 2);
-                    case BOOTS -> LootItem.createBoots(r.nextInt(this.length) + 2);
+                    case SWORD -> LootItem.createSword(r.nextInt(this.level * 2 - 2) + 2);
+                    case HELMET -> LootItem.createHelmet(r.nextInt(this.level) + 2);
+                    case CHESTPLATE -> LootItem.createChestplate(r.nextInt(this.level) + 2);
+                    case GAUNTLETS -> LootItem.createGauntlets(r.nextInt(this.level) + 2);
+                    case LEGGINGS -> LootItem.createLeggings(r.nextInt(this.level) + 2);
+                    case BOOTS -> LootItem.createBoots(r.nextInt(this.level) + 2);
                     case NONE -> throw new IllegalStateException("Unexpected Loot Type \"NONE\" in Adventure!");
                 };
 
@@ -188,10 +189,12 @@ public class Adventure
         END_TIMES.remove(ID);
     }
 
-    public void setup(int length)
+    public void setup(int length, int level)
     {
         this.length = length;
         this.progress = 0;
+
+        this.level = level;
 
         this.eventLog = new ArrayList<>();
 
