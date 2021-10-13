@@ -37,6 +37,9 @@ public class CommandHandler
         register("characters")
                 .setCommand(CommandCharacters::new);
 
+        register("select")
+                .setCommand(CommandSelect::new);
+
         register("dev")
                 .setCommand(CommandDeveloper::new);
     }
