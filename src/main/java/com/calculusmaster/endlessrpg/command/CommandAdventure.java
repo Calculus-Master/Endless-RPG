@@ -24,10 +24,8 @@ public class CommandAdventure extends Command
             String ID = this.playerData.getActiveCharacter().getCharacterID();
 
             if(!Adventure.isCharacterOnAdventure(ID)) this.response = "This character is not on any adventures!";
-            else
-            {
-                this.response = Adventure.instance(ID).getRemainingTime();
-            }
+            else this.response = Adventure.instance(ID).getRemainingTime();
+
         }
         else if(start)
         {
@@ -42,7 +40,7 @@ public class CommandAdventure extends Command
 
                 a.start();
 
-                this.response = "Adventure started (Length %s)!".formatted(length);
+                this.response = "Level %s Adventure started (Length: %s)!".formatted(level, length);
             }
         }
         else this.response = INVALID;
