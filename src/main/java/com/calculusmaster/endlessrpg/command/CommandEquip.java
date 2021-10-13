@@ -4,6 +4,7 @@ import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
+import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -23,6 +24,7 @@ public class CommandEquip extends Command
         else if(equip)
         {
             int target = this.getInt(1);
+            RPGCharacter active = this.playerData.getActiveCharacter();
 
             if(target < 1 || target > this.playerData.getLoot().size()) this.response = "Invalid index!";
             else
@@ -56,10 +58,22 @@ public class CommandEquip extends Command
 
                 if(slot == null) this.response = "Invalid slot!";
                 else if(!slot.isValidLoot(loot.getLootType())) this.response = "Loot of type `" + loot.getLootType() + "` cannot be equipped to your Character's " + slot.getStyledName() + " Equipment Slot!";
-                else if(loot.getRequiredLevel() > this.playerData.getActiveCharacter().getLevel()) this.response = "Your character needs to be Level " + loot.getRequiredLevel() + " to equip this item!";
+                else if(loot.getRequiredLevel() > active.getLevel()) this.response = "Your character needs to be Level " + loot.getRequiredLevel() + " to equip this item!";
                 else
                 {
-                    RPGCharacter active = this.playerData.getActiveCharacter();
+                    //Basic Sword cannot be in both hands at once
+                    if(slot.isHand() && loot.getLootType().equals(LootType.SWORD))
+                    {
+                        boolean leftInvalid = slot.equals(EquipmentType.LEFT_HAND) && active.getEquipment().getEquipmentLoot(EquipmentType.RIGHT_HAND).getLootType().equals(LootType.SWORD);
+                        boolean rightInvalid = slot.equals(EquipmentType.RIGHT_HAND) && active.getEquipment().getEquipmentLoot(EquipmentType.LEFT_HAND).getLootType().equals(LootType.SWORD);
+
+                        if(leftInvalid || rightInvalid)
+                        {
+                            this.response = "You cannot equip two basic Sword loot items at the same time!";
+                            return this;
+                        }
+                    }
+
                     active.equipLoot(slot, loot.getLootID());
                     active.updateEquipment();
 

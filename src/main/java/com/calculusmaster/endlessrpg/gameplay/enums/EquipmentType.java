@@ -22,6 +22,11 @@ public enum EquipmentType
         this.validLoot = Arrays.asList(validLoot);
     }
 
+    public boolean isHand()
+    {
+        return this.equals(LEFT_HAND) || this.equals(RIGHT_HAND);
+    }
+
     public boolean isValidLoot(LootType loot)
     {
         return this.validLoot.contains(loot.getCore());
