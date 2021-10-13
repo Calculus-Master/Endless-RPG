@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg.gameplay.adventure;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
+import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
@@ -86,12 +87,12 @@ public class Adventure
                 while(lootType.equals(LootType.NONE));
 
                 LootItem earned = switch(lootType) {
-                    case SWORD -> LootItem.createSword(r.nextInt(this.level * 2 - 2) + 2);
-                    case HELMET -> LootItem.createHelmet(r.nextInt(this.level) + 2);
-                    case CHESTPLATE -> LootItem.createChestplate(r.nextInt(this.level) + 2);
-                    case GAUNTLETS -> LootItem.createGauntlets(r.nextInt(this.level) + 2);
-                    case LEGGINGS -> LootItem.createLeggings(r.nextInt(this.level) + 2);
-                    case BOOTS -> LootItem.createBoots(r.nextInt(this.level) + 2);
+                    case SWORD -> LootBuilder.rewardSword(this.level);
+                    case HELMET -> LootBuilder.rewardHelmet(this.level);
+                    case CHESTPLATE -> LootBuilder.rewardChestplate(this.level);
+                    case GAUNTLETS -> LootBuilder.rewardGauntlets(this.level);
+                    case LEGGINGS -> LootBuilder.rewardLeggings(this.level);
+                    case BOOTS -> LootBuilder.rewardBoots(this.level);
                     case NONE -> throw new IllegalStateException("Unexpected Loot Type \"NONE\" in Adventure!");
                 };
 

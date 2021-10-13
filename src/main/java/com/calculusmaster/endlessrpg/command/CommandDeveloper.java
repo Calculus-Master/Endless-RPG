@@ -4,12 +4,11 @@ import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
+import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.mongodb.client.model.Filters;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-
-import java.util.Random;
 
 public class CommandDeveloper extends Command
 {
@@ -40,13 +39,14 @@ public class CommandDeveloper extends Command
                 }
                 case "clearlootdb" -> Mongo.LootData.deleteMany(Filters.exists("lootID"));
                 case "addloot" -> {
+                    int activeLevel = this.playerData.getActiveCharacter().getLevel();
                     LootItem loot = switch(this.msg[2]) {
-                        case "sword" -> LootItem.createSword(new Random().nextInt(15) + 1);
-                        case "helmet" -> LootItem.createHelmet(new Random().nextInt(15) + 1);
-                        case "chestplate" -> LootItem.createChestplate(new Random().nextInt(15) + 1);
-                        case "gauntlets" -> LootItem.createGauntlets(new Random().nextInt(15) + 1);
-                        case "leggings" -> LootItem.createLeggings(new Random().nextInt(15) + 1);
-                        case "boots" -> LootItem.createBoots(new Random().nextInt(15) + 1);
+                        case "sword" -> LootBuilder.rewardSword(activeLevel + 1);
+                        case "helmet" -> LootBuilder.rewardHelmet(activeLevel + 1);
+                        case "chestplate" -> LootBuilder.rewardChestplate(activeLevel + 1);
+                        case "gauntlets" -> LootBuilder.rewardGauntlets(activeLevel + 1);
+                        case "leggings" -> LootBuilder.rewardLeggings(activeLevel + 1);
+                        case "boots" -> LootBuilder.rewardBoots(activeLevel + 1);
                         default -> throw new IllegalStateException("Invalid Loot Argument");
                     };
 
