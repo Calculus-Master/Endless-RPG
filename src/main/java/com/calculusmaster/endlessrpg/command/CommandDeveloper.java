@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.command;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
+import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
@@ -52,6 +53,7 @@ public class CommandDeveloper extends Command
                     loot.upload();
                     this.playerData.addLootItem(loot.getLootID());
                 }
+                case "clearbattles" -> Battle.BATTLES.clear();
                 default -> throw new IllegalStateException("Invalid Developer Command. Input: " + this.msg[0]);
             }
 
