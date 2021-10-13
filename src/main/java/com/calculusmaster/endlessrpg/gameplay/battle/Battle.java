@@ -127,9 +127,8 @@ public class Battle
             for(String s : this.turnResults) desc.append(s).append("\n");
         }
 
-        embed
-                .setDescription(desc.toString())
-                .setFooter("It's now " + this.battlers[!this.turnResults.isEmpty() ? (this.nextValidCharacter()) : 0].getName() + "'s turn!");
+        embed.setDescription(desc.toString());
+        if(!this.isComplete()) embed.setFooter("It's now " + this.battlers[!this.turnResults.isEmpty() ? (this.nextValidCharacter()) : 0].getName() + "'s turn!");
 
         this.sendEmbed(embed);
 
