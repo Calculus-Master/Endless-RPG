@@ -30,7 +30,8 @@ public class CommandAttack extends Command
             int move = this.getInt(1);
             int target = this.getInt(2) - 1;
 
-            if(target < 0 || target > b.getBattlers().length || b.getBattlers()[target].getCharacterID().equals(b.getCurrentCharacter().getCharacterID())) this.response = "Invalid target!";
+            if(!b.getCurrentCharacter().isOwnedBy(this.player.getId())) this.response = "It isn't your turn!";
+            else if(target < 0 || target > b.getBattlers().length || b.getBattlers()[target].getCharacterID().equals(b.getCurrentCharacter().getCharacterID())) this.response = "Invalid target!";
             else if(move < 1 || move > active.getSpells().size())  this.response = "Invalid spell index!";
             else
             {
