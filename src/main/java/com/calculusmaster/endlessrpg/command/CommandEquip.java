@@ -59,6 +59,7 @@ public class CommandEquip extends Command
                 if(slot == null) this.response = "Invalid slot!";
                 else if(!slot.isValidLoot(loot.getLootType())) this.response = "Loot of type `" + loot.getLootType() + "` cannot be equipped to your Character's " + slot.getStyledName() + " Equipment Slot!";
                 else if(loot.getRequiredLevel() > active.getLevel()) this.response = "Your character needs to be Level " + loot.getRequiredLevel() + " to equip this item!";
+                else if(this.playerData.getCharacterList().stream().map(RPGCharacter::build).anyMatch(c -> c.getEquipment().asList().contains(loot.getLootID()))) this.response = "Another one of your characters already has that Loot equipped!";
                 else
                 {
                     //Basic Sword cannot be in both hands at once

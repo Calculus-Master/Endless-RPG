@@ -5,6 +5,10 @@ import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.mongodb.BasicDBObject;
 import org.bson.Document;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class RPGEquipment
 {
     private String helmet;
@@ -63,5 +67,10 @@ public class RPGEquipment
     public LootItem getEquipmentLoot(EquipmentType type)
     {
         return LootItem.build(this.getEquipmentID(type));
+    }
+
+    public List<String> asList()
+    {
+        return Arrays.stream(EquipmentType.values()).map(this::getEquipmentID).collect(Collectors.toList());
     }
 }
