@@ -32,16 +32,7 @@ public class CommandEquip extends Command
                 LootItem loot = LootItem.build(this.playerData.getLoot().get(target - 1));
 
                 EquipmentType slot;
-                if(this.msg.length == 3) slot = switch(this.msg[2]) {
-                    case "helmet", "helm", "h" -> EquipmentType.HELMET;
-                    case "chestplate", "chest", "c" -> EquipmentType.CHESTPLATE;
-                    case "gauntlets", "gloves", "g" -> EquipmentType.GAUNTLETS;
-                    case "leggings", "legs", "l" -> EquipmentType.LEGGINGS;
-                    case "boots", "b" -> EquipmentType.BOOTS;
-                    case "left_hand", "lh", "left" -> EquipmentType.LEFT_HAND;
-                    case "right_hand", "rh", "right" -> EquipmentType.RIGHT_HAND;
-                    default -> null;
-                };
+                if(this.msg.length == 3) slot = EquipmentType.parse(this.msg[2]);
                 else if(!loot.getLootType().isArmor())
                 {
                     this.response = "Cannot infer loot slot! Please specify Left Hand or Right Hand";

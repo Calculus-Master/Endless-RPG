@@ -43,6 +43,9 @@ public class CommandHandler
         register("balance", "bal", "gold", "g")
                 .setCommand(CommandBalance::new);
 
+        register("remove")
+                .setCommand(CommandRemove::new);
+
         register("dev")
                 .setCommand(CommandDeveloper::new);
     }
