@@ -288,7 +288,7 @@ public class RPGCharacter
         attack = (int)(attack * randomATK * (critATK ? critVal : 1.0));
         defense = (int)(defense * randomDEF * (critDEF ? critVal : 1.0));
 
-        return attack - defense;
+        return Math.max(attack - defense, 0);
     }
 
     public int getStat(Stat s)
