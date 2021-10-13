@@ -72,7 +72,13 @@ public class RPGEquipment
     public RPGElementalContainer combinedElementalDamage()
     {
         RPGElementalContainer damage = new RPGElementalContainer();
-        for(EquipmentType equipment : EquipmentType.values()) if(!this.isEmpty(equipment)) damage.combine(this.getEquipmentLoot(equipment).getElementalDamage());
+        for(EquipmentType equipment : EquipmentType.values())
+        {
+            if(!this.isEmpty(equipment))
+            {
+                damage.combine(this.getEquipmentLoot(equipment).getElementalDamage());
+            }
+        }
         return damage;
     }
 

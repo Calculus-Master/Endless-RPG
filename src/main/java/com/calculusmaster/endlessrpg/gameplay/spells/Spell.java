@@ -29,8 +29,8 @@ public abstract class Spell
 
         for(ElementType element : ElementType.values())
         {
-            int eATK = (int)(userElementalDamage.get(element) * attack);
-            int eDEF = (int)(targetElementalDefense.get(element) * defense);
+            int eATK = userElementalDamage.getRaw(element);
+            int eDEF = targetElementalDefense.getRaw(element);
 
             damage += Math.max(0, eATK - eDEF);
         }
