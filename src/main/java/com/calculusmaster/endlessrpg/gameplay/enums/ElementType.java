@@ -1,5 +1,9 @@
 package com.calculusmaster.endlessrpg.gameplay.enums;
 
+import net.dv8tion.jda.api.entities.Emote;
+
+import static com.calculusmaster.endlessrpg.EndlessRPG.BOT_JDA;
+
 public enum ElementType
 {
     FIRE,
@@ -8,6 +12,11 @@ public enum ElementType
     AIR,
     DARK,
     LIGHT;
+
+    public Emote getIcon()
+    {
+        return BOT_JDA.getEmotesByName("element_" + this.toString().toLowerCase(), true).get(0);
+    }
 
     public static class Pair
     {
