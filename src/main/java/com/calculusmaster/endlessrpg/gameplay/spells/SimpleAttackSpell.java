@@ -11,15 +11,9 @@ public class SimpleAttackSpell extends Spell
     }
 
     @Override
-    public String getSpellID()
-    {
-        return Spell.SIMPLE_ATTACK_SPELL_ID;
-    }
-
-    @Override
     public String execute(RPGCharacter user, RPGCharacter target, RPGCharacter[] battlers, Battle battle)
     {
-        int damage = user.getDamage(target);
+        int damage = this.calculateDamage(user, target);
 
         target.damage(damage);
 
