@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg.mongo;
 
 import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
@@ -124,7 +125,17 @@ public class PlayerDataQuery extends AbstractMongoQuery
 
     public void addLootItem(String ID)
     {
-        this.update(Updates.push("loot", ID));
+        if(this.getLoot().size() == this.getMaxLootAmount())
+        {
+            this.DM("You have reached your maximum Loot amount! Any newly acquired loot will be lost forever!");
+            LootItem.delete(ID);
+        }
+        else this.update(Updates.push("loot", ID));
+    }
+
+    public int getMaxLootAmount()
+    {
+        return 50; //TODO: Player Level, and adjusting the inventory size for that
     }
 
     public void removeLootItem(String ID)
