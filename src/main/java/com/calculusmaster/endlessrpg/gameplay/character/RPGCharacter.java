@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg.gameplay.character;
 
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AIPlayer;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AbstractPlayer;
+import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
 import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
@@ -399,12 +400,15 @@ public class RPGCharacter
             this.experience -= this.getExpRequired(this.level + 1);
             this.level++;
 
-            this.grantCoreStat();
+            this.onLevelUp();
         }
     }
 
-    private void grantCoreStat()
+    private void onLevelUp()
     {
+        final Random r = new Random();
+
+        //Grant Core Stat
         List<Stat> coreStatPool = new ArrayList<>(Arrays.asList(Stat.values()));
 
         if(!this.getRPGClass().equals(RPGClass.RECRUIT))
@@ -415,8 +419,18 @@ public class RPGCharacter
             }
         }
 
-        Stat s = coreStatPool.get(new Random().nextInt(coreStatPool.size()));
+        Stat s = coreStatPool.get(r.nextInt(coreStatPool.size()));
         this.stats.put(s, this.stats.get(s) + 1);
+
+        //Grant Elemental Core Stat
+        if(this.getLevel() % 20 == 0)
+        {
+            ElementType damage = ElementType.values()[r.nextInt(ElementType.values().length)];
+            ElementType defense = ElementType.values()[r.nextInt(ElementType.values().length)];
+
+            this.getCoreElementalDamage().increase(damage, 1 + this.getLevel() / 20);
+            this.getCoreElementalDefense().increase(defense, 1 + this.getLevel() / 20);
+        }
     }
 
     public int getExpRequired(int targetLevel)
