@@ -63,7 +63,7 @@ public class CommandDeveloper extends Command
                     int target = this.getInt(2);
                     RPGCharacter active = this.playerData.getActiveCharacter();
                     while(active.getLevel() != target) active.addExp(active.getExpRequired(active.getLevel() + 1));
-                    active.updateExperience();
+                    active.completeUpdate();
                 }
                 default -> throw new IllegalStateException("Invalid Developer Command. Input: " + this.msg[0]);
             }
