@@ -16,62 +16,54 @@ public class LootBuilder
         Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> r.setSeed(System.nanoTime()), 1, 10, TimeUnit.MINUTES);
     }
 
+    private static int rand(int min, int max) { return r.nextInt(max - min + 1) + min; }
+
     public static LootItem rewardSword(int level)
     {
-        LootItem sword = LootItem.create(LootType.SWORD);
-
-        //All swords have attack
-        sword.withBoosts(Stat.Pair.of(Stat.ATTACK, level * (r.nextInt(2) + 3)));
+        LootItem sword = LootItem.create(LootType.SWORD)
+            .addBoost(Stat.ATTACK, rand(2, 5) * level + 5 + rand(1, level * 2));
 
         return sword;
     }
 
+    //Armor
+
     public static LootItem rewardHelmet(int level)
     {
-        LootItem helmet = LootItem.create(LootType.HELMET);
-
-        //All helmets have defense
-        helmet.withBoosts(Stat.Pair.of(Stat.DEFENSE, level * (r.nextInt(2) + 2)));
+        LootItem helmet = LootItem.create(LootType.HELMET)
+                .addBoost(Stat.DEFENSE, level * (r.nextInt(2) + 2));
 
         return helmet;
     }
 
     public static LootItem rewardChestplate(int level)
     {
-        LootItem chestplate = LootItem.create(LootType.CHESTPLATE);
-
-        //All helmets have defense
-        chestplate.withBoosts(Stat.Pair.of(Stat.DEFENSE, level * (r.nextInt(2) + 2)));
+        LootItem chestplate = LootItem.create(LootType.CHESTPLATE)
+                .addBoost(Stat.DEFENSE, level * (r.nextInt(2) + 2));
 
         return chestplate;
     }
 
     public static LootItem rewardGauntlets(int level)
     {
-        LootItem gauntlets = LootItem.create(LootType.GAUNTLETS);
-
-        //All helmets have defense
-        gauntlets.withBoosts(Stat.Pair.of(Stat.DEFENSE, level * (r.nextInt(2) + 2)));
+        LootItem gauntlets = LootItem.create(LootType.GAUNTLETS)
+                .addBoost(Stat.DEFENSE, level * (r.nextInt(2) + 2));
 
         return gauntlets;
     }
 
     public static LootItem rewardLeggings(int level)
     {
-        LootItem leggings = LootItem.create(LootType.LEGGINGS);
-
-        //All helmets have defense
-        leggings.withBoosts(Stat.Pair.of(Stat.DEFENSE, level * (r.nextInt(2) + 2)));
+        LootItem leggings = LootItem.create(LootType.LEGGINGS)
+                .addBoost(Stat.DEFENSE, level * (r.nextInt(2) + 2));
 
         return leggings;
     }
 
     public static LootItem rewardBoots(int level)
     {
-        LootItem boots = LootItem.create(LootType.BOOTS);
-
-        //All helmets have defense
-        boots.withBoosts(Stat.Pair.of(Stat.DEFENSE, level * (r.nextInt(2) + 2)));
+        LootItem boots = LootItem.create(LootType.BOOTS)
+                .addBoost(Stat.DEFENSE, level * (r.nextInt(2) + 2));
 
         return boots;
     }

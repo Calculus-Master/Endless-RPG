@@ -104,13 +104,6 @@ public class LootItem
         Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("elementalDefense", this.elementalDefense.serialized()));
     }
 
-    //Create
-    @Deprecated
-    public static LootItem createSword(int attack)
-    {
-        return LootItem.create(LootType.SWORD).withBoosts(Stat.Pair.of(Stat.ATTACK, attack));
-    }
-
     //Elemental Defense
     public LootItem withElementalDefenseModifiers(ElementType.Pair... modifiers)
     {
@@ -156,9 +149,9 @@ public class LootItem
     }
 
     //Boosts
-    public LootItem withBoosts(Stat.Pair... boosts)
+    public LootItem addBoost(Stat stat, int boost)
     {
-        for(Stat.Pair pair : boosts) this.boosts.put(pair.stat, pair.value);
+        this.boosts.put(stat, boost);
         return this;
     }
 
