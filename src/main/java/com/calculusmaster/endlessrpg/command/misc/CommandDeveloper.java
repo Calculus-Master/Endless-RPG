@@ -54,6 +54,11 @@ public class CommandDeveloper extends Command
                     this.playerData.addLootItem(loot.getLootID());
                 }
                 case "clearbattles" -> Battle.BATTLES.clear();
+                case "reset" -> {
+                    Mongo.LootData.deleteMany(Filters.exists("lootID"));
+                    Mongo.CharacterData.deleteMany(Filters.exists("characterID"));
+                    Mongo.PlayerData.deleteOne(Filters.exists("playerID"));
+                }
                 default -> throw new IllegalStateException("Invalid Developer Command. Input: " + this.msg[0]);
             }
 
