@@ -64,6 +64,16 @@ public class RPGEquipment
         }
     }
 
+    public void remove(EquipmentType type)
+    {
+        this.setEquipmentID(type, LootItem.EMPTY.getLootID());
+    }
+
+    public void remove(String lootID)
+    {
+        for(EquipmentType type : EquipmentType.values()) if(this.getEquipmentID(type).equals(lootID)) this.remove(type);
+    }
+
     public LootItem getEquipmentLoot(EquipmentType type)
     {
         return LootItem.build(this.getEquipmentID(type));

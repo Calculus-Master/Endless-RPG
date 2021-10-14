@@ -27,7 +27,7 @@ public class CommandRemove extends Command
             if(active.getEquipment().getEquipmentID(slot).equals(LootItem.EMPTY.getLootID())) this.response = "Your active character does not have anything equipped in that slot!";
             else
             {
-                active.equipLoot(slot, LootItem.EMPTY.getLootID());
+                active.getEquipment().remove(slot);
                 active.updateEquipment();
 
                 this.response = "Unequipped the Loot in your active character's `" + Global.normalize(slot.toString().replaceAll("_", " ")) + "` slot!";

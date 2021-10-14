@@ -4,6 +4,7 @@ import com.calculusmaster.endlessrpg.command.activity.CommandAdventure;
 import com.calculusmaster.endlessrpg.command.activity.CommandAttack;
 import com.calculusmaster.endlessrpg.command.activity.CommandBattle;
 import com.calculusmaster.endlessrpg.command.character.*;
+import com.calculusmaster.endlessrpg.command.loot.CommandDelete;
 import com.calculusmaster.endlessrpg.command.loot.CommandInventory;
 import com.calculusmaster.endlessrpg.command.loot.CommandLootInfo;
 import com.calculusmaster.endlessrpg.command.misc.CommandBalance;
@@ -55,6 +56,9 @@ public class CommandHandler
 
         register("lootinfo", "li")
                 .setCommand(CommandLootInfo::new);
+
+        register("delete", "salvage")
+                .setCommand(CommandDelete::new);
 
         register("dev")
                 .setCommand(CommandDeveloper::new);
