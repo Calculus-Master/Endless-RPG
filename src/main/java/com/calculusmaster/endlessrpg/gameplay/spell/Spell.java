@@ -4,7 +4,9 @@ import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGElementalContainer;
 import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
+import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
+import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 
 public abstract class Spell
 {
@@ -21,6 +23,26 @@ public abstract class Spell
 
         int attack = user.getStat(Stat.ATTACK);
         int defense = target.getStat(Stat.DEFENSE);
+
+        //Weapon Affinity Stats
+        LootItem leftHand = user.getEquipment().getEquipmentLoot(EquipmentType.LEFT_HAND);
+        LootItem rightHand = user.getEquipment().getEquipmentLoot(EquipmentType.RIGHT_HAND);
+
+        if(!leftHand.isEmpty())
+        {
+            switch(leftHand.getLootType())
+            {
+                case SWORD -> attack += (int)(attack * (user.getStat(Stat.STRENGTH) / 100.0));
+            }
+        }
+
+        if(!rightHand.isEmpty())
+        {
+            switch(rightHand.getLootType())
+            {
+                case SWORD -> attack += (int)(attack * (user.getStat(Stat.STRENGTH) / 100.0));
+            }
+        }
 
         int damage = 0;
 

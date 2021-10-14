@@ -4,10 +4,15 @@ import com.calculusmaster.endlessrpg.util.Global;
 
 public enum Stat
 {
+    //Basic Stats
     HEALTH,
     ATTACK,
     DEFENSE,
-    SPEED;
+    SPEED,
+
+    //Weapon Affinity Stats
+    STRENGTH,
+    INTELLECT; //TODO: Add staves
 
     public static Stat cast(String input)
     {
