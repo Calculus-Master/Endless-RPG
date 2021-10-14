@@ -266,7 +266,7 @@ public class Adventure
         for(String s : results) finalResults.append(s).append("\n");
         finalResults.deleteCharAt(finalResults.length() - 1);
 
-        this.player.DM("***Adventure Completed! Here's what***`" + this.character.getName() + "` ***earned:***\n" + finalResults);
+        this.player.DM("***Adventure Completed! Here's what \"" + this.character.getName() + "\" earned:***\n" + finalResults);
 
         System.out.println("Event Log: " + this.eventLog + ", Results: " + results);
         Adventure.removeScheduler(this.character.getCharacterID());
