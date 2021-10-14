@@ -9,6 +9,7 @@ import com.calculusmaster.endlessrpg.command.loot.CommandInventory;
 import com.calculusmaster.endlessrpg.command.loot.CommandLootInfo;
 import com.calculusmaster.endlessrpg.command.misc.CommandBalance;
 import com.calculusmaster.endlessrpg.command.misc.CommandDeveloper;
+import com.calculusmaster.endlessrpg.command.misc.CommandSpellInfo;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -59,6 +60,9 @@ public class CommandHandler
 
         register("delete", "salvage")
                 .setCommand(CommandDelete::new);
+
+        register("spellinfo", "si")
+                .setCommand(CommandSpellInfo::new);
 
         register("dev")
                 .setCommand(CommandDeveloper::new);

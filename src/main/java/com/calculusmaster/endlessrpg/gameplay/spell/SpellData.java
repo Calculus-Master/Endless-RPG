@@ -38,9 +38,21 @@ public enum SpellData
         return this.spellRequirements;
     }
 
+    public static SpellData dataFromID(String spellID)
+    {
+        for(SpellData sd : values()) if(sd.getID().equals(spellID.toUpperCase())) return sd;
+        return null;
+    }
+
+    public static SpellData dataFromName(String name)
+    {
+        for(SpellData sd : values()) if(sd.getInstance().getName().equalsIgnoreCase(name)) return sd;
+        return null;
+    }
+
     public static Spell fromID(String spellID)
     {
-        for(SpellData sd : values()) if(sd.getID().equals(spellID)) return sd.getInstance();
+        for(SpellData sd : values()) if(sd.getID().equals(spellID.toUpperCase())) return sd.getInstance();
         return null;
     }
 }
