@@ -125,8 +125,8 @@ public class Adventure
 
                 if(win)
                 {
-                    if(r.nextInt(100) < 50) this.rewardGold += (this.level * 1000) * ((new Random().nextInt(100) + 1) / 100.0);
-                    if(r.nextInt(100) < 25) this.rewardXP += (this.level * 500) * ((new Random().nextInt(100) + 1) / 100.0);
+                    if(r.nextInt(100) < 50) this.rewardGold += (this.level * 150) * ((new Random().nextInt(100) + 1) / 100.0);
+                    if(r.nextInt(100) < 25) this.rewardXP += (this.level * 200) * ((new Random().nextInt(100) + 1) / 100.0);
                     if(r.nextInt(100) < 30)
                     {
                         LootItem stolenLoot = LootItem.build(enemy.getEquipment().asList().get(new Random().nextInt(enemy.getEquipment().asList().size())));
