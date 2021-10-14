@@ -181,7 +181,7 @@ public class RPGCharacter
     public void addChange(Stat s, int change)
     {
         LinkedHashMap<Stat, Integer> changes = this.getChanges();
-        changes.put(s, changes.get(s) + change);
+        changes.put(s, changes.getOrDefault(s, 0) + change);
         this.changes = Optional.of(changes);
     }
 
