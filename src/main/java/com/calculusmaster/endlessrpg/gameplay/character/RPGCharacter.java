@@ -300,6 +300,14 @@ public class RPGCharacter
         return this.spells.contains(spellID);
     }
 
+    public List<SpellData> availableSpells()
+    {
+        //TODO: Should include owned spells only
+        List<SpellData> out = new ArrayList<>();
+        for(SpellData spell : SpellData.values()) if(spell.getRequirements().check(this)) out.add(spell);
+        return out;
+    }
+
     public void setSpells(List<String> spells)
     {
         this.spells = spells;
