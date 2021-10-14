@@ -86,6 +86,6 @@ public class RPGEquipment
 
     public List<String> asList()
     {
-        return Arrays.stream(EquipmentType.values()).map(this::getEquipmentID).collect(Collectors.toList());
+        return Arrays.stream(EquipmentType.values()).map(this::getEquipmentID).filter(s -> !s.equals(LootItem.EMPTY.getLootID())).collect(Collectors.toList());
     }
 }
