@@ -52,6 +52,25 @@ public class Battle
         return b;
     }
 
+    public static boolean simulate(RPGCharacter characterPlayer, RPGCharacter characterAI)
+    {
+        Battle b = new Battle();
+
+        b.setBattleType(BattleType.PVE);
+
+        b.players = new ArrayList<>();
+        AIPlayer player = new AIPlayer().overrideTeam(characterPlayer);
+        AIPlayer AI = new AIPlayer().overrideTeam(characterAI);
+        b.players.add(player);
+        b.players.add(AI);
+
+        b.setup();
+
+        while(!b.isComplete()) b.submitAITurn();
+
+        return b.getWinner().ID.equals(player.ID);
+    }
+
     //External
 
     public static boolean isInBattle(String ID)

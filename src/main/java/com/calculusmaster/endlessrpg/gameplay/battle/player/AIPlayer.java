@@ -2,6 +2,8 @@ package com.calculusmaster.endlessrpg.gameplay.battle.player;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class AIPlayer extends AbstractPlayer
@@ -9,6 +11,15 @@ public class AIPlayer extends AbstractPlayer
     public AIPlayer()
     {
         super(generateID());
+    }
+
+    public AIPlayer overrideTeam(RPGCharacter... characters)
+    {
+        this.team = new ArrayList<>();
+        this.team.addAll(Arrays.asList(characters));
+        this.team.forEach(c -> c.forBattle(this));
+
+        return this;
     }
 
     @Override
