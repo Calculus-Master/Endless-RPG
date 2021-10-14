@@ -10,6 +10,7 @@ import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.spells.Spell;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Mongo;
+import com.calculusmaster.endlessrpg.util.helpers.LoggerHelper;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
@@ -407,6 +408,7 @@ public class RPGCharacter
     private void onLevelUp()
     {
         final Random r = new Random();
+        final StringBuilder message = new StringBuilder(this.getName() + " is now Level " + this.getLevel()).append("\nRewards Earned:\n");
 
         //Grant Core Stat
         List<Stat> coreStatPool = new ArrayList<>(Arrays.asList(Stat.values()));
@@ -422,6 +424,8 @@ public class RPGCharacter
         Stat s = coreStatPool.get(r.nextInt(coreStatPool.size()));
         this.stats.put(s, this.stats.get(s) + 1);
 
+        message.append("Core ").append(Global.normalize(s.toString())).append(" Improved!\n");
+
         //Grant Elemental Core Stat
         if(this.getLevel() % 20 == 0)
         {
@@ -430,7 +434,15 @@ public class RPGCharacter
 
             this.getCoreElementalDamage().increase(damage, 1 + this.getLevel() / 20);
             this.getCoreElementalDefense().increase(defense, 1 + this.getLevel() / 20);
+
+            message
+                    .append("Core ").append(Global.normalize(damage.toString())).append(" Damage & Core ")
+                    .append(Global.normalize(defense.toString())).append(" Defense Improved by ")
+                    .append(1 + this.getLevel() / 20).append("!\n");
         }
+
+        //TODO: DM Player level up rewards
+        LoggerHelper.info(this.getClass(), "Level Up Event (" + this.getCharacterID() + ")\n" + message);
     }
 
     public int getExpRequired(int targetLevel)
