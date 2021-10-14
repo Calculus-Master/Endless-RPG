@@ -6,27 +6,24 @@ import com.mongodb.BasicDBObject;
 import org.bson.Document;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RPGEquipment
 {
-    private String helmet;
-    private String chestplate;
-    private String gauntlets;
-    private String leggings;
-    private String boots;
-
-    private String leftHand;
-    private String rightHand;
+    private Map<EquipmentType, String> equipment;
 
     public RPGEquipment(Document equipment)
     {
+        this();
         for(EquipmentType type : EquipmentType.values()) this.setEquipmentID(type, equipment.getString(type.toString()));
     }
 
     public RPGEquipment()
     {
+        this.equipment = new HashMap<>();
         for(EquipmentType type : EquipmentType.values()) this.setEquipmentID(type, LootItem.EMPTY.getLootID());
     }
 
@@ -39,29 +36,12 @@ public class RPGEquipment
 
     public String getEquipmentID(EquipmentType type)
     {
-        return switch(type) {
-            case HELMET -> this.helmet;
-            case CHESTPLATE -> this.chestplate;
-            case GAUNTLETS -> this.gauntlets;
-            case LEGGINGS -> this.leggings;
-            case BOOTS -> this.boots;
-            case LEFT_HAND -> this.leftHand;
-            case RIGHT_HAND -> this.rightHand;
-        };
+        return this.equipment.get(type);
     }
 
     public void setEquipmentID(EquipmentType type, String lootID)
     {
-        switch(type)
-        {
-            case HELMET -> this.helmet = lootID;
-            case CHESTPLATE -> this.chestplate = lootID;
-            case GAUNTLETS -> this.gauntlets = lootID;
-            case LEGGINGS -> this.leggings = lootID;
-            case BOOTS -> this.boots = lootID;
-            case LEFT_HAND -> this.leftHand = lootID;
-            case RIGHT_HAND -> this.rightHand = lootID;
-        }
+        this.equipment.put(type, lootID);
     }
 
     public void remove(EquipmentType type)
