@@ -1,7 +1,10 @@
 package com.calculusmaster.endlessrpg.gameplay.adventure;
 
+import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
+import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
@@ -129,6 +132,62 @@ public class Adventure
         this.eventLog.add(event);
     }
 
+    private RPGCharacter createFairAI()
+    {
+        RPGCharacter ai = RPGCharacter.create("Adventure AI");
+
+        final Random r = new Random();
+
+        //Class - Not a Recruit
+        ai.setRPGClass(Arrays.copyOfRange(RPGClass.values(), 1, RPGClass.values().length)[r.nextInt(RPGClass.values().length - 1)]);
+
+        //Level
+        int targetLevel = Math.max(1, r.nextInt(2) + this.level - 1);
+        while(ai.getLevel() < targetLevel) ai.addExp(ai.getExpRequired(ai.getLevel() + 1));
+
+        //Weapon (TODO: Pick between different kinds of weapons)
+        int weaponLevel = ai.getLevel() + 1 + r.nextInt(3);
+        LootItem weapon = LootBuilder.rewardSword(weaponLevel);
+
+        weapon.upload();
+        if(weapon.getLootType().equals(LootType.SWORD)) ai.equipLoot(EquipmentType.RIGHT_HAND, weapon.getLootID());
+
+        //Armor
+        List<LootType> armorPool = Arrays.asList(LootType.HELMET, LootType.CHESTPLATE, LootType.GAUNTLETS, LootType.LEGGINGS, LootType.BOOTS);
+        int armorLevel = Math.max(1, ai.getLevel() - 1 + r.nextInt(3));
+        int armorCount;
+            if(this.level < 5) armorCount = 1;
+            else if(this.level < 15) armorCount = 2;
+            else if(this.level < 30) armorCount = 3;
+            else if(this.level < 50) armorCount = 4;
+            else armorCount = 5;
+        for(int i = 0; i < armorCount; i++)
+        {
+            LootType armorType = armorPool.get(i);
+            LootItem armor = switch(armorType) {
+                case HELMET -> LootBuilder.rewardHelmet(armorLevel);
+                case CHESTPLATE -> LootBuilder.rewardChestplate(armorLevel);
+                case GAUNTLETS -> LootBuilder.rewardGauntlets(armorLevel);
+                case LEGGINGS -> LootBuilder.rewardLeggings(armorLevel);
+                case BOOTS -> LootBuilder.rewardBoots(armorLevel);
+                default -> throw new IllegalStateException("Illegal armor type given to AI in Adventure!");
+            };
+
+            armor.upload();
+            ai.equipLoot(EquipmentType.values()[i], armor.getLootID());
+        }
+
+        return ai;
+    }
+
+    private void deleteAI(RPGCharacter AI)
+    {
+        for(EquipmentType type : EquipmentType.values())
+        {
+            String lootID = AI.getEquipment().getEquipmentID(type);
+            if(!lootID.equals(LootItem.EMPTY.getLootID())) LootItem.delete(lootID);
+        }
+    }
 
     //Complete the Adventure and give out Rewards
     public void end()
@@ -136,6 +195,36 @@ public class Adventure
         if(this.eventLog.isEmpty()) this.executeEvent(AdventureEvent.EARN_XP);
 
         List<String> results = new ArrayList<>();
+
+        //Must defeat Bot to receive rewards! Mini Boss is slightly more difficult than other enemies that appear in Adventures
+        this.level += 2;
+
+        RPGCharacter miniBoss = this.createFairAI();
+        boolean win = Battle.simulate(this.character, miniBoss);
+
+        if(win)
+        {
+            this.rewardGold *= 1.5;
+            this.rewardXP *= 1.5;
+
+            //TODO: Add extra rewards for defeating Mini Boss
+            results.add("**Mini Boss:** `Battle Won`! Adventure Gold and XP rewards were boosted!");
+        }
+        else
+        {
+            this.rewardGold *= 0.5;
+            this.rewardXP *= 0.5;
+
+            this.rewardLoot = new ArrayList<>();
+            this.rewardCoreStat = new HashMap<>();
+
+            //TODO: Add extra negative effects for losing to Mini Boss at higher levels (?)
+            results.add("**Mini Boss:** `Battle Lost`! Adventure Gold and XP rewards were reduced! Other earnings were surrendered to the Mini Boss...");
+        }
+
+        this.deleteAI(miniBoss);
+
+        this.level -= 2;
 
         if(this.rewardGold > 0)
         {
