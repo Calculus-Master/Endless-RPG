@@ -30,8 +30,8 @@ public abstract class Spell
         //Equipment
         for(ElementType element : ElementType.values())
         {
-            int eATK = userElementalDamage.getRaw(element);
-            int eDEF = targetElementalDefense.getRaw(element);
+            int eATK = userElementalDamage.get(element);
+            int eDEF = targetElementalDefense.get(element);
 
             damage += Math.max(0, eATK - eDEF);
         }
@@ -39,8 +39,8 @@ public abstract class Spell
         //Core Elemental Stats
         for(ElementType element : ElementType.values())
         {
-            int eATK = (int)(user.getCoreElementalDamage().get(element) * attack);
-            int eDEF = (int)(target.getCoreElementalDefense().get(element) * defense);
+            int eATK = (int)(user.getCoreElementalDamage().percent(element) * attack);
+            int eDEF = (int)(target.getCoreElementalDefense().percent(element) * defense);
 
             damage += Math.max(0, eATK - eDEF);
         }

@@ -38,7 +38,7 @@ public class CommandDelete extends Command
                     character.updateEquipment();
                 }
 
-                int goldReward = (new Random().nextInt(5) + 1) * loot.getBoosts().values().stream().mapToInt(x -> x).sum() + Arrays.stream(ElementType.values()).mapToInt(e -> loot.getElementalDamage().getRaw(e) + loot.getElementalDefense().getRaw(e)).sum();
+                int goldReward = (new Random().nextInt(5) + 1) * loot.getBoosts().values().stream().mapToInt(x -> x).sum() + Arrays.stream(ElementType.values()).mapToInt(e -> loot.getElementalDamage().get(e) + loot.getElementalDefense().get(e)).sum();
                 this.playerData.addGold(goldReward);
 
                 LootItem.delete(loot.getLootID());

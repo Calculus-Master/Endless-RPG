@@ -48,15 +48,15 @@ public class RPGElementalContainer
 
     public void combine(RPGElementalContainer other)
     {
-        for(ElementType element : ElementType.values()) this.increase(element, other.getRaw(element));
+        for(ElementType element : ElementType.values()) this.increase(element, other.get(element));
     }
 
-    public double get(ElementType element)
+    public double percent(ElementType element)
     {
-        return this.getRaw(element) / 100.;
+        return this.get(element) / 100.;
     }
 
-    public int getRaw(ElementType element)
+    public int get(ElementType element)
     {
         return this.elementValues.get(element);
     }

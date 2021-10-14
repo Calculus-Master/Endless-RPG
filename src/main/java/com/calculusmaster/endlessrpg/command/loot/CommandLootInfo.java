@@ -62,7 +62,7 @@ public class CommandLootInfo extends Command
     private MessageEmbed.Field getElementalModifierField(String name, RPGElementalContainer container)
     {
         StringBuilder elements = new StringBuilder();
-        for(ElementType e : ElementType.values()) if(container.getRaw(e) != 0) elements.append(e.getIcon().getAsMention()).append(": ").append(this.formatNumber(container.getRaw(e))).append("\n");
+        for(ElementType e : ElementType.values()) if(container.get(e) != 0) elements.append(e.getIcon().getAsMention()).append(": ").append(this.formatNumber(container.get(e))).append("\n");
 
         if(!elements.isEmpty()) elements.deleteCharAt(elements.length() - 1);
         else elements.append("None");
