@@ -10,6 +10,7 @@ import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
+import com.calculusmaster.endlessrpg.util.helpers.LoggerHelper;
 
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -323,6 +324,14 @@ public class Adventure
             long nextEvent = END_TIMES.get(this.character.getCharacterID()).getDelay(TimeUnit.SECONDS);
             int minutes = (int)(nextEvent / 60);
             int seconds = (int)(nextEvent % 60);
+
+            if(nextEvent < 0)
+            {
+                LoggerHelper.error(this.getClass(), "Adventure failed to complete! Event Log{%s}, Length{%s}, Progress{%s}, Level{%s}, Scheduler{%s}".formatted(this.eventLog, this.length, this.progress, this.level, END_TIMES.get(this.character.getCharacterID())));
+                Adventure.removeScheduler(this.character.getCharacterID());
+                ADVENTURES.remove(this);
+                return "An error occurred with your Adventure! Forcefully ending it.";
+            }
 
             return "\nNext Event in **" + minutes + "M " + seconds + "S**\nEvent Progress: " + this.progress + " / " + this.length + "\nTotal Time Required: **" + (this.length * 15) + "**M!";
         }
