@@ -34,6 +34,8 @@ public class LootItem
         EMPTY.setLootType(LootType.NONE);
         EMPTY.setName("NONE");
         EMPTY.setBoosts();
+        EMPTY.setElementalDamage();
+        EMPTY.setElementalDefense();
     }
 
     public static LootItem build(String lootID)
