@@ -4,7 +4,7 @@ import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.adventure.Adventure;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.util.Random;
+import java.util.SplittableRandom;
 
 public class CommandAdventure extends Command
 {
@@ -34,8 +34,8 @@ public class CommandAdventure extends Command
             {
                 int activeLevel = this.playerData.getActiveCharacter().getLevel();
 
-                int length = new Random().nextInt(3) + 4;
-                int level = new Random().nextInt(100) < 25 ? activeLevel + 1 : activeLevel;
+                int length = new SplittableRandom().nextInt(4, 7);
+                int level = new SplittableRandom().nextInt(100) < 25 ? activeLevel + 1 : activeLevel;
                 Adventure a = Adventure.create(this.playerData, length, level);
 
                 a.start();

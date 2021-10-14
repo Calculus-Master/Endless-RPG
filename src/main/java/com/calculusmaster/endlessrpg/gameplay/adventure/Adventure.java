@@ -80,8 +80,8 @@ public class Adventure
 
         switch(event)
         {
-            case EARN_GOLD -> this.rewardGold += (new Random().nextInt(this.level) * 100 + this.level * 5);
-            case EARN_XP -> this.rewardXP += (new Random().nextInt(this.level) * 100 + this.level * 10);
+            case EARN_GOLD -> this.rewardGold += (new SplittableRandom().nextInt(this.level) * 100 + this.level * 5);
+            case EARN_XP -> this.rewardXP += (new SplittableRandom().nextInt(this.level) * 100 + this.level * 10);
             case EARN_LOOT -> {
                 final int amount;
                 if(this.level < 30) amount = 1;
@@ -92,7 +92,7 @@ public class Adventure
                 for(int i = 0; i < amount; i++) this.rewardLoot.add(LootBuilder.reward(LootType.getRandom(), this.level));
             }
             case EARN_CORE_STAT -> {
-                final Random r = new Random();
+                final SplittableRandom r = new SplittableRandom();
 
                 int rNum = r.nextInt(100);
 
@@ -119,18 +119,18 @@ public class Adventure
                 }
             }
             case BATTLE_ENEMY -> {
-                final Random r = new Random();
+                final SplittableRandom r = new SplittableRandom();
                 RPGCharacter enemy = this.createFairAI();
 
                 boolean win = Battle.simulate(this.character, enemy);
 
                 if(win)
                 {
-                    if(r.nextInt(100) < 50) this.rewardGold += (this.level * 150) * ((new Random().nextInt(100) + 1) / 100.0);
-                    if(r.nextInt(100) < 25) this.rewardXP += (this.level * 200) * ((new Random().nextInt(100) + 1) / 100.0);
+                    if(r.nextInt(100) < 50) this.rewardGold += (this.level * 150) * ((r.nextInt(100) + 1) / 100.0);
+                    if(r.nextInt(100) < 25) this.rewardXP += (this.level * 200) * ((r.nextInt(100) + 1) / 100.0);
                     if(r.nextInt(100) < 30)
                     {
-                        LootItem stolenLoot = LootItem.build(enemy.getEquipment().asList().get(new Random().nextInt(enemy.getEquipment().asList().size())));
+                        LootItem stolenLoot = LootItem.build(enemy.getEquipment().asList().get(r.nextInt(enemy.getEquipment().asList().size())));
                         LootItem.delete(stolenLoot.getLootID());
                         enemy.getEquipment().remove(stolenLoot.getLootID());
 
@@ -139,8 +139,8 @@ public class Adventure
                 }
                 else
                 {
-                    if(r.nextInt(100) < 25) this.rewardGold *= (new Random().nextInt(100) + 1) / 100.0;
-                    if(r.nextInt(100) < 10) this.rewardXP *= (new Random().nextInt(100) + 1) / 100.0;
+                    if(r.nextInt(100) < 25) this.rewardGold *= (r.nextInt(100) + 1) / 100.0;
+                    if(r.nextInt(100) < 10) this.rewardXP *= (r.nextInt(100) + 1) / 100.0;
                 }
 
                 this.deleteAI(enemy);
@@ -154,7 +154,7 @@ public class Adventure
     {
         RPGCharacter ai = RPGCharacter.create("Adventure AI");
 
-        final Random r = new Random();
+        final SplittableRandom r = new SplittableRandom();
 
         //Class - Not a Recruit
         ai.setRPGClass(Arrays.copyOfRange(RPGClass.values(), 1, RPGClass.values().length)[r.nextInt(RPGClass.values().length - 1)]);
@@ -220,9 +220,9 @@ public class Adventure
 
             results.add("**Mini Boss:** `Battle Won`! Adventure Gold and XP rewards were boosted!");
 
-            if(new Random().nextInt(100) < 20)
+            if(new SplittableRandom().nextInt(100) < 20)
             {
-                String stolenLoot = miniBoss.getEquipment().asList().get(new Random().nextInt(miniBoss.getEquipment().asList().size()));
+                String stolenLoot = miniBoss.getEquipment().asList().get(new SplittableRandom().nextInt(miniBoss.getEquipment().asList().size()));
 
                 miniBoss.getEquipment().remove(stolenLoot);
                 this.player.addLootItem(stolenLoot);
@@ -386,7 +386,7 @@ public class Adventure
             List<AdventureEvent> pool = new ArrayList<>();
             for(AdventureEvent event : AdventureEvent.values()) for(int i = 0; i < event.weight; i++) pool.add(event);
 
-            return pool.get(new Random().nextInt(pool.size()));
+            return pool.get(new SplittableRandom().nextInt(pool.size()));
         }
     }
 }
