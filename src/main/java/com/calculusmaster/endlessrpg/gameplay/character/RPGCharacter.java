@@ -367,7 +367,7 @@ public class RPGCharacter
             stat = core + boost + loot;
         }
 
-        int change = this.getStatChanges().get(s);
+        int change = this.getStatChanges().getOrDefault(s, 0);
 
         return stat + change;
     }
