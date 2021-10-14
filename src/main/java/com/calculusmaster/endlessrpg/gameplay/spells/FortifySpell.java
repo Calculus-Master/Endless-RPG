@@ -11,7 +11,7 @@ public class FortifySpell extends Spell
     {
         int defenseBoost = (int)(0.2 * user.getStat(Stat.DEFENSE));
 
-        user.addStatChange(Stat.DEFENSE, defenseBoost);
+        user.addChange(Stat.DEFENSE, defenseBoost);
 
         return user.getName() + " fortified their Defense by 20%!";
     }
