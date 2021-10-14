@@ -192,8 +192,19 @@ public class Adventure
             this.rewardGold *= 1.5;
             this.rewardXP *= 1.5;
 
-            //TODO: Add extra rewards for defeating Mini Boss
             results.add("**Mini Boss:** `Battle Won`! Adventure Gold and XP rewards were boosted!");
+
+            if(new Random().nextInt(100) < 20)
+            {
+                String stolenLoot = miniBoss.getEquipment().asList().get(new Random().nextInt(miniBoss.getEquipment().asList().size()));
+
+                miniBoss.getEquipment().remove(stolenLoot);
+                this.player.addLootItem(stolenLoot);
+
+                //TODO: Maybe add a flag or rarity value so the player can easily tell what loot was from the mini boss?
+
+                results.add("*A piece of loot was stolen from the Mini Boss!*");
+            }
         }
         else
         {
