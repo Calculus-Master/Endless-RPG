@@ -4,11 +4,15 @@ import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.util.Global;
+import com.mongodb.BasicDBObject;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class RPGCharacterRequirements
 {
@@ -26,6 +30,80 @@ public class RPGCharacterRequirements
         this.coreStat = new HashMap<>();
         this.elementalDamage = new HashMap<>();
         this.elementalDefense = new HashMap<>();
+    }
+
+    public BasicDBObject serialized()
+    {
+        BasicDBObject data = new BasicDBObject();
+
+        data.put("level", this.level);
+        data.put("class", this.clazz);
+        data.put("stat", serializeMap(this.stat));
+        data.put("core_stat", serializeMap(this.coreStat));
+        data.put("elemental_damage", serializeMap(this.elementalDamage));
+        data.put("elemental_defense", serializeMap(this.elementalDefense));
+
+        return data;
+    }
+
+    public static RPGCharacterRequirements read(Document document)
+    {
+        RPGCharacterRequirements req = new RPGCharacterRequirements();
+
+        req.level = document.getInteger("level");
+        req.clazz = document.getList("class", String.class).stream().map(RPGClass::cast).collect(Collectors.toList());
+        req.stat = readSerializedMap(document.get("stat", Document.class), Stat::cast);
+        req.coreStat = readSerializedMap(document.get("core_stat", Document.class), Stat::cast);
+        req.elementalDamage = readSerializedMap(document.get("elemental_damage", Document.class), ElementType::cast);
+        req.elementalDefense = readSerializedMap(document.get("elemental_defense", Document.class), ElementType::cast);
+
+        return req;
+    }
+
+    private static <E extends Enum<E>> BasicDBObject serializeMap(Map<E, Integer> map)
+    {
+        BasicDBObject out = new BasicDBObject();
+        for(Map.Entry<E, Integer> e : map.entrySet()) out.put(e.getKey().toString(), e.getValue());
+        return out;
+    }
+
+    private static <E extends Enum<E>> Map<E, Integer> readSerializedMap(Document document, Function<String, E> caster)
+    {
+        Map<E, Integer> out = new HashMap<>();
+
+        document.forEach((stat, value) -> out.put(caster.apply(stat), (Integer)value));
+
+        return out;
+    }
+
+    public int getLevel()
+    {
+        return this.level;
+    }
+
+    public List<RPGClass> getClasses()
+    {
+        return this.clazz;
+    }
+
+    public Map<Stat, Integer> getStat()
+    {
+        return this.stat;
+    }
+
+    public Map<Stat, Integer> getCoreStat()
+    {
+        return this.coreStat;
+    }
+
+    public Map<ElementType, Integer> getElementalDamage()
+    {
+        return this.elementalDamage;
+    }
+
+    public Map<ElementType, Integer> getElementalDefense()
+    {
+        return this.elementalDefense;
     }
 
     public RPGCharacterRequirements addLevel(int level)

@@ -33,7 +33,8 @@ public class CommandLootInfo extends Command
                 this.embed
                         .addField("Type", Global.normalize(loot.getLootType().toString()), true)
                         .addField("Equipment Slot", loot.getLootType().isArmor() ? Global.normalize(loot.getLootType().getCore().toString()) : "Left/Right Hand", true)
-                        .addField("Requirements", "Level: " + loot.getRequiredLevel(), true) //TODO: Add more requirements (fully fledged - defense, elements, etc)
+                        .addBlankField(true)
+                        .addField("Requirements", "Level: " + loot.getRequirements().getOverview(), false)
                         .addField(this.getStatModifierField(loot))
                         .addField(this.getElementalModifierField("Elemental Damage Modifiers", loot.getElementalDamage()))
                         .addField(this.getElementalModifierField("Elemental Defense Modifiers", loot.getElementalDefense()));

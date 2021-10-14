@@ -1,5 +1,6 @@
 package com.calculusmaster.endlessrpg.gameplay.loot;
 
+import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacterRequirements;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGElementalContainer;
 import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
@@ -12,6 +13,7 @@ import org.bson.Document;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 public class LootItem
@@ -19,10 +21,10 @@ public class LootItem
     private String lootID;
     private LootType lootType;
     private String name;
-    private int requiredLevel;
     private LinkedHashMap<Stat, Integer> boosts;
     private RPGElementalContainer elementalDamage;
     private RPGElementalContainer elementalDefense;
+    private RPGCharacterRequirements requirements;
 
     private LootItem() {}
 
@@ -36,23 +38,24 @@ public class LootItem
         EMPTY.setBoosts();
         EMPTY.setElementalDamage();
         EMPTY.setElementalDefense();
+        EMPTY.setRequirements();
     }
 
     public static LootItem build(String lootID)
     {
         if(lootID.equals(EMPTY.getLootID())) return EMPTY;
 
-        Document data = Mongo.LootData.find(Filters.eq("lootID", lootID)).first();
+        Document data = Objects.requireNonNull(Mongo.LootData.find(Filters.eq("lootID", lootID)).first());
 
         LootItem loot = new LootItem();
 
         loot.setLootID(lootID);
         loot.setLootType(LootType.cast(data.getString("type")));
         loot.setName(data.getString("name"));
-        loot.setRequiredLevel(data.getInteger("requiredLevel"));
         loot.setBoosts(data.get("boosts", Document.class));
         loot.setElementalDamage(data.get("elementalDamage", Document.class));
         loot.setElementalDefense(data.get("elementalDefense", Document.class));
+        loot.setRequirements(data.get("requirements", Document.class));
 
         return loot;
     }
@@ -64,7 +67,6 @@ public class LootItem
         loot.setLootID();
         loot.setLootType(type);
         loot.setName(type.getRandomName());
-        loot.setRequiredLevel(0);
         loot.setBoosts();
         loot.setElementalDamage();
         loot.setElementalDefense();
@@ -78,10 +80,10 @@ public class LootItem
                 .append("lootID", this.lootID)
                 .append("type", this.lootType.toString())
                 .append("name", this.name)
-                .append("requiredLevel", this.requiredLevel)
                 .append("boosts", Global.coreStatsDB(this.boosts))
                 .append("elementalDamage", this.elementalDamage.serialized())
-                .append("elementalDefense", this.elementalDefense.serialized());
+                .append("elementalDefense", this.elementalDefense.serialized())
+                .append("requirements", this.requirements.serialized());
 
         Mongo.LootData.insertOne(data);
     }
@@ -104,6 +106,22 @@ public class LootItem
     public void updateElementalDefense()
     {
         Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("elementalDefense", this.elementalDefense.serialized()));
+    }
+
+    //Requirements
+    public void setRequirements(Document document)
+    {
+        this.requirements = RPGCharacterRequirements.read(document);
+    }
+
+    public void setRequirements()
+    {
+        this.requirements = new RPGCharacterRequirements();
+    }
+
+    public RPGCharacterRequirements getRequirements()
+    {
+        return this.requirements;
     }
 
     //Elemental Defense
@@ -196,17 +214,6 @@ public class LootItem
     public LootType getLootType()
     {
         return this.lootType;
-    }
-
-    //Required Level
-    private void setRequiredLevel(int requiredLevel)
-    {
-        this.requiredLevel = requiredLevel;
-    }
-
-    public int getRequiredLevel()
-    {
-	    return this.requiredLevel;
     }
 
     //Name
