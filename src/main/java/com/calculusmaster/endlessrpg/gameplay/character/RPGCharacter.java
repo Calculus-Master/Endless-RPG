@@ -42,6 +42,7 @@ public class RPGCharacter
 
     private Optional<Integer> health = Optional.empty();
     private Optional<AbstractPlayer> owner = Optional.empty();
+    private Optional<LinkedHashMap<Stat, Integer>> statChanges = Optional.empty();
 
     //Use Factory methods!
     private RPGCharacter() {}
@@ -91,6 +92,8 @@ public class RPGCharacter
         this.setOwner(owner);
 
         this.setMaxHealth();
+
+        this.setStatChanges();
     }
 
     //Updates
@@ -161,6 +164,24 @@ public class RPGCharacter
     public void updateCoreElementalDefense()
     {
         this.update(Updates.set("coreElementalDefense", this.coreElementalDefense.serialized()));
+    }
+
+    //Stat Changes
+    public LinkedHashMap<Stat, Integer> getStatChanges()
+    {
+        return this.statChanges.orElse(new LinkedHashMap<>());
+    }
+
+    public void setStatChanges()
+    {
+        this.statChanges = Optional.of(new LinkedHashMap<>());
+    }
+
+    public void addStatChange(Stat s, int change)
+    {
+        LinkedHashMap<Stat, Integer> changes = this.getStatChanges();
+        changes.put(s, changes.get(s) + change);
+        this.statChanges = Optional.of(changes);
     }
 
     //Owner
@@ -334,14 +355,20 @@ public class RPGCharacter
 
         boost *= level;
 
+        int stat;
+
         if(s.equals(Stat.HEALTH))
         {
-            return 10 + (core * 10) + (boost * 5) + loot;
+            stat = 10 + (core * 10) + (boost * 5) + loot;
         }
         else
         {
-            return core + boost + loot;
+            stat = core + boost + loot;
         }
+
+        int change = this.getStatChanges().get(s);
+
+        return stat + change;
     }
 
     //Stats - Core
