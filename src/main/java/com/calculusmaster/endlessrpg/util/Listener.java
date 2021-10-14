@@ -3,7 +3,6 @@ package com.calculusmaster.endlessrpg.util;
 import com.calculusmaster.endlessrpg.command.core.CommandHandler;
 import com.calculusmaster.endlessrpg.mongo.ServerDataQuery;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -24,7 +23,9 @@ public class Listener extends ListenerAdapter
         //If any attachment is sent, skip the listener
         if(event.getMessage().getAttachments().size() > 0) return;
 
-        User player = event.getAuthor();
+        //Ignore DMs (temporary?)
+        if(!event.isFromGuild()) return;
+
         Guild server = event.getGuild();
         String msg = event.getMessage().getContentRaw().trim();
 
