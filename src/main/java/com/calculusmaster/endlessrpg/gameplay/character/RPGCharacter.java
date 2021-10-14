@@ -32,6 +32,8 @@ public class RPGCharacter
     private final LinkedHashMap<Stat, Integer> stats = new LinkedHashMap<>();
     private RPGEquipment equipment;
     private List<String> spells;
+    private RPGElementalContainer coreElementalDamage;
+    private RPGElementalContainer coreElementalDefense;
 
     //Battle Only Fields
 
@@ -54,6 +56,8 @@ public class RPGCharacter
         c.setCoreStats();
         c.setEquipment();
         c.setSpells();
+        c.setCoreElementalDamage();
+        c.setCoreElementalDefense();
 
         return c;
     }
@@ -72,6 +76,8 @@ public class RPGCharacter
         c.setCoreStats(data.get("stats", Document.class));
         c.setEquipment(data.get("equipment", Document.class));
         c.setSpells(data.getList("spells", String.class));
+        c.setCoreElementalDamage(data.get("coreElementalDamage", Document.class));
+        c.setCoreElementalDefense(data.get("coreElementalDefense", Document.class));
 
         return c;
     }
@@ -142,6 +148,16 @@ public class RPGCharacter
         this.update(Updates.set("spells", this.spells));
     }
 
+    public void updateCoreElementalDamage()
+    {
+        this.update(Updates.set("coreElementalDamage", this.coreElementalDamage.serialized()));
+    }
+
+    public void updateCoreElementalDefense()
+    {
+        this.update(Updates.set("coreElementalDefense", this.coreElementalDefense.serialized()));
+    }
+
     //Owner
     public AbstractPlayer getOwner()
     {
@@ -197,6 +213,38 @@ public class RPGCharacter
     public boolean isDefeated()
     {
         return this.getHealth() <= 0;
+    }
+
+    //Core Elemental Defense
+    public void setCoreElementalDefense(Document defense)
+    {
+        this.coreElementalDefense = new RPGElementalContainer(defense);
+    }
+
+    public void setCoreElementalDefense()
+    {
+        this.coreElementalDefense = new RPGElementalContainer();
+    }
+
+    public RPGElementalContainer getCoreElementalDefense()
+    {
+        return this.coreElementalDefense;
+    }
+
+    //Core Elemental Damage
+    public void setCoreElementalDamage(Document damage)
+    {
+        this.coreElementalDamage = new RPGElementalContainer(damage);
+    }
+
+    public void setCoreElementalDamage()
+    {
+        this.coreElementalDamage = new RPGElementalContainer();
+    }
+
+    public RPGElementalContainer getCoreElementalDamage()
+    {
+        return this.coreElementalDamage;
     }
 
     //Spells
