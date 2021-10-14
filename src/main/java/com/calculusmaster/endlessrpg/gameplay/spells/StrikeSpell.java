@@ -5,11 +5,6 @@ import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 
 public class StrikeSpell extends Spell
 {
-    public StrikeSpell()
-    {
-        super("Strike");
-    }
-
     @Override
     public String execute(RPGCharacter user, RPGCharacter target, RPGCharacter[] battlers, Battle battle)
     {
@@ -18,5 +13,17 @@ public class StrikeSpell extends Spell
         target.damage(damage);
 
         return user.getName() + " attacked " + target.getName() + " and dealt " + damage + " damage!";
+    }
+
+    @Override
+    public String getName()
+    {
+        return "Strike";
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Simple Attack on the target.";
     }
 }

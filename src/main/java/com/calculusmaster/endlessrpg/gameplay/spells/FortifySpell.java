@@ -6,11 +6,6 @@ import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 
 public class FortifySpell extends Spell
 {
-    public FortifySpell()
-    {
-        super("Fortify");
-    }
-
     @Override
     public String execute(RPGCharacter user, RPGCharacter target, RPGCharacter[] battlers, Battle battle)
     {
@@ -19,5 +14,17 @@ public class FortifySpell extends Spell
         user.addStatChange(Stat.DEFENSE, defenseBoost);
 
         return user.getName() + " fortified their Defense by 20%!";
+    }
+
+    @Override
+    public String getName()
+    {
+        return "Fortify";
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Boosts Defense by 20%.";
     }
 }

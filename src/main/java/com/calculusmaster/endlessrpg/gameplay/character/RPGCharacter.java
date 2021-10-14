@@ -8,6 +8,7 @@ import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.spells.Spell;
+import com.calculusmaster.endlessrpg.gameplay.spells.SpellData;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Mongo;
@@ -276,12 +277,12 @@ public class RPGCharacter
     //Spells
     public List<Spell> getSpells()
     {
-        return this.spells.stream().map(Spell::parse).collect(Collectors.toList());
+        return this.spells.stream().map(SpellData::fromID).collect(Collectors.toList());
     }
 
     public Spell getSpell(int index)
     {
-        return Spell.parse(this.spells.get(index));
+        return SpellData.fromID(this.spells.get(index));
     }
 
     public void addSpell(String spellID)
@@ -307,7 +308,7 @@ public class RPGCharacter
     public void setSpells()
     {
         this.spells = new ArrayList<>();
-        this.spells.add(Spell.SIMPLE_ATTACK_SPELL_ID);
+        this.spells.add(SpellData.STRIKE.getID());
     }
 
     //Equipment

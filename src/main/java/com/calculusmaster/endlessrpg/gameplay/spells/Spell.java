@@ -8,14 +8,11 @@ import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 
 public abstract class Spell
 {
-    private String name;
-
-    public Spell(String name)
-    {
-        this.name = name;
-    }
-
     public abstract String execute(RPGCharacter user, RPGCharacter target, RPGCharacter[] battlers, Battle battle);
+
+    public abstract String getName();
+
+    public abstract String getDescription();
 
     protected int calculateDamage(RPGCharacter user, RPGCharacter target)
     {
@@ -49,18 +46,5 @@ public abstract class Spell
         damage += Math.max(0, attack - defense);
 
         return damage;
-    }
-
-    //ID Mappings
-    public static final String SIMPLE_ATTACK_SPELL_ID = "DEFAULT_ATTACK";
-    public static final String FORTIFY_SPELL_ID = "FORTIFY";
-
-    public static Spell parse(String spellID)
-    {
-        return switch(spellID) {
-            case SIMPLE_ATTACK_SPELL_ID -> new StrikeSpell();
-            case FORTIFY_SPELL_ID -> new FortifySpell();
-            default -> new StrikeSpell();
-        };
     }
 }
