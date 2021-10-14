@@ -80,7 +80,7 @@ public class Adventure
 
         switch(event)
         {
-            case EARN_GOLD -> this.rewardGold += (new Random().nextInt(this.level) * 150 + this.level * 5);
+            case EARN_GOLD -> this.rewardGold += (new Random().nextInt(this.level) * 100 + this.level * 5);
             case EARN_XP -> this.rewardXP += (new Random().nextInt(this.level) * 100 + this.level * 10);
             case EARN_LOOT -> {
                 final Random r = new Random();
