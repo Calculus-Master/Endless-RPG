@@ -13,15 +13,12 @@ import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.helpers.LoggerHelper;
 
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class Adventure
 {
-    public static int ADVENTURE_EVENT_INTERVAL = 15 * 60;
+    public static int ADVENTURE_EVENT_INTERVAL = 15;
 
     public static final List<Adventure> ADVENTURES = new ArrayList<>();
     public static final Map<String, ScheduledFuture<?>> END_TIMES = new HashMap<>();
@@ -89,7 +86,7 @@ public class Adventure
                 final Random r = new Random();
                 LootType lootType;
 
-                do { lootType = LootType.values()[LootType.values().length]; }
+                do { lootType = LootType.values()[r.nextInt(LootType.values().length)]; }
                 while(lootType.equals(LootType.NONE));
 
                 LootItem earned = switch(lootType) {
@@ -330,6 +327,11 @@ public class Adventure
             if(nextEvent < 0)
             {
                 LoggerHelper.error(this.getClass(), "Adventure failed to complete! Event Log{%s}, Length{%s}, Progress{%s}, Level{%s}, Scheduler{%s}".formatted(this.eventLog, this.length, this.progress, this.level, END_TIMES.get(this.character.getCharacterID())));
+                try {
+                    END_TIMES.get(this.character.getCharacterID()).get();
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                }
                 Adventure.removeScheduler(this.character.getCharacterID());
                 ADVENTURES.remove(this);
                 return "An error occurred with your Adventure! Forcefully ending it.";
