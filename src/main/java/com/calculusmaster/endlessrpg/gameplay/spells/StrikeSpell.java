@@ -3,11 +3,11 @@ package com.calculusmaster.endlessrpg.gameplay.spells;
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 
-public class SimpleAttackSpell extends Spell
+public class StrikeSpell extends Spell
 {
-    public SimpleAttackSpell()
+    public StrikeSpell()
     {
-        super("Attack");
+        super("Strike");
     }
 
     @Override

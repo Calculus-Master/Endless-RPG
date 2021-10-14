@@ -58,9 +58,9 @@ public abstract class Spell
     public static Spell parse(String spellID)
     {
         return switch(spellID) {
-            case SIMPLE_ATTACK_SPELL_ID -> new SimpleAttackSpell();
+            case SIMPLE_ATTACK_SPELL_ID -> new StrikeSpell();
             case FORTIFY_SPELL_ID -> new FortifySpell();
-            default -> new SimpleAttackSpell();
+            default -> new StrikeSpell();
         };
     }
 }

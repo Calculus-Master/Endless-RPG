@@ -5,8 +5,8 @@ import com.calculusmaster.endlessrpg.gameplay.battle.player.AbstractPlayer;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.UserPlayer;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
-import com.calculusmaster.endlessrpg.gameplay.spells.SimpleAttackSpell;
 import com.calculusmaster.endlessrpg.gameplay.spells.Spell;
+import com.calculusmaster.endlessrpg.gameplay.spells.StrikeSpell;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -219,7 +219,7 @@ public class Battle
                 possibleTargets.add(i);
 
             //TODO: Random spell from list of spells
-        this.submitTurn(possibleTargets.get(new Random().nextInt(possibleTargets.size())), new SimpleAttackSpell());
+        this.submitTurn(possibleTargets.get(new Random().nextInt(possibleTargets.size())), new StrikeSpell());
     }
 
     //Battle Setup - Common
