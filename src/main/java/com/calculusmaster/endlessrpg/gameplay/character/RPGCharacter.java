@@ -8,6 +8,7 @@ import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.spells.Spell;
+import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.mongodb.client.model.Filters;
@@ -16,6 +17,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.*;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class RPGCharacter
@@ -423,7 +425,10 @@ public class RPGCharacter
                     .append(1 + this.getLevel() / 20).append("!\n");
         }
 
-        //TODO: DM Player level up rewards
+        Executors.newSingleThreadExecutor().execute(() -> Mongo.PlayerData.find().forEach(d -> {
+            if(d.getList("characters", String.class).contains(this.getCharacterID())) new PlayerDataQuery(d.getString("playerID")).DM(message.toString());
+        }));
+
         //LoggerHelper.info(this.getClass(), "Level Up Event (" + this.getCharacterID() + ")\n" + message);
     }
 
