@@ -16,6 +16,19 @@ public class LootBuilder
         Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> r.setSeed(System.nanoTime()), 1, 10, TimeUnit.MINUTES);
     }
 
+    public static LootItem reward(LootType type, int level)
+    {
+        return switch(type) {
+            case SWORD -> LootBuilder.rewardSword(level);
+            case HELMET -> LootBuilder.rewardHelmet(level);
+            case CHESTPLATE -> LootBuilder.rewardChestplate(level);
+            case GAUNTLETS -> LootBuilder.rewardGauntlets(level);
+            case LEGGINGS -> LootBuilder.rewardLeggings(level);
+            case BOOTS -> LootBuilder.rewardBoots(level);
+            case NONE -> throw new IllegalStateException("Unexpected Loot Type \"NONE\" in LootBuilder!");
+        };
+    }
+
     private static int rand(int min, int max) { return r.nextInt(max - min + 1) + min; }
 
     public static LootItem rewardSword(int level)

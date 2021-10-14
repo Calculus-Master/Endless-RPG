@@ -89,15 +89,7 @@ public class Adventure
                 do { lootType = LootType.values()[r.nextInt(LootType.values().length)]; }
                 while(lootType.equals(LootType.NONE));
 
-                LootItem earned = switch(lootType) {
-                    case SWORD -> LootBuilder.rewardSword(this.level);
-                    case HELMET -> LootBuilder.rewardHelmet(this.level);
-                    case CHESTPLATE -> LootBuilder.rewardChestplate(this.level);
-                    case GAUNTLETS -> LootBuilder.rewardGauntlets(this.level);
-                    case LEGGINGS -> LootBuilder.rewardLeggings(this.level);
-                    case BOOTS -> LootBuilder.rewardBoots(this.level);
-                    case NONE -> throw new IllegalStateException("Unexpected Loot Type \"NONE\" in Adventure!");
-                };
+                LootItem earned = LootBuilder.reward(lootType, this.level);
 
                 this.rewardLoot.add(earned);
             }
@@ -147,7 +139,7 @@ public class Adventure
 
         //Weapon (TODO: Pick between different kinds of weapons)
         int weaponLevel = ai.getLevel() + 1 + r.nextInt(3);
-        LootItem weapon = LootBuilder.rewardSword(weaponLevel);
+        LootItem weapon = LootBuilder.reward(LootType.SWORD, weaponLevel);
 
         weapon.upload();
         if(weapon.getLootType().equals(LootType.SWORD)) ai.equipLoot(EquipmentType.RIGHT_HAND, weapon.getLootID());
@@ -164,14 +156,7 @@ public class Adventure
         for(int i = 0; i < armorCount; i++)
         {
             LootType armorType = armorPool.get(i);
-            LootItem armor = switch(armorType) {
-                case HELMET -> LootBuilder.rewardHelmet(armorLevel);
-                case CHESTPLATE -> LootBuilder.rewardChestplate(armorLevel);
-                case GAUNTLETS -> LootBuilder.rewardGauntlets(armorLevel);
-                case LEGGINGS -> LootBuilder.rewardLeggings(armorLevel);
-                case BOOTS -> LootBuilder.rewardBoots(armorLevel);
-                default -> throw new IllegalStateException("Illegal armor type given to AI in Adventure!");
-            };
+            LootItem armor = LootBuilder.reward(armorType, armorLevel);
 
             armor.upload();
             ai.equipLoot(EquipmentType.values()[i], armor.getLootID());
