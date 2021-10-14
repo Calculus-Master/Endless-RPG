@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg.gameplay.character;
 import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
+import com.calculusmaster.endlessrpg.util.Global;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,8 +66,55 @@ public class RPGCharacterRequirements
 
     public String getOverview()
     {
-        //TODO: Requirements overview
-        return "NYI";
+        List<String> overview = new ArrayList<>();
+
+        if(this.level != 0) overview.add("Level: " + this.level);
+
+        if(!this.clazz.isEmpty())
+        {
+            StringBuilder s = new StringBuilder("Class: ");
+            for(RPGClass clazz : this.clazz) s.append(Global.normalize(clazz.toString())).append(", ");
+            s.deleteCharAt(s.length() - 1).deleteCharAt(s.length() - 1);
+            overview.add(s.toString());
+        }
+
+        if(!this.stat.isEmpty())
+        {
+            StringBuilder s = new StringBuilder("Stats: ");
+            for(Map.Entry<Stat, Integer> e : this.stat.entrySet()) s.append(Global.normalize(e.getKey().toString())).append("(").append(e.getValue()).append(")").append(", ");
+            s.deleteCharAt(s.length() - 1).deleteCharAt(s.length() - 1);
+            overview.add(s.toString());
+        }
+
+        if(!this.coreStat.isEmpty())
+        {
+            StringBuilder s = new StringBuilder("Core Stats: ");
+            for(Map.Entry<Stat, Integer> e : this.coreStat.entrySet()) s.append(Global.normalize(e.getKey().toString())).append("(").append(e.getValue()).append(")").append(", ");
+            s.deleteCharAt(s.length() - 1).deleteCharAt(s.length() - 1);
+            overview.add(s.toString());
+        }
+
+        if(!this.elementalDamage.isEmpty())
+        {
+            StringBuilder s = new StringBuilder("Elemental Damage: ");
+            for(Map.Entry<ElementType, Integer> e : this.elementalDamage.entrySet()) s.append(e.getValue()).append(" ").append(e.getKey().getIcon().getAsMention()).append(", ");
+            s.deleteCharAt(s.length() - 1).deleteCharAt(s.length() - 1);
+            overview.add(s.toString());
+        }
+
+        if(!this.elementalDefense.isEmpty())
+        {
+            StringBuilder s = new StringBuilder("Elemental Defense: ");
+            for(Map.Entry<ElementType, Integer> e : this.elementalDefense.entrySet()) s.append(e.getValue()).append(" ").append(e.getKey().getIcon().getAsMention()).append(", ");
+            s.deleteCharAt(s.length() - 1).deleteCharAt(s.length() - 1);
+            overview.add(s.toString());
+        }
+
+        if(overview.isEmpty()) overview.add("None");
+
+        StringBuilder out = new StringBuilder();
+        overview.forEach(s -> out.append(s).append("\n"));
+        return out.deleteCharAt(out.length() - 1).toString();
     }
 
     public boolean check(RPGCharacter c)
