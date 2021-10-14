@@ -70,6 +70,7 @@ public class LootItem
         loot.setBoosts();
         loot.setElementalDamage();
         loot.setElementalDefense();
+        loot.setRequirements();
 
         return loot;
     }
