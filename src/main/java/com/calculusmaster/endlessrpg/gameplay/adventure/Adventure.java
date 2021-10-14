@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 
 public class Adventure
 {
+    public static int ADVENTURE_EVENT_INTERVAL = 15 * 60;
+
     public static final List<Adventure> ADVENTURES = new ArrayList<>();
     public static final Map<String, ScheduledFuture<?>> END_TIMES = new HashMap<>();
     private static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(5);
@@ -57,7 +59,7 @@ public class Adventure
     //Start the Adventure
     public void start()
     {
-        ScheduledFuture<?> end = SCHEDULER.scheduleAtFixedRate(this::event, 0, 15, TimeUnit.MINUTES);
+        ScheduledFuture<?> end = SCHEDULER.scheduleAtFixedRate(this::event, 0, ADVENTURE_EVENT_INTERVAL, TimeUnit.SECONDS);
 
         END_TIMES.put(this.character.getCharacterID(), end);
     }
@@ -333,7 +335,7 @@ public class Adventure
                 return "An error occurred with your Adventure! Forcefully ending it.";
             }
 
-            return "\nNext Event in **" + minutes + "M " + seconds + "S**\nEvent Progress: " + this.progress + " / " + this.length + "\nTotal Time Required: **" + (this.length * 15) + "**M!";
+            return "\nNext Event in **" + minutes + "M " + seconds + "S**\nEvent Progress: " + this.progress + " / " + this.length + "\nTotal Time Required: **" + (this.length * ADVENTURE_EVENT_INTERVAL) + "**S!";
         }
         else return "Complete!";
     }
