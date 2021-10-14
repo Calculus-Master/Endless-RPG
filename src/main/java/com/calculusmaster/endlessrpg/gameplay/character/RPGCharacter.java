@@ -104,7 +104,9 @@ public class RPGCharacter
                 .append("exp", this.experience)
                 .append("stats", Global.coreStatsDB(this.stats))
                 .append("equipment", this.equipment.serialized())
-                .append("spells", this.spells);
+                .append("spells", this.spells)
+                .append("coreElementalDamage", this.coreElementalDamage.serialized())
+                .append("coreElementalDefense", this.coreElementalDefense.serialized());
 
         Mongo.CharacterData.insertOne(d);
     }

@@ -59,6 +59,12 @@ public class CommandDeveloper extends Command
                     Mongo.CharacterData.deleteMany(Filters.exists("characterID"));
                     Mongo.PlayerData.deleteOne(Filters.exists("playerID"));
                 }
+                case "forcelevel" -> {
+                    int target = this.getInt(2);
+                    RPGCharacter active = this.playerData.getActiveCharacter();
+                    while(active.getLevel() != target) active.addExp(active.getExpRequired(active.getLevel() + 1));
+                    active.updateExperience();
+                }
                 default -> throw new IllegalStateException("Invalid Developer Command. Input: " + this.msg[0]);
             }
 
