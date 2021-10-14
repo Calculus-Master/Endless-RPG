@@ -10,14 +10,12 @@ public class UserPlayer extends AbstractPlayer
     public UserPlayer(String ID)
     {
         super(ID);
-    }
 
-    @Override
-    public void createTeam()
-    {
         this.data = new PlayerDataQuery(ID);
-        //TODO: This is temporary, need to implement a Team system and maybe altered size duels
+
         for(String s : this.data.getCharacterList()) this.team.add(RPGCharacter.build(s));
+
+        this.initTeam();
     }
 
     @Override

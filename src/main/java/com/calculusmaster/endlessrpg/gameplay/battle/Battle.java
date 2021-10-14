@@ -59,8 +59,8 @@ public class Battle
         b.setBattleType(BattleType.PVE);
 
         b.players = new ArrayList<>();
-        AIPlayer player = new AIPlayer().overrideTeam(characterPlayer);
-        AIPlayer AI = new AIPlayer().overrideTeam(characterAI);
+        AIPlayer player = new AIPlayer(characterPlayer);
+        AIPlayer AI = new AIPlayer(characterAI);
         b.players.add(player);
         b.players.add(AI);
 
@@ -261,7 +261,7 @@ public class Battle
     {
         this.players = new ArrayList<>();
         this.players.add(new UserPlayer(userID));
-        this.players.add(new AIPlayer());
+        this.players.add(new AIPlayer(RPGCharacter.create("Bot")));
     }
 
     //Accessors

@@ -13,14 +13,13 @@ public abstract class AbstractPlayer
     public AbstractPlayer(String ID)
     {
         this.ID = ID;
-
         this.team = new ArrayList<>();
-        this.createTeam();
-
-        this.team.forEach(c -> c.forBattle(this));
     }
 
-    public abstract void createTeam();
+    protected void initTeam()
+    {
+        this.team.forEach(c -> c.forBattle(this));
+    }
 
     public abstract String getName();
 
