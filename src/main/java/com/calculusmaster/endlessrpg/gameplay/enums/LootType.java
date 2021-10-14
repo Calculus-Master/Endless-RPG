@@ -50,6 +50,16 @@ public enum LootType
         return this.coreType;
     }
 
+    public static LootType getRandom()
+    {
+        LootType lootType;
+
+        do { lootType = LootType.values()[r.nextInt(LootType.values().length)]; }
+        while(lootType.equals(LootType.NONE));
+
+        return lootType;
+    }
+
     public String getRandomName()
     {
         try

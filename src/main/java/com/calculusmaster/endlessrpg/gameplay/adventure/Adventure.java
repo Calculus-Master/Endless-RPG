@@ -83,15 +83,13 @@ public class Adventure
             case EARN_GOLD -> this.rewardGold += (new Random().nextInt(this.level) * 100 + this.level * 5);
             case EARN_XP -> this.rewardXP += (new Random().nextInt(this.level) * 100 + this.level * 10);
             case EARN_LOOT -> {
-                final Random r = new Random();
-                LootType lootType;
+                final int amount;
+                if(this.level < 30) amount = 1;
+                else if(this.level < 50) amount = 2;
+                else if(this.level < 80) amount = 3;
+                else amount = (int)(0.05 * this.level);
 
-                do { lootType = LootType.values()[r.nextInt(LootType.values().length)]; }
-                while(lootType.equals(LootType.NONE));
-
-                LootItem earned = LootBuilder.reward(lootType, this.level);
-
-                this.rewardLoot.add(earned);
+                for(int i = 0; i < amount; i++) this.rewardLoot.add(LootBuilder.reward(LootType.getRandom(), this.level));
             }
             case EARN_CORE_STAT -> {
                 final Random r = new Random();
@@ -118,6 +116,9 @@ public class Adventure
 
                     this.rewardCoreStat.put(s, this.rewardCoreStat.getOrDefault(s, 0) + amount);
                 }
+            }
+            case BATTLE_ENEMY -> {
+
             }
         }
 
@@ -349,7 +350,8 @@ public class Adventure
         EARN_GOLD(100),
         EARN_XP(75),
         EARN_LOOT(50),
-        EARN_CORE_STAT(10);
+        EARN_CORE_STAT(10),
+        BATTLE_ENEMY(60);
 
         private final int weight;
         AdventureEvent(int weight) { this.weight = weight; }
