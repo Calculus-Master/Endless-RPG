@@ -25,7 +25,8 @@ public class CommandInfo extends Command
                 .addField("Class", Global.normalize(c.getRPGClass().toString()), true)
                 .addField("Experience", "**Level " + c.getLevel() + "**\n" + c.getExp() + " / " + c.getExpRequired(c.getLevel() + 1) + " XP", true)
                 .addBlankField(true)
-                .addField(this.getEquipmentField())
+                .addField(this.getSpellsField(c))
+                .addField(this.getEquipmentField(c))
                 .addField(this.getStatTitleField())
                 .addField(this.getStatCoreField(c))
                 .addField(this.getStatEffectiveField(c));
@@ -35,10 +36,21 @@ public class CommandInfo extends Command
         return this;
     }
 
-    private MessageEmbed.Field getEquipmentField()
+    private MessageEmbed.Field getSpellsField(RPGCharacter c)
     {
         StringBuilder content = new StringBuilder();
-        RPGCharacter c = this.playerData.getActiveCharacter();
+
+        for(int i = 0; i < c.getSpells().size(); i++)
+        {
+            content.append(i + 1).append(": ").append(c.getSpell(i).getName()).append("\n");
+        }
+
+        return new MessageEmbed.Field("Spells", content.toString(), false);
+    }
+
+    private MessageEmbed.Field getEquipmentField(RPGCharacter c)
+    {
+        StringBuilder content = new StringBuilder();
 
         for(EquipmentType e : EquipmentType.values())
         {
