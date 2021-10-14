@@ -5,8 +5,8 @@ import com.calculusmaster.endlessrpg.gameplay.battle.player.AbstractPlayer;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.UserPlayer;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
-import com.calculusmaster.endlessrpg.gameplay.spells.Spell;
-import com.calculusmaster.endlessrpg.gameplay.spells.StrikeSpell;
+import com.calculusmaster.endlessrpg.gameplay.spell.Spell;
+import com.calculusmaster.endlessrpg.gameplay.spell.spells.StrikeSpell;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 

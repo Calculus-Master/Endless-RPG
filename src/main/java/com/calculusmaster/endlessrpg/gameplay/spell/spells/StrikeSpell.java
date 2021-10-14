@@ -1,7 +1,8 @@
-package com.calculusmaster.endlessrpg.gameplay.spells;
+package com.calculusmaster.endlessrpg.gameplay.spell.spells;
 
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+import com.calculusmaster.endlessrpg.gameplay.spell.Spell;
 
 public class StrikeSpell extends Spell
 {

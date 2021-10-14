@@ -3,7 +3,7 @@ package com.calculusmaster.endlessrpg.command.activity;
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
-import com.calculusmaster.endlessrpg.gameplay.spells.Spell;
+import com.calculusmaster.endlessrpg.gameplay.spell.Spell;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.Objects;
