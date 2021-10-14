@@ -118,7 +118,31 @@ public class Adventure
                 }
             }
             case BATTLE_ENEMY -> {
+                final Random r = new Random();
+                RPGCharacter enemy = this.createFairAI();
 
+                boolean win = Battle.simulate(this.character, enemy);
+
+                if(win)
+                {
+                    if(r.nextInt(100) < 50) this.rewardGold += (this.level * 1000) * ((new Random().nextInt(100) + 1) / 100.0);
+                    if(r.nextInt(100) < 25) this.rewardXP += (this.level * 500) * ((new Random().nextInt(100) + 1) / 100.0);
+                    if(r.nextInt(100) < 30)
+                    {
+                        LootItem stolenLoot = LootItem.build(enemy.getEquipment().asList().get(new Random().nextInt(enemy.getEquipment().asList().size())));
+                        LootItem.delete(stolenLoot.getLootID());
+                        enemy.getEquipment().remove(stolenLoot.getLootID());
+
+                        this.rewardLoot.add(stolenLoot);
+                    }
+                }
+                else
+                {
+                    if(r.nextInt(100) < 25) this.rewardGold *= (new Random().nextInt(100) + 1) / 100.0;
+                    if(r.nextInt(100) < 10) this.rewardXP *= (new Random().nextInt(100) + 1) / 100.0;
+                }
+
+                this.deleteAI(enemy);
             }
         }
 
