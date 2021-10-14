@@ -103,6 +103,7 @@ public class Adventure
                 else statsEarned = 4;
 
                 List<Stat> stats = new ArrayList<>(Arrays.asList(Stat.values()));
+                Collections.shuffle(stats);
                 stats.subList(0, stats.size() - statsEarned).clear();
 
                 for(Stat s : stats)
