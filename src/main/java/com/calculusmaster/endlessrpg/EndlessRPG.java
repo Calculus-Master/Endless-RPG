@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg;
 
 import com.calculusmaster.endlessrpg.command.core.CommandHandler;
+import com.calculusmaster.endlessrpg.command.economy.CommandShop;
 import com.calculusmaster.endlessrpg.util.Listener;
 import com.calculusmaster.endlessrpg.util.PrivateInfo;
 import com.calculusmaster.endlessrpg.util.helpers.LoggerHelper;
@@ -21,6 +22,7 @@ public class EndlessRPG
         LoggerHelper.disableMongoLoggers();
 
         LoggerHelper.init("Command", CommandHandler::init);
+        LoggerHelper.init("Shop", CommandShop::init);
 
         JDABuilder bot = JDABuilder
                 .createDefault(PrivateInfo.TOKEN)
