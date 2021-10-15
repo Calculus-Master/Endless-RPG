@@ -53,7 +53,7 @@ public class RPGElementalContainer
 
         for(Map.Entry<ElementType, Integer> e : this.elementValues.entrySet()) if(e.getValue() != 0) overview.append(e.getKey().getIcon().getAsMention()).append(": ").append(Global.formatNumber(e.getValue())).append(", ");
 
-        return overview.deleteCharAt(overview.length() - 1).deleteCharAt(overview.length() - 1).toString();
+        return overview.isEmpty() ? "None" : overview.deleteCharAt(overview.length() - 1).deleteCharAt(overview.length() - 1).toString();
     }
 
     public boolean isEmpty()
