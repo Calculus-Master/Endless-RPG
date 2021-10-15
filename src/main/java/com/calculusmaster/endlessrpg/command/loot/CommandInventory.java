@@ -15,9 +15,12 @@ public class CommandInventory extends Command
     @Override
     public Command run()
     {
-        StringBuilder list = new StringBuilder();
+        int page = 10;
+        int start = this.msg.length == 2 && this.isNumeric(1) ? (this.getInt(1) - 1) * page : 0;
+        int end = Math.min(start + page, this.playerData.getLoot().size());
 
-        for(int i = 0; i < this.playerData.getLoot().size(); i++)
+        StringBuilder list = new StringBuilder();
+        for(int i = start; i < end; i++)
         {
             LootItem loot = LootItem.build(this.playerData.getLoot().get(i));
 
@@ -31,7 +34,8 @@ public class CommandInventory extends Command
 
         this.embed
                 .setTitle(this.player.getName() + "'s Loot")
-                .setDescription(list.toString());
+                .setDescription(list.toString())
+                .setFooter("Showing %s to %s (Total: %s)".formatted(start + 1, end, this.playerData.getLoot().size()));
 
         return this;
     }
