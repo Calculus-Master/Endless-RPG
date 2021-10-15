@@ -27,6 +27,9 @@ public class CommandInfo extends Command
                 .addBlankField(true)
                 .addField(this.getSpellsField(c))
                 .addField(this.getEquipmentField(c))
+                .addField("Elemental Damage", c.getEquipment().combinedElementalDamage().getOverview(), true)
+                .addField("Elemental Defense", c.getEquipment().combinedElementalDefense().getOverview(), true)
+                .addBlankField(true)
                 .addField(this.getStatTitleField())
                 .addField(this.getStatCoreField(c))
                 .addField(this.getStatEffectiveField(c));

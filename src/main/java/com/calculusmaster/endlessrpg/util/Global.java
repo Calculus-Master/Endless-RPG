@@ -28,6 +28,11 @@ public class Global
         return RANDOM.nextInt(max - min + 1) + min;
     }
 
+    public static String formatNumber(int number)
+    {
+        return number > 0 ? "+" + number : "" + number;
+    }
+
     public static String normalize(String input)
     {
         StringBuilder out = new StringBuilder();

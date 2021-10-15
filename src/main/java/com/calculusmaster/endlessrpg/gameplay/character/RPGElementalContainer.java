@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.character;
 
 import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
+import com.calculusmaster.endlessrpg.util.Global;
 import com.mongodb.BasicDBObject;
 import org.bson.Document;
 
@@ -44,6 +45,20 @@ public class RPGElementalContainer
     public void decrease(ElementType element, int amount)
     {
         this.set(element, this.elementValues.get(element) - amount);
+    }
+
+    public String getOverview()
+    {
+        StringBuilder overview = new StringBuilder();
+
+        for(Map.Entry<ElementType, Integer> e : this.elementValues.entrySet()) if(e.getValue() != 0) overview.append(e.getKey().getIcon().getAsMention()).append(": ").append(Global.formatNumber(e.getValue())).append(", ");
+
+        return overview.deleteCharAt(overview.length() - 1).deleteCharAt(overview.length() - 1).toString();
+    }
+
+    public boolean isEmpty()
+    {
+        return this.elementValues.values().stream().allMatch(v -> v == 0);
     }
 
     public void combine(RPGElementalContainer other)
