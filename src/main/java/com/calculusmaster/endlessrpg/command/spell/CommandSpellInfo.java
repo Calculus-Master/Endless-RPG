@@ -1,4 +1,4 @@
-package com.calculusmaster.endlessrpg.command.misc;
+package com.calculusmaster.endlessrpg.command.spell;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.spell.Spell;
