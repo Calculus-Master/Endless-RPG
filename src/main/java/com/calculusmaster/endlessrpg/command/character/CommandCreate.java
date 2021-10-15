@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg.command.character;
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
+import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
@@ -52,7 +53,7 @@ public class CommandCreate extends Command
             //Starting Inventory
             if(this.playerData.getCharacterList().isEmpty())
             {
-                LootItem starterSword = LootBuilder.rewardSword(1);
+                LootItem starterSword = LootBuilder.rewardSword(1).addBoost(Stat.ATTACK, 3);
                 starterSword.upload();
 
                 c.equipLoot(EquipmentType.RIGHT_HAND, starterSword.getLootID());

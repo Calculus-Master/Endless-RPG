@@ -34,7 +34,7 @@ public class LootBuilder
     public static LootItem rewardSword(int level)
     {
         LootItem sword = LootItem.create(LootType.SWORD)
-            .addBoost(Stat.ATTACK, rand(2, 5) * level + 5 + rand(1, level * 2));
+            .addBoost(Stat.ATTACK, rand(2, 5) * level + 2 + rand(1, level * 2));
 
         return sword;
     }
