@@ -51,6 +51,9 @@ public class LootBuilder
                 .addBoost(Stat.ATTACK, rand(2, 5) * level + 5 + rand(1, level * 2))
                 .addElementalDamage(ElementType.getRandom(), rand(2, 5) * level + rand(1, level));
 
+        wand.getRequirements()
+                .addStat(Stat.INTELLECT, level * 3);
+
         return wand;
     }
 
