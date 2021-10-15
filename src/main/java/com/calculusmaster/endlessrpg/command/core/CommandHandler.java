@@ -4,10 +4,12 @@ import com.calculusmaster.endlessrpg.command.activity.CommandAdventure;
 import com.calculusmaster.endlessrpg.command.activity.CommandAttack;
 import com.calculusmaster.endlessrpg.command.activity.CommandBattle;
 import com.calculusmaster.endlessrpg.command.character.*;
+import com.calculusmaster.endlessrpg.command.economy.CommandBalance;
+import com.calculusmaster.endlessrpg.command.economy.CommandBuy;
+import com.calculusmaster.endlessrpg.command.economy.CommandShop;
 import com.calculusmaster.endlessrpg.command.loot.CommandDelete;
 import com.calculusmaster.endlessrpg.command.loot.CommandInventory;
 import com.calculusmaster.endlessrpg.command.loot.CommandLootInfo;
-import com.calculusmaster.endlessrpg.command.misc.CommandBalance;
 import com.calculusmaster.endlessrpg.command.misc.CommandDeveloper;
 import com.calculusmaster.endlessrpg.command.misc.CommandSpellInfo;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -63,6 +65,12 @@ public class CommandHandler
 
         register("spellinfo", "si")
                 .setCommand(CommandSpellInfo::new);
+
+        register("shop")
+                .setCommand(CommandShop::new);
+
+        register("buy")
+                .setCommand(CommandBuy::new);
 
         register("dev")
                 .setCommand(CommandDeveloper::new);
