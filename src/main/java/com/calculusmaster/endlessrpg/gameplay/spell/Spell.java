@@ -8,6 +8,9 @@ import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 
+import java.util.Arrays;
+import java.util.List;
+
 public abstract class Spell
 {
     public abstract String execute(RPGCharacter user, RPGCharacter target, RPGCharacter[] battlers, Battle battle);
@@ -25,21 +28,11 @@ public abstract class Spell
         int defense = target.getStat(Stat.DEFENSE);
 
         //Weapon Affinity Stats
-        LootItem leftHand = user.getEquipment().getEquipmentLoot(EquipmentType.LEFT_HAND);
-        LootItem rightHand = user.getEquipment().getEquipmentLoot(EquipmentType.RIGHT_HAND);
+        List<LootItem> weapons = Arrays.asList(user.getEquipment().getEquipmentLoot(EquipmentType.LEFT_HAND), user.getEquipment().getEquipmentLoot(EquipmentType.RIGHT_HAND));
 
-        if(!leftHand.isEmpty())
+        for(LootItem l : weapons)
         {
-            switch(leftHand.getLootType())
-            {
-                case SWORD -> attack += (int)(attack * (user.getStat(Stat.STRENGTH) / 100.0));
-                case WAND -> attack += (int)(attack * (user.getStat(Stat.INTELLECT) / 100.0));
-            }
-        }
-
-        if(!rightHand.isEmpty())
-        {
-            switch(rightHand.getLootType())
+            switch(l.getLootType())
             {
                 case SWORD -> attack += (int)(attack * (user.getStat(Stat.STRENGTH) / 100.0));
                 case WAND -> attack += (int)(attack * (user.getStat(Stat.INTELLECT) / 100.0));
