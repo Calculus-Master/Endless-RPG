@@ -79,6 +79,9 @@ public class LootItem
     {
         LootItem copy = LootItem.create(source.getLootType());
 
+        //Name
+        copy.name = source.name;
+
         //Boosts
         for(Map.Entry<Stat, Integer> e : source.getBoosts().entrySet()) copy.addBoost(e.getKey(), e.getValue());
 
