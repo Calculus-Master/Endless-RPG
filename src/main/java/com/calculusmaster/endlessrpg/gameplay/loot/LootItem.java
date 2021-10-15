@@ -234,7 +234,7 @@ public class LootItem
         final StringBuilder s = new StringBuilder();
         final String pool = "abcdefghiklmnopqrstuvwxyz0123456789";
         final Random r = new Random();
-        for(int i = 0; i < 32; i++) s.append(pool.charAt(r.nextInt(pool.length())));
+        for(int i = 0; i < 16; i++) s.append(pool.charAt(r.nextInt(pool.length())));
         this.lootID = s.toString();
     }
 

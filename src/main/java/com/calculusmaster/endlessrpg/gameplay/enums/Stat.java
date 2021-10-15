@@ -12,7 +12,7 @@ public enum Stat
 
     //Weapon Affinity Stats
     STRENGTH,
-    INTELLECT; //TODO: Add staves
+    INTELLECT;
 
     public static Stat cast(String input)
     {
