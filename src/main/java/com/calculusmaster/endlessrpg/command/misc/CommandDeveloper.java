@@ -49,7 +49,7 @@ public class CommandDeveloper extends Command
                 case "reset" -> {
                     Mongo.LootData.deleteMany(Filters.exists("lootID"));
                     Mongo.CharacterData.deleteMany(Filters.exists("characterID"));
-                    Mongo.PlayerData.deleteOne(Filters.exists("playerID"));
+                    Mongo.PlayerData.deleteMany(Filters.exists("playerID"));
                 }
                 case "forcelevel" -> {
                     int target = this.getInt(2);
