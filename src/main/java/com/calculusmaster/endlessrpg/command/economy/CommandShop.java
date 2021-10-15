@@ -60,6 +60,7 @@ public class CommandShop extends Command
         {
             LootItem loot = LootBuilder.reward(LootType.getRandom(), r.nextInt(5, 50));
             int cost = loot.getBoosts().values().stream().mapToInt(x -> x).sum() * (new SplittableRandom().nextInt(2, 10) + 100);
+            cost -= cost % 10;
             SHOP_LOOT.add(new ShopEntry<>(loot, cost));
         }
     }
