@@ -110,7 +110,7 @@ public class Battle
 
         EmbedBuilder embed = new EmbedBuilder();
 
-        embed.setDescription(this.getWinner().getName() + " has defeated " + this.getLoser().getName() + "!");
+        embed.setDescription(this.getWinner().getName() + " has won!");
 
         //TODO: Battle win rewards
 
@@ -169,11 +169,6 @@ public class Battle
     {
         if(!this.isComplete()) throw new IllegalStateException("Cannot find Battle Winner because Battle is not complete!");
         else return this.players.get(0).isDefeated() ? this.players.get(1) : this.players.get(0);
-    }
-
-    public AbstractPlayer getLoser()
-    {
-        return this.getWinner().ID.equals(this.players.get(0).ID) ? this.players.get(1) : this.players.get(0);
     }
 
     private void advanceTurn()
