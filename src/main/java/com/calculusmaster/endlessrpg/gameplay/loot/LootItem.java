@@ -126,9 +126,9 @@ public class LootItem
     }
 
     //Elemental Defense
-    public LootItem withElementalDefenseModifiers(ElementType.Pair... modifiers)
+    public LootItem addElementalDefense(ElementType element, int value)
     {
-        for(ElementType.Pair modifier : modifiers) this.elementalDefense.set(modifier.element, modifier.value);
+        this.elementalDefense.set(element, value);
         return this;
     }
 
@@ -148,9 +148,9 @@ public class LootItem
     }
 
     //Elemental Damage
-    public LootItem withElementalDamageModifiers(ElementType.Pair... modifiers)
+    public LootItem addElementalDamage(ElementType element, int value)
     {
-        for(ElementType.Pair modifier : modifiers) this.elementalDamage.set(modifier.element, modifier.value);
+        this.elementalDamage.set(element, value);
         return this;
     }
 

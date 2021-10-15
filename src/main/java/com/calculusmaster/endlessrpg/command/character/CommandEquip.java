@@ -6,7 +6,11 @@ import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class CommandEquip extends Command
 {
@@ -54,16 +58,25 @@ public class CommandEquip extends Command
                 else if(!loot.getRequirements().check(active)) this.response = active.getName() + " doesn't meet the requirements to equip this Loot item! Requirements: \n" + loot.getRequirements().getOverview();
                 else
                 {
-                    //Basic Sword cannot be in both hands at once
-                    if(slot.isHand() && loot.getLootType().equals(LootType.SWORD))
+                    //Basic Sword and Wand cannot be in both hands at once
+                    if(slot.isHand() && loot.getLootType().isWeapon())
                     {
-                        boolean leftInvalid = slot.equals(EquipmentType.LEFT_HAND) && active.getEquipment().getEquipmentLoot(EquipmentType.RIGHT_HAND).getLootType().equals(LootType.SWORD);
-                        boolean rightInvalid = slot.equals(EquipmentType.RIGHT_HAND) && active.getEquipment().getEquipmentLoot(EquipmentType.LEFT_HAND).getLootType().equals(LootType.SWORD);
+                        LootType check = loot.getLootType();
+                        List<LootType> singleHandLootTypes = Arrays.asList(LootType.SWORD, LootType.WAND);
 
-                        if(leftInvalid || rightInvalid)
+                        if(singleHandLootTypes.contains(check))
                         {
-                            this.response = "You cannot equip two basic Sword loot items at the same time!";
-                            return this;
+                            LootType right = active.getEquipment().getEquipmentLoot(EquipmentType.RIGHT_HAND).getLootType();
+                            LootType left = active.getEquipment().getEquipmentLoot(EquipmentType.LEFT_HAND).getLootType();
+
+                            boolean leftInvalid = slot.equals(EquipmentType.LEFT_HAND) && singleHandLootTypes.contains(right);
+                            boolean rightInvalid = slot.equals(EquipmentType.RIGHT_HAND) && singleHandLootTypes.contains(left);
+
+                            if(leftInvalid || rightInvalid)
+                            {
+                                this.response = "You cannot equip two basic %s loot items at the same time!".formatted(Global.normalize(check.toString()));
+                                return this;
+                            }
                         }
                     }
 

@@ -33,6 +33,7 @@ public abstract class Spell
             switch(leftHand.getLootType())
             {
                 case SWORD -> attack += (int)(attack * (user.getStat(Stat.STRENGTH) / 100.0));
+                case WAND -> attack += (int)(attack * (user.getStat(Stat.INTELLECT) / 100.0));
             }
         }
 
@@ -41,6 +42,7 @@ public abstract class Spell
             switch(rightHand.getLootType())
             {
                 case SWORD -> attack += (int)(attack * (user.getStat(Stat.STRENGTH) / 100.0));
+                case WAND -> attack += (int)(attack * (user.getStat(Stat.INTELLECT) / 100.0));
             }
         }
 

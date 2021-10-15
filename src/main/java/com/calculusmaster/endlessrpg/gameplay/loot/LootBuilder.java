@@ -1,5 +1,6 @@
 package com.calculusmaster.endlessrpg.gameplay.loot;
 
+import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 
@@ -20,6 +21,7 @@ public class LootBuilder
     {
         return switch(type) {
             case SWORD -> LootBuilder.rewardSword(level);
+            case WAND -> LootBuilder.rewardWand(level);
             case HELMET -> LootBuilder.rewardHelmet(level);
             case CHESTPLATE -> LootBuilder.rewardChestplate(level);
             case GAUNTLETS -> LootBuilder.rewardGauntlets(level);
@@ -37,6 +39,15 @@ public class LootBuilder
             .addBoost(Stat.ATTACK, rand(2, 5) * level + 5 + rand(1, level * 2));
 
         return sword;
+    }
+
+    public static LootItem rewardWand(int level)
+    {
+        LootItem wand = LootItem.create(LootType.WAND)
+                .addBoost(Stat.ATTACK, rand(2, 5) * level + 5 + rand(1, level * 2))
+                .addElementalDamage(ElementType.getRandom(), rand(2, 5) * level + rand(1, level));
+
+        return wand;
     }
 
     //Armor

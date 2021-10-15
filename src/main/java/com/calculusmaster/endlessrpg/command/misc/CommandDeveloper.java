@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg.command.misc;
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
@@ -40,16 +41,7 @@ public class CommandDeveloper extends Command
                 case "clearlootdb" -> Mongo.LootData.deleteMany(Filters.exists("lootID"));
                 case "addloot" -> {
                     int activeLevel = this.playerData.getActiveCharacter().getLevel();
-                    LootItem loot = switch(this.msg[2]) {
-                        case "sword" -> LootBuilder.rewardSword(activeLevel + 1);
-                        case "helmet" -> LootBuilder.rewardHelmet(activeLevel + 1);
-                        case "chestplate" -> LootBuilder.rewardChestplate(activeLevel + 1);
-                        case "gauntlets" -> LootBuilder.rewardGauntlets(activeLevel + 1);
-                        case "leggings" -> LootBuilder.rewardLeggings(activeLevel + 1);
-                        case "boots" -> LootBuilder.rewardBoots(activeLevel + 1);
-                        default -> throw new IllegalStateException("Invalid Loot Argument");
-                    };
-
+                    LootItem loot = LootBuilder.reward(LootType.cast(this.msg[2]), activeLevel + 1);
                     loot.upload();
                     this.playerData.addLootItem(loot.getLootID());
                 }

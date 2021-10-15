@@ -13,6 +13,7 @@ public enum LootType
 {
     NONE(null, ""),
     SWORD(CoreLootType.WEAPON, "sword_names"),
+    WAND(CoreLootType.WEAPON, "wand_names"),
     HELMET(CoreLootType.HELMET, "helmet_names"),
     CHESTPLATE(CoreLootType.CHESTPLATE, "chestplate_names"),
     GAUNTLETS(CoreLootType.GAUNTLETS, "gauntlets_names"),
