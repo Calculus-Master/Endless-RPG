@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.command.loot;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
+import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -19,6 +20,8 @@ public class CommandInventory extends Command
         int start = this.msg.length == 2 && this.isNumeric(1) ? (this.getInt(1) - 1) * page : 0;
         int end = Math.min(start + page, this.playerData.getLoot().size());
 
+        RPGCharacter active = this.playerData.getActiveCharacter();
+
         StringBuilder list = new StringBuilder();
         for(int i = start; i < end; i++)
         {
@@ -29,7 +32,7 @@ public class CommandInventory extends Command
                     .append("*").append(loot.getName()).append("*")
                     .append(" | ").append(Global.normalize(loot.getLootType().toString()))
                     .append(" | Boosts: ").append(loot.getBoostsOverview())
-                    .append(" | Req. Level: ").append(loot.getRequirements().getLevel())
+                    .append(" | ").append(loot.getRequirements().check(active) ? ":white_check_mark:" : ":x:")
                     .append("\n");
         }
 
