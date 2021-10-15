@@ -3,10 +3,11 @@ package com.calculusmaster.endlessrpg.gameplay.enums;
 import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.util.Global;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public enum LootType
@@ -66,11 +67,12 @@ public enum LootType
     {
         try
         {
-            List<String> pool = Files.lines(Paths.get(EndlessRPG.class.getResource("/names/" + this.namesFile + ".txt").toURI())).toList();
+            List<String> pool = new BufferedReader(new InputStreamReader(Objects.requireNonNull(EndlessRPG.class.getResourceAsStream("/names/" + this.namesFile + ".txt")))).lines().toList();
             return pool.get(r.nextInt(pool.size()));
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             return "UNNAMED LOOT ITEM";
         }
     }
