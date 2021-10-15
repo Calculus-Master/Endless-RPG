@@ -4,18 +4,11 @@ import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 
-import java.util.Random;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.SplittableRandom;
 
 public class LootBuilder
 {
-    public static final Random r = new Random();
-
-    static
-    {
-        Executors.newScheduledThreadPool(1).scheduleAtFixedRate(() -> r.setSeed(System.nanoTime()), 1, 10, TimeUnit.MINUTES);
-    }
+    public static final SplittableRandom r = new SplittableRandom();
 
     public static LootItem reward(LootType type, int level)
     {
