@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg.command.loot;
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGElementalContainer;
 import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
+import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.util.Global;
@@ -19,30 +20,53 @@ public class CommandLootInfo extends Command
     @Override
     public Command run()
     {
-        boolean info = this.msg.length == 2 && this.isNumeric(1);
+        boolean info = this.msg.length == 2 && (this.isNumeric(1) || EquipmentType.parse(this.msg[1]) != null);
 
         if(info)
         {
-            int lootIndex = this.getInt(1) - 1;
+            LootItem loot = null;
 
-            if(lootIndex < 0 || lootIndex >= this.playerData.getLoot().size()) this.response = "Invalid loot index!";
-            else
+            if(this.isNumeric(1))
             {
-                LootItem loot = LootItem.build(this.playerData.getLoot().get(lootIndex));
+                int lootIndex = this.getInt(1) - 1;
 
-                this.embed
-                        .addField("Type", Global.normalize(loot.getLootType().toString()), true)
-                        .addField("Equipment Slot", loot.getLootType().isArmor() ? Global.normalize(loot.getLootType().getCore().toString()) : "Left/Right Hand", true)
-                        .addBlankField(true)
-                        .addField("Requirements", "Level: " + loot.getRequirements().getOverview(), false)
-                        .addField(this.getStatModifierField(loot))
-                        .addField(this.getElementalModifierField("Elemental Damage Modifiers", loot.getElementalDamage()))
-                        .addField(this.getElementalModifierField("Elemental Defense Modifiers", loot.getElementalDefense()));
+                if(lootIndex < 0 || lootIndex >= this.playerData.getLoot().size())
+                {
+                    this.response = "Invalid loot index!";
+                    return this;
+                }
+                else loot = LootItem.build(this.playerData.getLoot().get(lootIndex));
 
-                this.embed
-                        .setTitle(loot.getName())
-                        .setFooter((lootIndex + 1) + " / " + this.playerData.getLoot().size());
+                this.embed.setFooter((lootIndex + 1) + " / " + this.playerData.getLoot().size());
             }
+            else if(EquipmentType.parse(this.msg[1]) != null)
+            {
+                String ID = this.playerData.getActiveCharacter().getEquipment().getEquipmentID(EquipmentType.parse(this.msg[1]));
+
+                if(ID.equals(LootItem.EMPTY.getLootID()))
+                {
+                    this.response = "Your character has nothing equipped in that slot!";
+                    return this;
+                }
+                else loot = LootItem.build(ID);
+            }
+
+            if(loot == null)
+            {
+                this.response = "An error has occurred trying to display Loot Information.";
+                return this;
+            }
+
+            this.embed
+                    .addField("Type", Global.normalize(loot.getLootType().toString()), true)
+                    .addField("Equipment Slot", loot.getLootType().isArmor() ? Global.normalize(loot.getLootType().getCore().toString()) : "Left/Right Hand", true)
+                    .addBlankField(true)
+                    .addField("Requirements", "Level: " + loot.getRequirements().getOverview(), false)
+                    .addField(this.getStatModifierField(loot))
+                    .addField(this.getElementalModifierField("Elemental Damage Modifiers", loot.getElementalDamage()))
+                    .addField(this.getElementalModifierField("Elemental Defense Modifiers", loot.getElementalDefense()));
+
+            this.embed.setTitle(loot.getName());
         }
         else this.response = INVALID;
 
