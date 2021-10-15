@@ -36,7 +36,7 @@ public class CommandShop extends Command
                 LootItem l = SHOP_LOOT.get(i).item;
                 this.embed.addField(
                         (i + 1) + ": " + Global.normalize(l.getLootType().toString()),
-                        "*" + l.getName() + "*\nCost: `" + SHOP_LOOT.get(i).cost + "` Gold\nBoosts: " + l.getBoostsOverview() + "\nRequirements: " + l.getRequirements().getOverview(),
+                        "*" + l.getName() + "*\nCost: `" + SHOP_LOOT.get(i).cost + "` Gold\nBoosts: " + l.getBoostsOverview() + "\n*Requirements:\n" + l.getRequirements().getOverview() + "*",
                         true);
             }
         }

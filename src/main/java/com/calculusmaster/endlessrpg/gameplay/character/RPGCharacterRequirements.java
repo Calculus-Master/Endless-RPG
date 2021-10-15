@@ -159,7 +159,7 @@ public class RPGCharacterRequirements
         if(!this.stat.isEmpty())
         {
             StringBuilder s = new StringBuilder("Stats: ");
-            for(Map.Entry<Stat, Integer> e : this.stat.entrySet()) s.append(Global.normalize(e.getKey().toString())).append("(").append(e.getValue()).append(")").append(", ");
+            for(Map.Entry<Stat, Integer> e : this.stat.entrySet()) s.append(Global.normalize(e.getKey().toString())).append(" (").append(e.getValue()).append(")").append(", ");
             s.deleteCharAt(s.length() - 1).deleteCharAt(s.length() - 1);
             overview.add(s.toString());
         }
