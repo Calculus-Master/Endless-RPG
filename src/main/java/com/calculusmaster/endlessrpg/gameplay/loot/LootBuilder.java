@@ -49,7 +49,7 @@ public class LootBuilder
     public static LootItem rewardWand(int level)
     {
         LootItem wand = LootItem.create(LootType.WAND)
-                .addBoost(Stat.ATTACK, rand(2, 5) * level + 5 + rand(1, level * 2))
+                .addBoost(Stat.ATTACK, level + rand(5, Math.max(6, level * 2)))
                 .addElementalDamage(ElementType.getRandom(), rand(2, 5) * level + rand(1, level));
 
         wand.getRequirements()
