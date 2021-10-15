@@ -24,11 +24,12 @@ public class CommandInventory extends Command
         {
             LootItem loot = LootItem.build(this.playerData.getLoot().get(i));
 
-            list.append(i + 1).append(": ")
-                    .append(loot.getName())
-                    .append(" | Type: ").append(Global.normalize(loot.getLootType().toString()))
+            list
+                    .append("**").append(i + 1).append(":** ")
+                    .append("*").append(loot.getName()).append("*")
+                    .append(" | ").append(Global.normalize(loot.getLootType().toString()))
                     .append(" | Boosts: ").append(loot.getBoostsOverview())
-                    .append(" | Min. Level: ").append(loot.getRequirements().getLevel())
+                    .append(" | Req. Level: ").append(loot.getRequirements().getLevel())
                     .append("\n");
         }
 
