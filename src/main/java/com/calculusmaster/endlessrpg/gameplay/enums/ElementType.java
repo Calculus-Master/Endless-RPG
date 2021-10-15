@@ -13,6 +13,7 @@ public enum ElementType
     WATER,
     EARTH,
     AIR,
+    LIGHTNING,
     DARK,
     LIGHT;
 
