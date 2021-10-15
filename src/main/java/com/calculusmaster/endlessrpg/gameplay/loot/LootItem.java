@@ -75,6 +75,25 @@ public class LootItem
         return loot;
     }
 
+    public static LootItem copy(LootItem source)
+    {
+        LootItem copy = LootItem.create(source.getLootType());
+
+        //Boosts
+        for(Map.Entry<Stat, Integer> e : source.getBoosts().entrySet()) copy.addBoost(e.getKey(), e.getValue());
+
+        //Requirements
+        copy.requirements = source.requirements;
+
+        //Elemental Damage
+        copy.elementalDamage = source.elementalDamage;
+
+        //Elemental Defense
+        copy.elementalDefense = source.elementalDefense;
+
+        return copy;
+    }
+
     public void upload()
     {
         Document data = new Document()
