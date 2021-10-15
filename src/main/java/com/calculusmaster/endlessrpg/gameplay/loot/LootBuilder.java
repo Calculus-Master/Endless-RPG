@@ -19,7 +19,7 @@ public class LootBuilder
 
     public static LootItem reward(LootType type, int level)
     {
-        return switch(type) {
+        LootItem out = switch(type) {
             case SWORD -> LootBuilder.rewardSword(level);
             case WAND -> LootBuilder.rewardWand(level);
             case HELMET -> LootBuilder.rewardHelmet(level);
@@ -29,6 +29,10 @@ public class LootBuilder
             case BOOTS -> LootBuilder.rewardBoots(level);
             case NONE -> throw new IllegalStateException("Unexpected Loot Type \"NONE\" in LootBuilder!");
         };
+
+        out.getRequirements().addLevel(level);
+
+        return out;
     }
 
     private static int rand(int min, int max) { return r.nextInt(max - min + 1) + min; }
