@@ -222,7 +222,7 @@ public class Adventure
         List<String> results = new ArrayList<>();
 
         //Must defeat Bot to receive rewards! Mini Boss is slightly more difficult than other enemies that appear in Adventures
-        this.level += 2;
+        this.level += 1;
 
         RPGCharacter miniBoss = this.createFairAI();
         boolean win = Battle.simulate(this.character, miniBoss);
@@ -260,7 +260,7 @@ public class Adventure
 
         this.deleteAI(miniBoss);
 
-        this.level -= 2;
+        this.level -= 1;
 
         if(this.rewardGold > 0)
         {
