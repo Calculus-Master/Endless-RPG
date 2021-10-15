@@ -12,7 +12,8 @@ public enum Stat
 
     //Weapon Affinity Stats
     STRENGTH,
-    INTELLECT;
+    INTELLECT,
+    PRECISION;
 
     public static Stat cast(String input)
     {
