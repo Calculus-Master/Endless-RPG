@@ -22,6 +22,7 @@ public class LootBuilder
         LootItem out = switch(type) {
             case SWORD -> LootBuilder.rewardSword(level);
             case WAND -> LootBuilder.rewardWand(level);
+            case SHIELD -> LootBuilder.rewardShield(level);
             case HELMET -> LootBuilder.rewardHelmet(level);
             case CHESTPLATE -> LootBuilder.rewardChestplate(level);
             case GAUNTLETS -> LootBuilder.rewardGauntlets(level);
@@ -55,6 +56,17 @@ public class LootBuilder
                 .addStat(Stat.INTELLECT, level * 3);
 
         return wand;
+    }
+
+    public static LootItem rewardShield(int level)
+    {
+        LootItem shield = LootItem.create(LootType.SHIELD)
+                .addBoost(Stat.DEFENSE, rand(2, 5) * level + 5 + rand(1, (int)(level * 1.5)));
+
+        shield.getRequirements()
+                .addStat(Stat.DEFENSE, Math.max(1, level / 2));
+
+        return shield;
     }
 
     //Armor

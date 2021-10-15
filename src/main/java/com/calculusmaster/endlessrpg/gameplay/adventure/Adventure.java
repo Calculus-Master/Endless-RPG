@@ -165,10 +165,24 @@ public class Adventure
 
         //Weapon (TODO: Pick between different kinds of weapons)
         int weaponLevel = ai.getLevel() + 1 + r.nextInt(3);
-        LootItem weapon = LootBuilder.reward(LootType.SWORD, weaponLevel);
+        List<LootType> weaponPool = Arrays.asList(LootType.SWORD, LootType.WAND);
+        LootItem weapon = LootBuilder.reward(weaponPool.get(new SplittableRandom().nextInt(weaponPool.size())), weaponLevel);
 
         weapon.upload();
-        if(weapon.getLootType().equals(LootType.SWORD)) ai.equipLoot(EquipmentType.RIGHT_HAND, weapon.getLootID());
+        switch(weapon.getLootType())
+        {
+            case SWORD, WAND -> {
+                ai.equipLoot(EquipmentType.RIGHT_HAND, weapon.getLootID());
+
+                if(this.level > 25 && new SplittableRandom().nextInt(100) < 25)
+                {
+                    LootItem shield = LootBuilder.reward(LootType.SHIELD, weaponLevel + 1);
+                    shield.upload();
+
+                    ai.equipLoot(EquipmentType.LEFT_HAND, shield.getLootID());
+                }
+            }
+        }
 
         //Armor
         List<LootType> armorPool = Arrays.asList(LootType.HELMET, LootType.CHESTPLATE, LootType.GAUNTLETS, LootType.LEGGINGS, LootType.BOOTS);
