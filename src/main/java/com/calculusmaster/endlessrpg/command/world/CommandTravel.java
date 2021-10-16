@@ -6,10 +6,7 @@ import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -20,6 +17,7 @@ public class CommandTravel extends Command
     private static final ScheduledExecutorService THREAD_POOL = Executors.newScheduledThreadPool(5);
 
     public static final Map<String, ScheduledFuture<?>> TRAVEL_COOLDOWNS = new HashMap<>();
+    public static final Map<String, ScheduledFuture<?>> TRAVEL_TIME = new HashMap<>();
 
     public CommandTravel(MessageReceivedEvent event, String msg)
     {
@@ -52,16 +50,13 @@ public class CommandTravel extends Command
 
             if(l.getID().equals(current)) this.response = "You are already at that Location!";
             else if(!l.getID().startsWith("HUB") && TRAVEL_COOLDOWNS.containsKey(this.player.getId())) this.response = "Your character is exhausted! You cannot travel for another " + TRAVEL_COOLDOWNS.get(this.player.getId()).getDelay(TimeUnit.MINUTES) + " minutes!";
+            else if(TRAVEL_TIME.containsKey(this.player.getId())) this.response = "Your character is currently traveling to a location! They will arrive in " + TRAVEL_TIME.get(this.player.getId()).getDelay(TimeUnit.MINUTES) + " minutes!";
             else if(possible.contains(l.getID()) || visited.contains(l.getID()))
             {
-                this.playerData.setLocation(l.getID());
-                if(!visited.contains(l.getID())) this.playerData.addVisitedLocation(l.getID());
+                this.addTravelTime(l, visited, current);
 
-                //TODO: Travel time (between locations)
+                this.response = "Your character started traveling to " + l.getName() + "! Traveling will take about " + TRAVEL_TIME.get(this.player.getId()).getDelay(TimeUnit.MINUTES) + " minutes!";
                 //TODO: Location travel requirements (fight an enemy to gain access, RPGCharacterRequirements field in Location objects)
-                this.response = "You successfully traveled from **" + Realm.CURRENT.getLocation(current).getName() + "** to **" + l.getName() + "**!";
-
-                if(!l.getID().startsWith("HUB")) this.addCooldownTimer();
             }
             else this.response = "You cannot travel to this Location! You must have visited a nearby Location to be able to travel to `%s`! (If the Location is visible using the Location command, you must travel to the previous node before you are allowed to travel to this one)".formatted(l.getName());
         }
@@ -69,10 +64,36 @@ public class CommandTravel extends Command
         return this;
     }
 
+    private void addTravelTime(Location l, List<String> visited, String current)
+    {
+        int speed = this.playerData.getActiveCharacter().getStat(Stat.SPEED);
+        int time = Math.max(45 - (int)((Math.pow(speed, 1.2) / (1 + 2.6 * speed)) * 45), 5);
+
+        time = new SplittableRandom().nextInt((int)(time * 0.9), (int)(time * 1.1));
+
+        ScheduledFuture<?> travelTime = THREAD_POOL.schedule(() -> this.arrive(l, visited, current), time, TimeUnit.MINUTES);
+        TRAVEL_TIME.put(this.player.getId(), travelTime);
+    }
+
+    private void arrive(Location l, List<String> visited, String current)
+    {
+        this.playerData.setLocation(l.getID());
+        if(!visited.contains(l.getID())) this.playerData.addVisitedLocation(l.getID());
+
+        this.playerData.DM("You successfully traveled from **" + Realm.CURRENT.getLocation(current).getName() + "** to **" + l.getName() + "**!");
+
+        if(!l.getID().startsWith("HUB")) this.addCooldownTimer();
+
+        TRAVEL_TIME.get(this.player.getId()).cancel(true);
+        TRAVEL_TIME.remove(this.player.getId());
+    }
+
     private void addCooldownTimer()
     {
         int stamina = this.playerData.getActiveCharacter().getStat(Stat.STAMINA);
-        int time = 60 - (int)((Math.pow(stamina, 1.2) / (1 + 2.6 * stamina)) * 60);
+        int time = Math.max(60 - (int)((Math.pow(stamina, 1.2) / (1 + 2.6 * stamina)) * 60), 5);
+
+        time = new SplittableRandom().nextInt((int)(time * 0.9), (int)(time * 1.1));
 
         ScheduledFuture<?> cooldown = THREAD_POOL.schedule(() -> {
             Collections.synchronizedMap(TRAVEL_COOLDOWNS).get(this.player.getId()).cancel(true);
