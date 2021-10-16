@@ -40,7 +40,7 @@ public class CommandTravel extends Command
             if(possible.contains(l.getID()) || visited.contains(l.getID()))
             {
                 this.playerData.setLocation(l.getID());
-                this.playerData.addVisitedLocation(l.getID());
+                if(!visited.contains(l.getID())) this.playerData.addVisitedLocation(l.getID());
 
                 //TODO: Travel time (between locations)
                 //TODO: Travel cooldown (so people can't spam through)
