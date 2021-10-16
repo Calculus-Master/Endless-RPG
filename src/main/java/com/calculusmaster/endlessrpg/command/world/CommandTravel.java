@@ -24,6 +24,7 @@ public class CommandTravel extends Command
 
             Location l = Realm.CURRENT.getLocation(target);
             if(l == null) for(Location realmLocation : Realm.CURRENT.getLocations()) if(realmLocation.getName().equalsIgnoreCase(target)) l = realmLocation;
+            if(target.equalsIgnoreCase("hub")) l = Realm.CURRENT.getLocations().get(0);
 
             if(l == null)
             {
