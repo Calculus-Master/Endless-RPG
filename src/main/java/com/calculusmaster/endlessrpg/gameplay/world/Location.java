@@ -125,8 +125,13 @@ public class Location
     private void setName()
     {
         //TODO: Location Types, like cities, towns, forests, mines, caves, lakes, etc
+        String file = "/names/" + switch(this.getType()) {
+            case TOWN -> "town_names.txt";
+            case DUNGEON -> "dungeon_names.txt";
+            default -> "location_names.txt";
+        };
 
-        List<String> pool = new BufferedReader(new InputStreamReader(Objects.requireNonNull(EndlessRPG.class.getResourceAsStream("/names/location_names.txt")))).lines().toList();
+        List<String> pool = new BufferedReader(new InputStreamReader(Objects.requireNonNull(EndlessRPG.class.getResourceAsStream(file)))).lines().toList();
         this.name = pool.get(new SplittableRandom().nextInt(pool.size()));
     }
 }
