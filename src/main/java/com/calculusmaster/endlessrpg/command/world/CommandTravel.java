@@ -19,7 +19,7 @@ public class CommandTravel extends Command
 {
     private static final ScheduledExecutorService THREAD_POOL = Executors.newScheduledThreadPool(5);
 
-    private static final Map<String, ScheduledFuture<?>> TRAVEL_COOLDOWNS = new HashMap<>();
+    public static final Map<String, ScheduledFuture<?>> TRAVEL_COOLDOWNS = new HashMap<>();
 
     public CommandTravel(MessageReceivedEvent event, String msg)
     {

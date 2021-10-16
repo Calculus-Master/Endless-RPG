@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.command.misc;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
+import com.calculusmaster.endlessrpg.command.world.CommandTravel;
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
@@ -16,6 +17,7 @@ import com.mongodb.client.model.Updates;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class CommandDeveloper extends Command
 {
@@ -82,6 +84,11 @@ public class CommandDeveloper extends Command
                 }
                 case "newrealm" -> Realm.init();
                 case "realmmap" -> this.event.getChannel().sendMessage(Realm.CURRENT.getRealmLayout().toString()).queue();
+                case "removecooldown" -> {
+                    String ID = this.getMentions().size() > 0 ? this.getMentions().get(0).getId() : this.player.getId();
+                    Collections.synchronizedMap(CommandTravel.TRAVEL_COOLDOWNS).get(ID).cancel(true);
+                    Collections.synchronizedMap(CommandTravel.TRAVEL_COOLDOWNS).remove(ID);
+                }
                 default -> throw new IllegalStateException("Invalid Developer Command. Input: " + this.msg[0]);
             }
 
