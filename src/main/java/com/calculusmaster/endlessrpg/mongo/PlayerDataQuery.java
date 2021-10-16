@@ -27,6 +27,7 @@ public class PlayerDataQuery extends AbstractMongoQuery
                 .append("selected", 0)
                 .append("gold", 100)
                 .append("location", "")
+                .append("visited", new JSONArray())
                 .append("loot", new JSONArray());
 
         Mongo.PlayerData.insertOne(data);
@@ -132,6 +133,22 @@ public class PlayerDataQuery extends AbstractMongoQuery
     public void resetLocation()
     {
         this.setLocation("");
+    }
+
+    //key: "visited"
+    public List<String> getVisitedLocations()
+    {
+        return this.document.getList("visited", String.class);
+    }
+
+    public void addVisitedLocation(String locationID)
+    {
+        this.update(Updates.push("visited", locationID));
+    }
+
+    public void clearVisitedLocations()
+    {
+        this.update(Updates.set("visited", new JSONArray()));
     }
 
     //key: "loot"

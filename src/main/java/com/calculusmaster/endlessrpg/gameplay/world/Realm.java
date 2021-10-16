@@ -7,6 +7,7 @@ import com.calculusmaster.endlessrpg.util.helpers.IDHelper;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
+import org.json.JSONArray;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -25,12 +26,17 @@ public class Realm
 
     public static void init()
     {
-        if(Mongo.RealmData.find().first() != null) Realm.build(Mongo.RealmData.find().first().getString("realmID")).delete();
+        if(Mongo.RealmData.find().first() != null)
+        {
+            Realm.build(Mongo.RealmData.find().first().getString("realmID")).delete();
+            Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.set("visited", new JSONArray()));
+        }
 
         CURRENT = Realm.create();
         CURRENT.upload();
 
         Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.set("location", CURRENT.getLocations().get(0).getID()));
+        Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.push("visited", CURRENT.getLocations().get(0).getID()));
 
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(Realm::init, 0, 1, TimeUnit.DAYS);
     }
@@ -102,7 +108,7 @@ public class Realm
         return this.locations;
     }
 
-    public Map<String, List<String>> getRealmLayout()
+    public LinkedHashMap<String, List<String>> getRealmLayout()
     {
         return this.realmMap;
     }
@@ -123,7 +129,7 @@ public class Realm
 
         Collections.shuffle(this.locations);
 
-        this.locations.add(Location.createRealmHub(this.name));
+        this.locations.add(0, Location.createRealmHub(this.name));
     }
 
     private void createRealmMap()
