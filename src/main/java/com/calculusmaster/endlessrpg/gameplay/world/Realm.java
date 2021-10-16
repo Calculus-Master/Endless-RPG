@@ -124,9 +124,26 @@ public class Realm
 
         this.locations = new ArrayList<>();
 
-        for(int i = 0; i < towns; i++) this.locations.add(Location.create(LocationType.TOWN));
-        for(int i = 0; i < dungeons; i++) this.locations.add(Location.create(LocationType.DUNGEON));
-        for(int i = 0; i < biomes; i++) this.locations.add(Location.create(LocationType.getRandomBiome()));
+        for(int i = 0; i < towns; i++)
+        {
+            Location l = Location.create(LocationType.TOWN);
+            if(this.locations.stream().anyMatch(loc -> loc.getName().equals(l.getName()))) i--;
+            else this.locations.add(l);
+        }
+
+        for(int i = 0; i < dungeons; i++)
+        {
+            Location l = Location.create(LocationType.DUNGEON);
+            if(this.locations.stream().anyMatch(loc -> loc.getName().equals(l.getName()))) i--;
+            else this.locations.add(l);
+        }
+
+        for(int i = 0; i < biomes; i++)
+        {
+            Location l = Location.create(LocationType.getRandomBiome());
+            if(this.locations.stream().anyMatch(loc -> loc.getName().equals(l.getName()))) i--;
+            else this.locations.add(l);
+        }
 
         Collections.shuffle(this.locations);
 
