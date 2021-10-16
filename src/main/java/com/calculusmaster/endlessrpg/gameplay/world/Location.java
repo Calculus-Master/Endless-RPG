@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.world;
 
 import com.calculusmaster.endlessrpg.EndlessRPG;
+import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Time;
 import com.calculusmaster.endlessrpg.gameplay.enums.Weather;
 import com.calculusmaster.endlessrpg.util.Mongo;
@@ -19,6 +20,7 @@ public class Location
 {
     private String locationID;
     private String name;
+    private LocationType type;
     private Weather weather;
 
     private Location() {}
@@ -29,6 +31,7 @@ public class Location
 
         l.locationID = IDHelper.create(6);
         l.setName();
+        l.type = LocationType.values()[new SplittableRandom().nextInt(LocationType.values().length)];
         l.weather = Weather.values()[new SplittableRandom().nextInt(Weather.values().length)];
 
         return l;
@@ -42,6 +45,7 @@ public class Location
 
         l.locationID = locationID;
         l.name = data.getString("name");
+        l.type = LocationType.cast(data.getString("type"));
         l.weather = Weather.cast(data.getString("weather"));
 
         return l;
@@ -52,6 +56,7 @@ public class Location
         Document data = new Document()
                 .append("locationID", this.locationID)
                 .append("name", this.name)
+                .append("type", this.type.toString())
                 .append("weather", this.weather.toString());
 
         Mongo.LocationData.insertOne(data);
@@ -76,6 +81,16 @@ public class Location
     public String getName()
     {
         return this.name;
+    }
+
+    public LocationType getType()
+    {
+        return this.type;
+    }
+
+    public void setType(LocationType type)
+    {
+        this.type = type;
     }
 
     public Weather getWeather()
