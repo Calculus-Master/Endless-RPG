@@ -6,6 +6,7 @@ import java.util.SplittableRandom;
 
 public enum LocationType
 {
+    HUB,
     TOWN,
     DUNGEON,
     FOREST,
@@ -22,6 +23,6 @@ public enum LocationType
 
     public static LocationType getRandomBiome()
     {
-        return values()[new SplittableRandom().nextInt(2, values().length)];
+        return values()[new SplittableRandom().nextInt(3, values().length)];
     }
 }

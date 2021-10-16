@@ -29,10 +29,22 @@ public class Location
     {
         Location l = new Location();
 
-        l.locationID = IDHelper.create(6);
+        l.locationID = IDHelper.create(8);
         l.setName();
         l.type = type;
         l.weather = Weather.values()[new SplittableRandom().nextInt(Weather.values().length)];
+
+        return l;
+    }
+
+    public static Location createRealmHub(String name)
+    {
+        Location l = new Location();
+
+        l.locationID = "HUB-" + IDHelper.create(4);
+        l.name = "Hub of " + name;
+        l.type = LocationType.HUB;
+        l.weather = Weather.CLEAR;
 
         return l;
     }

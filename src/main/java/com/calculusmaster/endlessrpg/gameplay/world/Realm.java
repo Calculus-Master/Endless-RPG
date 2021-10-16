@@ -21,6 +21,7 @@ public class Realm
     private String realmID;
     private String name;
     private List<Location> locations;
+    private LinkedHashMap<String, List<String>> realmMap;
 
     public static void init()
     {
@@ -43,6 +44,7 @@ public class Realm
         r.realmID = IDHelper.create(10);
         r.setName();
         r.createLocations();
+        r.createRealmMap();
 
         return r;
     }
@@ -100,6 +102,11 @@ public class Realm
         return this.locations;
     }
 
+    public Map<String, List<String>> getRealmLayout()
+    {
+        return this.realmMap;
+    }
+
     private void createLocations()
     {
         int totalCount = new SplittableRandom().nextInt(15, 30);
@@ -115,6 +122,50 @@ public class Realm
         for(int i = 0; i < biomes; i++) this.locations.add(Location.create(LocationType.getRandomBiome()));
 
         Collections.shuffle(this.locations);
+
+        this.locations.add(Location.createRealmHub(this.name));
+    }
+
+    private void createRealmMap()
+    {
+        List<Location> all = new ArrayList<>(List.copyOf(this.locations));
+
+        List<List<Location>> columns = new ArrayList<>();
+
+        while(!all.isEmpty())
+        {
+            int nodes = Math.min(new SplittableRandom().nextInt(1, 4), all.size());
+
+            columns.add(List.copyOf(all.subList(0, nodes)));
+            all.subList(0, nodes).clear();
+        }
+
+        this.realmMap = new LinkedHashMap<>();
+
+        for(int i = 0; i < columns.size() - 1; i++)
+        {
+            List<Location> current = columns.get(i);
+            List<Location> next = columns.get(i + 1);
+
+            List<Integer> nums = new ArrayList<>();
+            for(int k = 0; k < next.size(); k++) nums.add(k);
+
+            while(!nums.isEmpty())
+            {
+                int rCurrent = new SplittableRandom().nextInt(current.size());
+                int numsIndex = new SplittableRandom().nextInt(nums.size());
+
+                String key = current.get(rCurrent).getID();
+                String addition = next.get(nums.get(numsIndex)).getID();
+
+                if(!this.realmMap.containsKey(key)) this.realmMap.put(key, new ArrayList<>());
+                this.realmMap.get(key).add(addition);
+
+                nums.remove(numsIndex);
+            }
+        }
+
+        for(Location l : columns.get(columns.size() - 1)) this.realmMap.put(l.getName(), new ArrayList<>());
     }
 
     private void setName()
