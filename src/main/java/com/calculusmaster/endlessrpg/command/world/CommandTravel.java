@@ -22,20 +22,21 @@ public class CommandTravel extends Command
         {
             String target = this.msgMultiWordContent(1);
 
+            String current = this.playerData.getLocationID();
+            List<String> possible = Realm.CURRENT.getRealmLayout().get(current);
+
+            List<String> visited = this.playerData.getVisitedLocations();
+
             Location l = Realm.CURRENT.getLocation(target);
             if(l == null) for(Location realmLocation : Realm.CURRENT.getLocations()) if(realmLocation.getName().equalsIgnoreCase(target)) l = realmLocation;
             if(target.equalsIgnoreCase("hub")) l = Realm.CURRENT.getLocations().get(0);
+            if(target.equalsIgnoreCase("latest")) l = Realm.CURRENT.getLocation(this.playerData.getVisitedLocations().get(this.playerData.getVisitedLocations().size() - 1));
 
             if(l == null)
             {
                 this.response = "Invalid Location name or ID!";
                 return this;
             }
-
-            String current = this.playerData.getLocationID();
-            List<String> possible = Realm.CURRENT.getRealmLayout().get(current);
-
-            List<String> visited = this.playerData.getVisitedLocations();
 
             if(possible.contains(l.getID()) || visited.contains(l.getID()))
             {
