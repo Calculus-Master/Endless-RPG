@@ -45,13 +45,13 @@ public class CommandLocation extends Command
         for(String s : visited)
         {
             Location l = Realm.CURRENT.getLocation(s);
-            content.append("**").append(l.getName()).append("** ").append(visited.contains(s) ? " (Visited) " : "").append("– ");
+            content.append("**").append(l.getName()).append("** – ");
 
             if(layout.get(s).isEmpty()) content.append("None (Path End)");
             else
             {
                 StringBuilder list = new StringBuilder();
-                for(String next : layout.get(s)) list.append(Realm.CURRENT.getLocation(next).getName()).append(visited.contains(next) ? " (Visited)" : "").append(" | ");
+                for(String next : layout.get(s)) list.append(visited.contains(next) ? "" : "`").append(Realm.CURRENT.getLocation(next).getName()).append(visited.contains(next) ? "" : "`").append(" | ");
                 content.append(list.delete(list.length() - 3, list.length()));
             }
 
