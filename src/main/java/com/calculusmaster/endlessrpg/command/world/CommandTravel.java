@@ -47,7 +47,7 @@ public class CommandTravel extends Command
                 //TODO: Location travel requirements (fight an enemy to gain access, RPGCharacterRequirements field in Location objects)
                 this.response = "You successfully traveled from **" + Realm.CURRENT.getLocation(current).getName() + "** to **" + l.getName() + "**!";
             }
-            else this.response = "You cannot travel to this Location! You must have visited a nearby Location to be able to travel to `%s`!".formatted(l.getName());
+            else this.response = "You cannot travel to this Location! You must have visited a nearby Location to be able to travel to `%s`! (If the Location is visible using the Location command, you must travel to the previous node before you are allowed to travel to this one)".formatted(l.getName());
         }
 
         return this;
