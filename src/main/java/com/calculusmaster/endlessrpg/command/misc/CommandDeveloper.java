@@ -81,6 +81,7 @@ public class CommandDeveloper extends Command
                     active.completeUpdate();
                 }
                 case "newrealm" -> Realm.init();
+                case "realmmap" -> this.response = Realm.CURRENT.getRealmLayout().toString();
                 default -> throw new IllegalStateException("Invalid Developer Command. Input: " + this.msg[0]);
             }
 
