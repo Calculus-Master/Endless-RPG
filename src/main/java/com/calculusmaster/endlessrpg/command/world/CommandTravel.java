@@ -49,13 +49,13 @@ public class CommandTravel extends Command
             }
 
             if(l.getID().equals(current)) this.response = "You are already at that Location!";
-            else if(!l.getID().startsWith("HUB") && TRAVEL_COOLDOWNS.containsKey(this.player.getId())) this.response = "Your character is exhausted! You cannot travel for another " + TRAVEL_COOLDOWNS.get(this.player.getId()).getDelay(TimeUnit.MINUTES) + " minutes!";
-            else if(TRAVEL_TIME.containsKey(this.player.getId())) this.response = "Your character is currently traveling to a location! They will arrive in " + TRAVEL_TIME.get(this.player.getId()).getDelay(TimeUnit.MINUTES) + " minutes!";
+            else if(!l.getID().startsWith("HUB") && TRAVEL_COOLDOWNS.containsKey(this.player.getId())) this.response = "Your character is exhausted! You cannot travel for another " + this.formatTime(TRAVEL_COOLDOWNS.get(this.player.getId()).getDelay(TimeUnit.SECONDS)) + " minutes!";
+            else if(TRAVEL_TIME.containsKey(this.player.getId())) this.response = "Your character is currently traveling to a location! They will arrive in " + this.formatTime(TRAVEL_TIME.get(this.player.getId()).getDelay(TimeUnit.SECONDS)) + " minutes!";
             else if(possible.contains(l.getID()) || visited.contains(l.getID()))
             {
                 this.addTravelTime(l, visited, current);
 
-                this.response = "Your character started traveling to " + l.getName() + "! Traveling will take about " + TRAVEL_TIME.get(this.player.getId()).getDelay(TimeUnit.MINUTES) + " minutes!";
+                this.response = "Your character started traveling to " + l.getName() + "! Traveling will take about " + this.formatTime(TRAVEL_TIME.get(this.player.getId()).getDelay(TimeUnit.SECONDS)) + " minutes!";
                 //TODO: Location travel requirements (fight an enemy to gain access, RPGCharacterRequirements field in Location objects)
             }
             else this.response = "You cannot travel to this Location! You must have visited a nearby Location to be able to travel to `%s`! (If the Location is visible using the Location command, you must travel to the previous node before you are allowed to travel to this one)".formatted(l.getName());
@@ -101,5 +101,13 @@ public class CommandTravel extends Command
         }, time, TimeUnit.MINUTES);
 
         TRAVEL_COOLDOWNS.put(this.player.getId(), cooldown);
+    }
+
+    private String formatTime(long time)
+    {
+        int seconds = (int)(time % 60);
+        int minutes = (int)(time / 60);
+
+        return minutes + "M " + seconds + "S";
     }
 }
