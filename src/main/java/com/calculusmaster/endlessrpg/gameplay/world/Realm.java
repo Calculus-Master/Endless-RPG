@@ -39,7 +39,7 @@ public class Realm
         Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.set("location", CURRENT.getLocations().get(0).getID()));
         Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.push("visited", CURRENT.getLocations().get(0).getID()));
 
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(Realm::init, 0, 1, TimeUnit.DAYS);
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(Realm::init, 1, 1, TimeUnit.DAYS);
     }
 
     private Realm() {}
