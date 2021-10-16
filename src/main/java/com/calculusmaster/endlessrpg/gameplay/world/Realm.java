@@ -202,7 +202,7 @@ public class Realm
             for(Location l : current) if(!this.realmMap.containsKey(l.getID())) this.realmMap.put(l.getID(), new ArrayList<>());
         }
 
-        for(Location l : columns.get(columns.size() - 1)) this.realmMap.put(l.getName(), new ArrayList<>());
+        for(Location l : columns.get(columns.size() - 1)) this.realmMap.put(l.getID(), new ArrayList<>());
     }
 
     private void setName()
