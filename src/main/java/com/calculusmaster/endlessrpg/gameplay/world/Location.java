@@ -49,6 +49,18 @@ public class Location
         return l;
     }
 
+    public static Location createFinalKingdom(String name)
+    {
+        Location l = new Location();
+
+        l.locationID = "KING-" + IDHelper.create(3);
+        l.name = "Kingdom of " + name;
+        l.type = LocationType.FINAL_KINGDOM;
+        l.weather = Weather.CLEAR; //TODO: Harshest weather?
+
+        return l;
+    }
+
     public static Location build(String locationID)
     {
         Document data = Objects.requireNonNull(Mongo.LocationData.find(Filters.eq("locationID", locationID)).first());

@@ -148,6 +148,7 @@ public class Realm
         Collections.shuffle(this.locations);
 
         this.locations.add(0, Location.createRealmHub(this.name));
+        this.locations.add(Location.createFinalKingdom(this.name));
     }
 
     private void createRealmMap()
@@ -156,8 +157,12 @@ public class Realm
 
         List<List<Location>> columns = new ArrayList<>();
 
+        //Hub
         columns.add(List.of(all.get(0)));
         all.remove(0);
+
+        //Final Kingdom
+        all.remove(all.size() - 1);
 
         while(!all.isEmpty())
         {
@@ -166,6 +171,9 @@ public class Realm
             columns.add(List.copyOf(all.subList(0, nodes)));
             all.subList(0, nodes).clear();
         }
+
+        //Final Kingdom
+        columns.add(List.of(this.locations.get(this.locations.size() - 1)));
 
         this.realmMap = new LinkedHashMap<>();
 
