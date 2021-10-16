@@ -156,6 +156,9 @@ public class Realm
 
         List<List<Location>> columns = new ArrayList<>();
 
+        columns.add(List.of(all.get(0)));
+        all.remove(0);
+
         while(!all.isEmpty())
         {
             int nodes = Math.min(new SplittableRandom().nextInt(1, 4), all.size());
