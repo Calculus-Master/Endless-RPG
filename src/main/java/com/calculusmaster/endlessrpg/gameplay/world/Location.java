@@ -25,13 +25,13 @@ public class Location
 
     private Location() {}
 
-    public static Location create()
+    public static Location create(LocationType type)
     {
         Location l = new Location();
 
         l.locationID = IDHelper.create(6);
         l.setName();
-        l.type = LocationType.values()[new SplittableRandom().nextInt(LocationType.values().length)];
+        l.type = type;
         l.weather = Weather.values()[new SplittableRandom().nextInt(Weather.values().length)];
 
         return l;

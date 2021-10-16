@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.world;
 
 import com.calculusmaster.endlessrpg.EndlessRPG;
+import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.calculusmaster.endlessrpg.util.helpers.IDHelper;
 import com.mongodb.client.model.Filters;
@@ -104,11 +105,17 @@ public class Realm
 
     private void createLocations()
     {
-        int count = new SplittableRandom().nextInt(15, 30);
+        int totalCount = new SplittableRandom().nextInt(15, 30);
+
+        int towns = totalCount / 5;
+        int dungeons = 3;
+        int biomes = totalCount - dungeons - towns;
 
         this.locations = new ArrayList<>();
 
-        for(int i = 0; i < count; i++) this.locations.add(Location.create());
+        for(int i = 0; i < towns; i++) this.locations.add(Location.create(LocationType.TOWN));
+        for(int i = 0; i < dungeons; i++) this.locations.add(Location.create(LocationType.DUNGEON));
+        for(int i = 0; i < biomes; i++) this.locations.add(Location.create(LocationType.getRandomBiome()));
     }
 
     private void setName()
