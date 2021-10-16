@@ -11,9 +11,10 @@ import com.calculusmaster.endlessrpg.command.loot.CommandDelete;
 import com.calculusmaster.endlessrpg.command.loot.CommandInventory;
 import com.calculusmaster.endlessrpg.command.loot.CommandLootInfo;
 import com.calculusmaster.endlessrpg.command.misc.CommandDeveloper;
-import com.calculusmaster.endlessrpg.command.misc.CommandLocation;
 import com.calculusmaster.endlessrpg.command.spell.CommandSpellInfo;
 import com.calculusmaster.endlessrpg.command.spell.CommandSpells;
+import com.calculusmaster.endlessrpg.command.world.CommandLocation;
+import com.calculusmaster.endlessrpg.command.world.CommandTravel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -79,6 +80,9 @@ public class CommandHandler
 
         register("location")
                 .setCommand(CommandLocation::new);
+
+        register("travel")
+                .setCommand(CommandTravel::new);
 
         register("dev")
                 .setCommand(CommandDeveloper::new);
