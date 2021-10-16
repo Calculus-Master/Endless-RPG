@@ -13,7 +13,10 @@ public enum Stat
     //Weapon Affinity Stats
     STRENGTH,
     INTELLECT,
-    PRECISION;
+    PRECISION,
+
+    //Other Stats
+    STAMINA;
 
     public static Stat cast(String input)
     {
