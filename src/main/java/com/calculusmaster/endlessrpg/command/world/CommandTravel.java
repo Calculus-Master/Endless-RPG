@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg.command.world;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.command.misc.CommandDeveloper;
+import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
@@ -86,7 +87,13 @@ public class CommandTravel extends Command
 
         this.playerData.DM("You successfully traveled from **" + Realm.CURRENT.getLocation(current).getName() + "** to **" + l.getName() + "**!");
 
-        if(!l.getID().startsWith("HUB")) this.addCooldownTimer();
+        if(l.getType().equals(LocationType.FINAL_KINGDOM) && !visited.contains(l.getID()))
+        {
+            this.playerData.DM("You reached the " + l.getName() + "! You are given a sizable sum of gold from a stranger, who immediately disappears...What secrets lie within the " + l.getName() + "?");
+            this.playerData.addGold(new SplittableRandom().nextInt(500, 1000) + 1000);
+        }
+
+        if(!l.getType().equals(LocationType.HUB)) this.addCooldownTimer();
 
         TRAVEL_TIME.get(this.player.getId()).cancel(true);
         TRAVEL_TIME.remove(this.player.getId());
