@@ -29,6 +29,7 @@ public class Realm
         if(Mongo.RealmData.find().first() != null)
         {
             Realm.build(Mongo.RealmData.find().first().getString("realmID")).delete();
+            Mongo.LocationData.deleteMany(Filters.exists("locationID"));
             Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.set("visited", new JSONArray()));
         }
 
