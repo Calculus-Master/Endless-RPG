@@ -38,7 +38,8 @@ public class CommandTravel extends Command
                 return this;
             }
 
-            if(possible.contains(l.getID()) || visited.contains(l.getID()))
+            if(l.getID().equals(current)) this.response = "You are already at that Location!";
+            else if(possible.contains(l.getID()) || visited.contains(l.getID()))
             {
                 this.playerData.setLocation(l.getID());
                 if(!visited.contains(l.getID())) this.playerData.addVisitedLocation(l.getID());
