@@ -58,7 +58,6 @@ public class CommandTravel extends Command
                 if(!visited.contains(l.getID())) this.playerData.addVisitedLocation(l.getID());
 
                 //TODO: Travel time (between locations)
-                //TODO: TEST THIS FEATURE: Travel cooldown (so people can't spam through) - Cooldown time: 60 - (x^1.2 / (1 + 2.6x)) * 60, x = stamina
                 //TODO: Location travel requirements (fight an enemy to gain access, RPGCharacterRequirements field in Location objects)
                 this.response = "You successfully traveled from **" + Realm.CURRENT.getLocation(current).getName() + "** to **" + l.getName() + "**!";
 
