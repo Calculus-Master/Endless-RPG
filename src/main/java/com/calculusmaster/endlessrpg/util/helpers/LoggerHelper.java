@@ -14,7 +14,7 @@ public class LoggerHelper
 
     public static void init(String name, Runnable init, boolean time)
     {
-        info(EndlessRPG.class, "Starting " + name + " Init!");
+        info(EndlessRPG.class, "Initializing " + name + "!");
         long i = System.currentTimeMillis();
 
         init.run();

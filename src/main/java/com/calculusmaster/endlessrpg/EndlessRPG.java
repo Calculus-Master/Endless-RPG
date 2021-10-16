@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg;
 
 import com.calculusmaster.endlessrpg.command.core.CommandHandler;
 import com.calculusmaster.endlessrpg.command.economy.CommandShop;
+import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.util.Listener;
 import com.calculusmaster.endlessrpg.util.PrivateInfo;
 import com.calculusmaster.endlessrpg.util.helpers.LoggerHelper;
@@ -31,5 +32,7 @@ public class EndlessRPG
 
         BOT_JDA = bot.build().awaitReady();
         TESTING_SERVER = BOT_JDA.getGuildById("873993084155887617");
+
+        LoggerHelper.init("Realm", Realm::init);
     }
 }
