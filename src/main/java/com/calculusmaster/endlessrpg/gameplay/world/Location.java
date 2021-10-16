@@ -30,8 +30,8 @@ public class Location
         Location l = new Location();
 
         l.locationID = IDHelper.create(8);
-        l.setName();
         l.type = type;
+        l.setName();
         l.weather = Weather.values()[new SplittableRandom().nextInt(Weather.values().length)];
 
         return l;
