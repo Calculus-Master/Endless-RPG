@@ -24,7 +24,7 @@ public class EndlessRPG
 
         LoggerHelper.init("Command", CommandHandler::init);
         LoggerHelper.init("Shop", CommandShop::init);
-        LoggerHelper.init("Realm", Realm::init);
+        LoggerHelper.init("Realm", Realm::init, true);
 
         JDABuilder bot = JDABuilder
                 .createDefault(PrivateInfo.TOKEN)
