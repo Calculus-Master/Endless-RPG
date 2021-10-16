@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class CommandLocation extends Command
 {
@@ -26,8 +27,20 @@ public class CommandLocation extends Command
                 .setTitle(Realm.CURRENT.getName())
                 .addField("Current Location", "**" + location.getName() + "**\nType: " + Global.normalize(location.getType().toString().replaceAll("_", " ")), true)
                 .addField("Current Time", "**" + Global.normalize(location.getTime().toString()) + "**", true)
-                .addField("Current Weather", "**" + Global.normalize(location.getWeather().toString()) + "**", true)
-                .addField(this.getVisitedOverview());
+                .addField("Current Weather", "**" + Global.normalize(location.getWeather().toString()) + "**", true);
+
+        if(CommandTravel.TRAVEL_COOLDOWNS.containsKey(this.player.getId()) || CommandTravel.TRAVEL_TIME.containsKey(this.player.getId()))
+        {
+            StringBuilder lines = new StringBuilder();
+
+            if(CommandTravel.TRAVEL_COOLDOWNS.containsKey(this.player.getId())) lines.append("Exhaustion: `").append(this.formatTime(CommandTravel.TRAVEL_COOLDOWNS.get(this.player.getId()).getDelay(TimeUnit.SECONDS))).append("`!\n");
+            if(CommandTravel.TRAVEL_TIME.containsKey(this.player.getId())) lines.append("Currently Traveling! Arrival in `").append(this.formatTime(CommandTravel.TRAVEL_TIME.get(this.player.getId()).getDelay(TimeUnit.SECONDS))).append("`!\n");
+
+            lines.deleteCharAt(lines.length() - 1);
+            this.embed.addField("Travel Status", lines.toString(), false);
+        }
+
+        this.embed.addField(this.getVisitedOverview());
 
         //TODO: Detailed description of Location (with Type), detailed description of weather effects, detailed description of realm effects
 
@@ -59,5 +72,13 @@ public class CommandLocation extends Command
         }
 
         return new MessageEmbed.Field("Realm Exploration Progress", content.toString(), false);
+    }
+
+    private String formatTime(long time)
+    {
+        int seconds = (int)(time % 60);
+        int minutes = (int)(time / 60);
+
+        return minutes + "M " + seconds + "S";
     }
 }
