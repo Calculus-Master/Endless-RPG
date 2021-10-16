@@ -73,6 +73,7 @@ public class CommandTravel extends Command
         time = new SplittableRandom().nextInt((int)(time * 0.9), (int)(time * 1.1));
 
         if(CommandDeveloper.isDevMode(this.player.getId())) time = 1;
+        time = 1;
 
         ScheduledFuture<?> travelTime = THREAD_POOL.schedule(() -> this.arrive(l, visited, current), time, TimeUnit.MINUTES);
         TRAVEL_TIME.put(this.player.getId(), travelTime);
@@ -97,6 +98,7 @@ public class CommandTravel extends Command
         int time = Math.max(60 - (int)((Math.pow(stamina, 1.2) / (1 + 2.6 * stamina)) * 60), 5);
 
         time = new SplittableRandom().nextInt((int)(time * 0.9), (int)(time * 1.1));
+        time = 1;
 
         if(CommandDeveloper.isDevMode(this.player.getId())) time = 1;
 
