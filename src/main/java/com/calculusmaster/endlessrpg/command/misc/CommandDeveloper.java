@@ -21,6 +21,9 @@ import java.util.Collections;
 
 public class CommandDeveloper extends Command
 {
+    public static boolean DEV_MODE = false;
+    public static final String DEVELOPER = "309135641453527040";
+
     public CommandDeveloper(MessageReceivedEvent event, String msg)
     {
         super(event, msg);
@@ -30,7 +33,7 @@ public class CommandDeveloper extends Command
     public Command run()
     {
         if(this.msg.length == 1) this.response = INVALID;
-        else if(!this.player.getId().equals("309135641453527040")) this.response = "You cannot use this Command!";
+        else if(!this.player.getId().equals(DEVELOPER)) this.response = "You cannot use this Command!";
         else
         {
             switch(this.msg[1])
@@ -89,6 +92,10 @@ public class CommandDeveloper extends Command
                     Collections.synchronizedMap(CommandTravel.TRAVEL_COOLDOWNS).get(ID).cancel(true);
                     Collections.synchronizedMap(CommandTravel.TRAVEL_COOLDOWNS).remove(ID);
                 }
+                case "devmode" -> {
+                    DEV_MODE = !DEV_MODE;
+                    this.event.getChannel().sendMessage("Developer Mode is now " + DEV_MODE).queue();
+                }
                 default -> throw new IllegalStateException("Invalid Developer Command. Input: " + this.msg[0]);
             }
 
@@ -96,5 +103,10 @@ public class CommandDeveloper extends Command
         }
 
         return this;
+    }
+
+    public static boolean isDevMode(String ID)
+    {
+        return ID.equals(DEVELOPER) && DEV_MODE;
     }
 }
