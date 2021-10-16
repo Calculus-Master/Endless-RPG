@@ -78,10 +78,10 @@ public class CommandHandler
         register("spells")
                 .setCommand(CommandSpells::new);
 
-        register("location")
+        register("location", "loc")
                 .setCommand(CommandLocation::new);
 
-        register("travel")
+        register("travel", "go")
                 .setCommand(CommandTravel::new);
 
         register("dev")
