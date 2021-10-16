@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.SplittableRandom;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Realm
 {
@@ -30,6 +32,8 @@ public class Realm
         CURRENT.upload();
 
         Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.set("location", CURRENT.getLocations().get(0).getID()));
+
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(Realm::init, 0, 1, TimeUnit.DAYS);
     }
 
     private Realm() {}
