@@ -51,7 +51,7 @@ public class CommandTravel extends Command
             }
 
             if(l.getID().equals(current)) this.response = "You are already at that Location!";
-            else if(TRAVEL_COOLDOWNS.containsKey(this.player.getId())) this.response = "Your character is exhausted! You cannot travel for another " + TRAVEL_COOLDOWNS.get(this.player.getId()).getDelay(TimeUnit.MINUTES) + " minutes!";
+            else if(!l.getID().startsWith("HUB") && TRAVEL_COOLDOWNS.containsKey(this.player.getId())) this.response = "Your character is exhausted! You cannot travel for another " + TRAVEL_COOLDOWNS.get(this.player.getId()).getDelay(TimeUnit.MINUTES) + " minutes!";
             else if(possible.contains(l.getID()) || visited.contains(l.getID()))
             {
                 this.playerData.setLocation(l.getID());
@@ -62,7 +62,7 @@ public class CommandTravel extends Command
                 //TODO: Location travel requirements (fight an enemy to gain access, RPGCharacterRequirements field in Location objects)
                 this.response = "You successfully traveled from **" + Realm.CURRENT.getLocation(current).getName() + "** to **" + l.getName() + "**!";
 
-                this.addCooldownTimer();
+                if(!l.getID().startsWith("HUB")) this.addCooldownTimer();
             }
             else this.response = "You cannot travel to this Location! You must have visited a nearby Location to be able to travel to `%s`! (If the Location is visible using the Location command, you must travel to the previous node before you are allowed to travel to this one)".formatted(l.getName());
         }
