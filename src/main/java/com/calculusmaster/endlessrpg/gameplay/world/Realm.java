@@ -10,10 +10,7 @@ import org.bson.Document;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.SplittableRandom;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -116,6 +113,8 @@ public class Realm
         for(int i = 0; i < towns; i++) this.locations.add(Location.create(LocationType.TOWN));
         for(int i = 0; i < dungeons; i++) this.locations.add(Location.create(LocationType.DUNGEON));
         for(int i = 0; i < biomes; i++) this.locations.add(Location.create(LocationType.getRandomBiome()));
+
+        Collections.shuffle(this.locations);
     }
 
     private void setName()
