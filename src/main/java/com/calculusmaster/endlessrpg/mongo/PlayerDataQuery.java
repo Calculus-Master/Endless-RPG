@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg.mongo;
 import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
@@ -26,8 +27,8 @@ public class PlayerDataQuery extends AbstractMongoQuery
                 .append("characters", new JSONArray())
                 .append("selected", 0)
                 .append("gold", 100)
-                .append("location", "")
-                .append("visited", new JSONArray())
+                .append("location", Realm.CURRENT.getLocations().get(0).getID())
+                .append("visited", List.of(Realm.CURRENT.getLocations().get(0).getID()))
                 .append("loot", new JSONArray());
 
         Mongo.PlayerData.insertOne(data);
