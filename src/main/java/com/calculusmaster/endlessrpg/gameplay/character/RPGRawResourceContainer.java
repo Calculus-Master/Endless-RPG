@@ -60,6 +60,11 @@ public class RPGRawResourceContainer
         return content.isEmpty() ? "None" : content.deleteCharAt(content.length() - 1).toString();
     }
 
+    public boolean has(RawResource r)
+    {
+        return this.get(r) != 0;
+    }
+
     public boolean isEmpty()
     {
         return this.resourceValues.values().stream().allMatch(i -> i == 0);

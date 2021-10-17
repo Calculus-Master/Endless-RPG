@@ -47,7 +47,7 @@ public class GatheringAdventure
         RPGRawResourceContainer output = this.location.getResources();
         for(RawResource r : RawResource.values())
         {
-            if(output.get(r) != 0)
+            if(output.has(r))
             {
                 this.character.getRawResources().increase(r, output.get(r));
                 this.character.addSkillExp(r.getSkill(), new SplittableRandom().nextInt((int)(0.9 * r.getExp()), (int)(1.1 * r.getExp())) * this.character.getSkillLevel(r.getSkill()));
