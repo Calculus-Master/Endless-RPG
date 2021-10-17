@@ -48,8 +48,13 @@ public class RPGRawResourceContainer
     public String getOverview(GatheringSkill s)
     {
         StringBuilder content = new StringBuilder();
-        for(RawResource r : RawResource.getResources(s)) if(this.resourceValues.get(r) != 0) content.append(r.getName()).append(" - ").append(this.resourceValues.get(r));
+        for(RawResource r : RawResource.getResources(s)) if(this.resourceValues.get(r) != 0) content.append(r.getName()).append(" - ").append(this.resourceValues.get(r)).append("\n");
         return content.isEmpty() ? "None" : content.deleteCharAt(content.length() - 1).toString();
+    }
+
+    public boolean isEmpty()
+    {
+        return this.resourceValues.values().stream().allMatch(i -> i == 0);
     }
 
     public int get(RawResource r)

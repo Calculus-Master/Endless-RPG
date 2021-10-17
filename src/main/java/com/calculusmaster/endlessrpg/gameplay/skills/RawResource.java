@@ -79,6 +79,8 @@ public enum RawResource
     HUNTING_T9(HUNTING, 9, ""),
     HUNTING_T10(HUNTING, 10, "");
 
+    public static final int MAX_TIER = 10;
+
     private final GatheringSkill skill;
     private final int tier;
     private final String name;

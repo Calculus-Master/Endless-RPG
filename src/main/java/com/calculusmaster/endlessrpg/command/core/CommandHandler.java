@@ -14,6 +14,7 @@ import com.calculusmaster.endlessrpg.command.misc.CommandDeveloper;
 import com.calculusmaster.endlessrpg.command.spell.CommandSpellInfo;
 import com.calculusmaster.endlessrpg.command.spell.CommandSpells;
 import com.calculusmaster.endlessrpg.command.world.CommandLocation;
+import com.calculusmaster.endlessrpg.command.world.CommandResources;
 import com.calculusmaster.endlessrpg.command.world.CommandTravel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -83,6 +84,9 @@ public class CommandHandler
 
         register("travel", "go")
                 .setCommand(CommandTravel::new);
+
+        register("resources")
+                .setCommand(CommandResources::new);
 
         register("dev")
                 .setCommand(CommandDeveloper::new);
