@@ -107,6 +107,23 @@ public enum RawResource
         return this.name.isEmpty() ? this.toString() : this.name; //TODO: Actual names
     }
 
+    public int getExp()
+    {
+        return switch(this.tier) {
+            case 1 -> 10;
+            case 2 -> 25;
+            case 3 -> 50;
+            case 4 -> 75;
+            case 5 -> 100;
+            case 6 -> 200;
+            case 7 -> 500;
+            case 8 -> 1000;
+            case 9 -> 1500;
+            case 10 -> 2500;
+            default -> 0;
+        };
+    }
+
     public static List<RawResource> getResources(GatheringSkill skill)
     {
         List<RawResource> resources = new ArrayList<>();

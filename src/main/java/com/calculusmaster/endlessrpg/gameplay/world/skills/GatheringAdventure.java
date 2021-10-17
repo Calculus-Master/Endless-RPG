@@ -1,13 +1,11 @@
 package com.calculusmaster.endlessrpg.gameplay.world.skills;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -50,7 +48,18 @@ public class GatheringAdventure
 
         GATHERING_ADVENTURES.remove(this);
 
+        //TODO: Weighted outputs? Dynamic EXP? Pick resource that gets gathered? Temporarily, just gives the full location's output
+        RPGRawResourceContainer output = this.location.getResources();
+        for(RawResource r : RawResource.values())
+        {
+            if(output.get(r) != 0)
+            {
+                this.character.getRawResources().increase(r, output.get(r));
+                this.character.addSkillExp(r.getSkill(), new SplittableRandom().nextInt((int)(0.9 * r.getExp()), (int)(1.1 * r.getExp())) * this.character.getSkillLevel(r.getSkill()));
+            }
+        }
 
+        this.player.DM(this.character.getName() + " finished gathering resources! Here's what was obtained:\n\n" + output.getFullOverview());
 
         this.character.completeUpdate();
     }
