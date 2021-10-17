@@ -9,7 +9,7 @@ public class StrikeSpell extends Spell
     @Override
     public String execute(RPGCharacter user, RPGCharacter target, RPGCharacter[] battlers, Battle battle)
     {
-        int damage = this.calculateDamage(user, target);
+        int damage = this.calculateDamage(user, target, battle);
 
         target.damage(damage);
 

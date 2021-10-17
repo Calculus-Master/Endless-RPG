@@ -6,6 +6,7 @@ import com.calculusmaster.endlessrpg.gameplay.character.RPGElementalContainer;
 import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
 import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
+import com.calculusmaster.endlessrpg.gameplay.enums.Weather;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 
 import java.util.Arrays;
@@ -19,7 +20,7 @@ public abstract class Spell
 
     public abstract String getDescription();
 
-    protected int calculateDamage(RPGCharacter user, RPGCharacter target)
+    protected int calculateDamage(RPGCharacter user, RPGCharacter target, Battle battle)
     {
         RPGElementalContainer userElementalDamage = user.getEquipment().combinedElementalDamage();
         RPGElementalContainer targetElementalDefense = target.getEquipment().combinedElementalDefense();
@@ -46,6 +47,12 @@ public abstract class Spell
         {
             int eATK = userElementalDamage.get(element);
             int eDEF = targetElementalDefense.get(element);
+
+            if(battle.getLocation().getWeather().equals(Weather.OVERCAST) && element.equals(ElementType.LIGHT))
+            {
+                eATK *= 0.9;
+                eDEF *= 0.9;
+            }
 
             damage += Math.max(0, eATK - eDEF);
         }
