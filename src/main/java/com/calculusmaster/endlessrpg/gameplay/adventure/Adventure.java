@@ -1,7 +1,6 @@
 package com.calculusmaster.endlessrpg.gameplay.adventure;
 
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
-import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyArchetype;
 import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyBuilder;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
@@ -123,7 +122,7 @@ public class Adventure
             }
             case BATTLE_ENEMY -> {
                 final SplittableRandom r = new SplittableRandom();
-                RPGCharacter enemy = EnemyArchetype.DEFAULT.create(this.level);
+                RPGCharacter enemy = this.location.getEnemyArchetype().create(this.level);
 
                 boolean win = Battle.simulate(this.character, enemy, this.location);
 
@@ -161,7 +160,7 @@ public class Adventure
         List<String> results = new ArrayList<>();
 
         //Must defeat Bot to receive rewards! Mini Boss is slightly more difficult than other enemies that appear in Adventures
-        RPGCharacter miniBoss = EnemyArchetype.DEFAULT.create(this.level + 1);
+        RPGCharacter miniBoss = this.location.getEnemyArchetype().create(this.level + 1);
         boolean win = Battle.simulate(this.character, miniBoss, this.location);
 
         if(win)
