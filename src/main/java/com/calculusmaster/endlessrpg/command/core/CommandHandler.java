@@ -96,6 +96,9 @@ public class CommandHandler
         register("dungeon")
                 .setCommand(CommandDungeon::new);
 
+        register("classinfo", "ci")
+                .setCommand(CommandClassInfo::new);
+
         register("dev")
                 .setCommand(CommandDeveloper::new);
     }
