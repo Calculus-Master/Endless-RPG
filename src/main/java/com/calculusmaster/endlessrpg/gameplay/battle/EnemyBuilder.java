@@ -28,21 +28,41 @@ public class EnemyBuilder
     {
         RPGCharacter enemy = RPGCharacter.create("Adventure AI");
 
-        final SplittableRandom r = new SplittableRandom();
+        EnemyBuilder.defaultClass(enemy);
+        EnemyBuilder.defaultLevel(enemy, level);
+        EnemyBuilder.defaultWeapons(enemy, level);
+        EnemyBuilder.defaultArmor(enemy, level);
 
-        //Class - Not a Recruit
-        enemy.setRPGClass(Arrays.copyOfRange(RPGClass.values(), 1, RPGClass.values().length)[r.nextInt(RPGClass.values().length - 1)]);
+        return enemy;
+    }
 
-        //Level
-        int targetLevel = Math.max(1, r.nextInt(2) + level - 1);
-        while(enemy.getLevel() < targetLevel) enemy.addExp(enemy.getExpRequired(enemy.getLevel() + 1));
+    //Helper
+    private static void setLevel(RPGCharacter enemy, int target)
+    {
+        while(enemy.getLevel() < target) enemy.addExp(enemy.getExpRequired(enemy.getLevel() + 1));
+    }
 
-        //Weapon (TODO: Pick between different kinds of weapons)
-        int weaponLevel = enemy.getLevel() + 1 + r.nextInt(3);
+    //Default
+    private static void defaultClass(RPGCharacter enemy)
+    {
+        enemy.setRPGClass(Arrays.copyOfRange(RPGClass.values(), 1, RPGClass.values().length)[new SplittableRandom().nextInt(RPGClass.values().length - 1)]);
+    }
+
+    private static void defaultLevel(RPGCharacter enemy, int level)
+    {
+        EnemyBuilder.setLevel(enemy, Math.max(1, new SplittableRandom().nextInt(level - 1, level + 2)));
+    }
+
+    private static void defaultWeapons(RPGCharacter enemy, int level)
+    {
+        //Weapon
+        int weaponLevel = enemy.getLevel() + 1 + new SplittableRandom().nextInt(3);
+
         List<LootType> weaponPool = Arrays.asList(LootType.SWORD, LootType.WAND);
         LootItem weapon = LootBuilder.reward(weaponPool.get(new SplittableRandom().nextInt(weaponPool.size())), weaponLevel);
 
         weapon.upload();
+
         switch(weapon.getLootType())
         {
             case SWORD, WAND -> {
@@ -57,16 +77,22 @@ public class EnemyBuilder
                 }
             }
         }
+    }
 
+    private static void defaultArmor(RPGCharacter enemy, int level)
+    {
         //Armor
         List<LootType> armorPool = Arrays.asList(LootType.HELMET, LootType.CHESTPLATE, LootType.GAUNTLETS, LootType.LEGGINGS, LootType.BOOTS);
-        int armorLevel = Math.max(1, enemy.getLevel() - 1 + r.nextInt(3));
+
+        int armorLevel = Math.max(1, enemy.getLevel() - 1 + new SplittableRandom().nextInt(3));
+
         int armorCount;
         if(level < 5) armorCount = 1;
         else if(level < 15) armorCount = 2;
         else if(level < 30) armorCount = 3;
         else if(level < 50) armorCount = 4;
         else armorCount = 5;
+
         for(int i = 0; i < armorCount; i++)
         {
             LootType armorType = armorPool.get(i);
@@ -75,7 +101,5 @@ public class EnemyBuilder
             armor.upload();
             enemy.equipLoot(EquipmentType.values()[i], armor.getLootID());
         }
-
-        return enemy;
     }
 }
