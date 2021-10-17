@@ -2,7 +2,6 @@ package com.calculusmaster.endlessrpg.command.character;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
-import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class CommandClassInfo extends Command
@@ -21,7 +20,7 @@ public class CommandClassInfo extends Command
         else
         {
             this.embed
-                    .setTitle(Global.normalize(clazz.toString()))
+                    .setTitle(clazz.getName())
                     .setDescription("*" + clazz.getDescription() + "*")
                     .addField("Modifiers", clazz.getModifierOverview(), false)
                     .addField("Elemental Damage Modifiers", clazz.getElementalDamageModifierOverview(), false)

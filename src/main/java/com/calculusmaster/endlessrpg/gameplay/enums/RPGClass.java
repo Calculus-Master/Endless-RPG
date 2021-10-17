@@ -11,42 +11,44 @@ import static com.calculusmaster.endlessrpg.gameplay.enums.Stat.*;
 
 public enum RPGClass
 {
-    RECRUIT("The most basic class.",
+    RECRUIT("Recruit", "The most basic class.",
             List.of(),
             List.of(),
             List.of()),
-    WARRIOR("A new soldier, somewhat adequate in the art of melee combat.",
+    WARRIOR("Warrior", "A new soldier, somewhat adequate in the art of melee combat.",
             List.of(Modifier.of(ATTACK, 1.05), Modifier.of(STRENGTH, 1.02)),
             List.of(),
             List.of()),
-    TANK("A new frontline soldier, learning the ways of a strong Defense.",
+    TANK("Tank", "A new frontline soldier, learning the ways of a strong Defense.",
             List.of(Modifier.of(DEFENSE, 1.05)),
             List.of(),
             List.of()),
-    KNIGHT("A standard melee combatant, with training in both melee combat and Defense.",
+    KNIGHT("Knight", "A standard melee combatant, with training in both melee combat and Defense.",
             List.of(Modifier.of(ATTACK, 1.05), Modifier.of(DEFENSE, 1.05)),
             List.of(),
             List.of()),
-    MAGE("A new magic user, somewhat adequate in the art of magical combat.",
+    MAGE("Mage", "A new magic user, somewhat adequate in the art of magical combat.",
             List.of(Modifier.of(ATTACK, 1.02), Modifier.of(INTELLECT, 1.05)),
             List.of(),
             List.of()),
-    WIZARD("A standard magic user, confident in magical combat.",
+    WIZARD("Wizard", "A standard magic user, confident in magical combat.",
             List.of(Modifier.of(INTELLECT, 1.1)),
             List.of(),
             List.of()),
-    DARK_KNIGHT("A standard melee combatant, swayed to the side of Darkness",
+    DARK_KNIGHT("Dark Knight", "A standard melee combatant, swayed to the side of Darkness.",
             List.of(Modifier.of(ATTACK, 1.1)),
             List.of(ElementalModifier.of(DARK, 1.2)),
             List.of(ElementalModifier.of(DARK, 1.2)));
 
+    private final String name;
     private final String description;
     private final Map<Stat, Double> modifiers;
     private final Map<ElementType, Double> elementalDamage;
     private final Map<ElementType, Double> elementalDefense;
 
-    RPGClass(String description, List<Modifier> modifiers, List<ElementalModifier> elementalDamage, List<ElementalModifier> elementalDefense)
+    RPGClass(String name, String description, List<Modifier> modifiers, List<ElementalModifier> elementalDamage, List<ElementalModifier> elementalDefense)
     {
+        this.name = name;
         this.description = description;
 
         this.modifiers = new HashMap<>();
@@ -77,6 +79,11 @@ public enum RPGClass
     public Map<Stat, Double> getModifiers()
     {
         return Map.copyOf(this.modifiers);
+    }
+
+    public String getName()
+    {
+        return this.name;
     }
 
     public String getModifierOverview()
@@ -120,6 +127,7 @@ public enum RPGClass
 
     public static RPGClass cast(String input)
     {
+        for(RPGClass clazz : values()) if(input.equalsIgnoreCase(clazz.getName()) || input.equalsIgnoreCase(clazz.toString())) return clazz;
         return Global.castEnum(input, values());
     }
 
