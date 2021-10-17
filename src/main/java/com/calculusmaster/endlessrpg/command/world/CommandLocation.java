@@ -28,7 +28,7 @@ public class CommandLocation extends Command
                 .setTitle(Realm.CURRENT.getName())
                 .addField("Current Location", "**" + location.getName() + "**\nType: " + Global.normalize(location.getType().toString().replaceAll("_", " ")), false)
                 .addField("Current Weather", "**" + Global.normalize(location.getWeather().toString()) + "**\nEffects:\n" + location.getWeather().getEffects(), true)
-                .addField("Current Time", "**" + Global.normalize(location.getTime().toString()) + "**", true)
+                .addField("Current Time", "**" + Global.normalize(location.getTime().toString()) + "**\nEffects:\n" + location.getTime().getEffects(), true)
                 .addBlankField(true);
 
         this.embed.addField(this.getResourcesOverview(location));

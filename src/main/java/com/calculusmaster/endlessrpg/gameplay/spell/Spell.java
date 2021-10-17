@@ -56,6 +56,19 @@ public abstract class Spell
                         eATK *= 0.9;
                         eDEF *= 0.9;
                     }
+
+                    if(time.equals(Time.DAY))
+                    {
+                        eATK *= 1.02;
+                        eDEF *= 1.04;
+                    }
+                }
+                case DARK -> {
+                    if(time.equals(Time.NIGHT))
+                    {
+                        eATK *= 1.04;
+                        eDEF *= 1.02;
+                    }
                 }
                 case WATER -> {
                     if(List.of(Weather.RAIN).contains(weather))
