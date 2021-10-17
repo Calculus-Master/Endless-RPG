@@ -476,7 +476,7 @@ public class RPGCharacter
 
         if(s.equals(Stat.HEALTH))
         {
-            stat = 10 + (core * 10) + (boost * 5) + loot;
+            stat = 10 + (core * 5) + (boost * 5) + loot;
         }
         else
         {
@@ -549,10 +549,18 @@ public class RPGCharacter
             }
         }
 
+        coreStatPool.remove(Stat.HEALTH);
+
         Stat s = coreStatPool.get(r.nextInt(coreStatPool.size()));
         this.stats.put(s, this.stats.get(s) + 1);
 
         message.append("Core ").append(Global.normalize(s.toString())).append(" Improved!\n");
+
+        //Health
+
+        this.stats.put(Stat.HEALTH, this.stats.get(Stat.HEALTH) + 2);
+
+        message.append("Health improved!\n");
 
         //Grant Elemental Core Stat
         if(this.getLevel() % 20 == 0)
