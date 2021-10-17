@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg;
 import com.calculusmaster.endlessrpg.command.core.CommandHandler;
 import com.calculusmaster.endlessrpg.command.economy.CommandShop;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
+import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Listener;
 import com.calculusmaster.endlessrpg.util.PrivateInfo;
 import com.calculusmaster.endlessrpg.util.helpers.LoggerHelper;
@@ -12,6 +13,8 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 
 import javax.security.auth.login.LoginException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class EndlessRPG
 {
@@ -33,5 +36,7 @@ public class EndlessRPG
 
         BOT_JDA = bot.build().awaitReady();
         TESTING_SERVER = BOT_JDA.getGuildById("873993084155887617");
+
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(Global::optimizeLootDatabase, 0, 30, TimeUnit.MINUTES);
     }
 }

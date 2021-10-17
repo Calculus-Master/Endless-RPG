@@ -1,8 +1,11 @@
 package com.calculusmaster.endlessrpg.util;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.client.model.Filters;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Random;
 
 public class Global
@@ -30,6 +33,19 @@ public class Global
     public static String formatNumber(int number)
     {
         return number > 0 ? "+" + number : "" + number;
+    }
+
+    public static void optimizeLootDatabase()
+    {
+        List<String> keep = new ArrayList<>();
+        Mongo.PlayerData.find().forEach(d -> keep.addAll(d.getList("loot", String.class)));
+
+        List<String> delete = new ArrayList<>();
+        Mongo.LootData.find().forEach(d -> {
+            if(!keep.contains(d.getString("lootID"))) delete.add(d.getString("lootID"));
+        });
+
+        Mongo.LootData.deleteMany(Filters.in("lootID", delete));
     }
 
     public static String normalize(String input)
