@@ -96,7 +96,7 @@ public enum RPGClass
 
         for(Map.Entry<Stat, Float> e : this.modifiers.entrySet())
         {
-            int percent = (int)((e.getValue() - 1.0) * 100);
+            long percent = Math.round((e.getValue() - 1.0f) * 100f + 0.0001f);
             overview.append(Global.normalize(e.getKey().toString())).append(": ").append(percent > 0 ? "+" + percent + "%" : percent + "%").append("\n");
         }
 
@@ -109,7 +109,7 @@ public enum RPGClass
 
         for(Map.Entry<ElementType, Float> e : this.elementalDamage.entrySet())
         {
-            int percent = (int)((e.getValue() - 1.0) * 100);
+            long percent = Math.round((e.getValue() - 1.0f) * 100f + 0.0001f);
             overview.append(e.getKey().getIcon().getAsMention()).append(": ").append(percent > 0 ? "+" + percent + "%" : percent + "%").append("\n");
         }
 
@@ -122,7 +122,7 @@ public enum RPGClass
 
         for(Map.Entry<ElementType, Float> e : this.elementalDefense.entrySet())
         {
-            int percent = (int)((e.getValue() - 1.0) * 100);
+            long percent = Math.round((e.getValue() - 1.0f) * 100f + 0.0001f);
             overview.append(e.getKey().getIcon().getAsMention()).append(": ").append(percent > 0 ? "+" + percent + "%" : percent + "%").append("\n");
         }
 
