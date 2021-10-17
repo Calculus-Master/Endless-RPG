@@ -7,6 +7,8 @@ import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.spell.Spell;
 import com.calculusmaster.endlessrpg.gameplay.spell.spells.StrikeSpell;
+import com.calculusmaster.endlessrpg.gameplay.world.Location;
+import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -19,6 +21,7 @@ public class Battle
 
     private BattleType battleType;
     private List<AbstractPlayer> players;
+    private Location location;
 
     private RPGCharacter[] battlers;
     private int turn;
@@ -34,41 +37,46 @@ public class Battle
 
         b.setBattleType(BattleType.PVP);
         b.createPlayers(p1ID, p2ID);
+        b.setLocation(Realm.CURRENT.getHub()); //TODO: Where should PvP Battles occur?
         b.setup();
 
         BATTLES.add(b);
         return b;
     }
 
-    public static Battle createPVE(String userID)
+    @Deprecated
+    public static Battle createPVE(String userID, Location location)
     {
         Battle b = new Battle();
 
         b.setBattleType(BattleType.PVE);
         b.createPlayers(userID);
+        b.setLocation(location);
         b.setup();
 
         BATTLES.add(b);
         return b;
     }
 
-    public static Battle createDungeon(String userID, AIPlayer enemy)
+    public static Battle createDungeon(String userID, AIPlayer enemy, Location location)
     {
         Battle b = new Battle();
 
         b.setBattleType(BattleType.PVE);
         b.createPlayers(userID, enemy);
+        b.setLocation(location);
         b.setup();
 
         BATTLES.add(b);
         return b;
     }
 
-    public static boolean simulate(RPGCharacter characterPlayer, RPGCharacter characterAI)
+    public static boolean simulate(RPGCharacter characterPlayer, RPGCharacter characterAI, Location location)
     {
         Battle b = new Battle();
 
         b.setBattleType(BattleType.PVE);
+        b.setLocation(location);
 
         b.players = new ArrayList<>();
         AIPlayer player = new AIPlayer(characterPlayer);
@@ -270,6 +278,16 @@ public class Battle
         Collections.reverse(pool);
 
         for(int i = 0; i < this.battlers.length; i++) this.battlers[i] = pool.get(i);
+    }
+
+    private void setLocation(Location location)
+    {
+        this.location = location;
+    }
+
+    public Location getLocation()
+    {
+        return this.location;
     }
 
     //Battle Setup - PvP

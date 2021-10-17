@@ -121,6 +121,11 @@ public class Realm
         return null;
     }
 
+    public Location getHub()
+    {
+        return this.locations.get(0);
+    }
+
     public List<Location> getLocations()
     {
         return this.locations;

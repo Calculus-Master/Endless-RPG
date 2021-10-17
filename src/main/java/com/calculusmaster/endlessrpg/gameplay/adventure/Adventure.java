@@ -8,6 +8,8 @@ import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.world.Location;
+import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.helpers.LoggerHelper;
@@ -30,6 +32,7 @@ public class Adventure
     private int length;
     private int progress;
     private int level;
+    private Location location;
 
     private List<AdventureEvent> eventLog;
 
@@ -122,7 +125,7 @@ public class Adventure
                 final SplittableRandom r = new SplittableRandom();
                 RPGCharacter enemy = EnemyArchetype.RANDOM.create(this.level);
 
-                boolean win = Battle.simulate(this.character, enemy);
+                boolean win = Battle.simulate(this.character, enemy, this.location);
 
                 if(win)
                 {
@@ -159,7 +162,7 @@ public class Adventure
 
         //Must defeat Bot to receive rewards! Mini Boss is slightly more difficult than other enemies that appear in Adventures
         RPGCharacter miniBoss = EnemyArchetype.RANDOM.create(this.level + 1);
-        boolean win = Battle.simulate(this.character, miniBoss);
+        boolean win = Battle.simulate(this.character, miniBoss, this.location);
 
         if(win)
         {
@@ -254,6 +257,8 @@ public class Adventure
 
         this.level = level;
 
+        this.location = Realm.CURRENT.getLocation(this.player.getLocationID());
+
         this.eventLog = new ArrayList<>();
 
         this.rewardGold = 0;
@@ -266,6 +271,11 @@ public class Adventure
     private void setPlayer(PlayerDataQuery player)
     {
         this.player = player;
+    }
+
+    public Location getLocation()
+    {
+        return this.location;
     }
 
     public static boolean isInAdventure(String ID)

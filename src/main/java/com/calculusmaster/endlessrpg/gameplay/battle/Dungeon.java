@@ -101,7 +101,7 @@ public class Dungeon
                 List<RPGCharacter> enemies = new ArrayList<>();
                 for(int i = 0; i < this.player.getCharacterList().size(); i++) enemies.add(EnemyBuilder.createDefault(new SplittableRandom().nextInt(this.level - 1, this.level + 2)));
 
-                Battle b = Battle.createDungeon(this.player.getID(), new AIPlayer(enemies));
+                Battle b = Battle.createDungeon(this.player.getID(), new AIPlayer(enemies), this.location);
                 b.setEvent(this.event);
 
                 b.sendTurnEmbed();
@@ -129,7 +129,7 @@ public class Dungeon
     private void startBossFight()
     {
         //TODO: Dragon or something - cooler boss
-        Battle b = Battle.createDungeon(this.player.getID(), new AIPlayer(EnemyBuilder.createDefault(this.level + new SplittableRandom().nextInt(5, 11))));
+        Battle b = Battle.createDungeon(this.player.getID(), new AIPlayer(EnemyBuilder.createDefault(this.level + new SplittableRandom().nextInt(5, 11))), this.location);
         b.setEvent(this.event);
 
         b.sendTurnEmbed();

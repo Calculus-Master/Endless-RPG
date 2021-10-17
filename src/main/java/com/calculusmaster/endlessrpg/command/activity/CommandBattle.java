@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg.command.activity;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
+import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -40,7 +41,7 @@ public class CommandBattle extends Command
             if(Battle.isInBattle(this.player.getId())) this.response = "You are already in a battle! Complete it to start another battle!";
             else
             {
-                Battle b = Battle.createPVE(this.player.getId());
+                Battle b = Battle.createPVE(this.player.getId(), Realm.CURRENT.getLocation(this.playerData.getLocationID()));
                 b.setEvent(this.event);
 
                 b.sendTurnEmbed();
