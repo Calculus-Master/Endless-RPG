@@ -32,8 +32,8 @@ public enum RawResource
     FORAGING_T10(FORAGING, 10, ""),
 
     //Fishing
-    FISHING_T2(FISHING, 2, ""),
     FISHING_T1(FISHING, 1, ""),
+    FISHING_T2(FISHING, 2, ""),
     FISHING_T3(FISHING, 3, ""),
     FISHING_T4(FISHING, 4, ""),
     FISHING_T5(FISHING, 5, ""),
