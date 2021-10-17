@@ -1,8 +1,8 @@
 package com.calculusmaster.endlessrpg.gameplay.adventure;
 
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
-import com.calculusmaster.endlessrpg.gameplay.battle.EnemyArchetype;
-import com.calculusmaster.endlessrpg.gameplay.battle.EnemyBuilder;
+import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyArchetype;
+import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyBuilder;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;

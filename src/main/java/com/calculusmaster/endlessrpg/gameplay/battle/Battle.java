@@ -52,6 +52,18 @@ public class Battle
         return b;
     }
 
+    public static Battle createDungeon(String userID, AIPlayer enemy)
+    {
+        Battle b = new Battle();
+
+        b.setBattleType(BattleType.PVE);
+        b.createPlayers(userID, enemy);
+        b.setup();
+
+        BATTLES.add(b);
+        return b;
+    }
+
     public static boolean simulate(RPGCharacter characterPlayer, RPGCharacter characterAI)
     {
         Battle b = new Battle();
@@ -110,11 +122,28 @@ public class Battle
 
         EmbedBuilder embed = new EmbedBuilder();
 
-        embed.setDescription(this.getWinner().getName() + " has won!");
+        AbstractPlayer winner = this.getWinner();
 
-        //TODO: Battle win rewards
+        embed.setDescription(winner.getName() + " has won!");
 
         this.sendEmbed(embed);
+
+        for(AbstractPlayer player : this.players)
+        {
+            if(!player.team.get(0).isAI() && Dungeon.isInDungeon(player.ID))
+            {
+                Dungeon d = Objects.requireNonNull(Dungeon.instance(player.ID));
+
+                if(player.ID.equals(winner.ID))
+                {
+                    d.addResult("You defeated all the enemies!");
+                    d.advance();
+                }
+                else d.fail();
+            }
+        }
+
+        //TODO: Battle win rewards
 
         BATTLES.remove(this);
     }
@@ -257,6 +286,13 @@ public class Battle
         this.players = new ArrayList<>();
         this.players.add(new UserPlayer(userID));
         this.players.add(new AIPlayer(RPGCharacter.create("Bot")));
+    }
+
+    private void createPlayers(String userID, AIPlayer enemy)
+    {
+        this.players = new ArrayList<>();
+        this.players.add(new UserPlayer(userID));
+        this.players.add(enemy);
     }
 
     //Accessors

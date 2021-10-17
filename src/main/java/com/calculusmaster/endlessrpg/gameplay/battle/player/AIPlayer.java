@@ -3,15 +3,21 @@ package com.calculusmaster.endlessrpg.gameplay.battle.player;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class AIPlayer extends AbstractPlayer
 {
     public AIPlayer(RPGCharacter... characters)
     {
+        this(Arrays.asList(characters));
+    }
+
+    public AIPlayer(List<RPGCharacter> characters)
+    {
         super(generateID());
 
-        this.team.addAll(Arrays.asList(characters));
+        this.team.addAll(characters);
 
         this.initTeam();
     }
