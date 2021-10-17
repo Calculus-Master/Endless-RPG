@@ -1,5 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.world.skills;
 
+import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,6 +124,16 @@ public enum RawResource
             case 10 -> 2500;
             default -> 0;
         };
+    }
+
+    public int getRequiredSkillLevel()
+    {
+        return 10 * (this.getTier() - 1);
+    }
+
+    public boolean canGather(RPGCharacter c)
+    {
+        return c.getSkillLevel(this.getSkill()) >= this.getRequiredSkillLevel();
     }
 
     public static List<RawResource> getResources(GatheringSkill skill)
