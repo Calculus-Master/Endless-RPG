@@ -6,7 +6,7 @@ public enum Weather
 {
     CLEAR("None"),
     OVERCAST("Light Damage is reduced by 10%", "Light Defense is reduced by 10%"),
-    RAIN("None"); //TODO: Rain effects
+    RAIN("Water Damage is boosted by 10%", "Water Defense is boosted by 20%", "Light Damage is reduced by 10%", "Light Defense is reduced by 10%");
 
     private final String effects;
 
