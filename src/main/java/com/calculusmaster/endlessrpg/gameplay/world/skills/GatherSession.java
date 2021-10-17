@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class GatherSession
 {
-    public static final List<GatherSession> GATHERING_ADVENTURES = new ArrayList<>();
+    public static final List<GatherSession> GATHER_SESSIONS = new ArrayList<>();
     public static final Map<String, ScheduledFuture<?>> END_TIMES = new HashMap<>();
     private static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(5);
 
@@ -30,7 +30,7 @@ public class GatherSession
         g.setPlayer(player);
         g.setLocation(location);
 
-        GATHERING_ADVENTURES.add(g);
+        GATHER_SESSIONS.add(g);
         return g;
     }
 
@@ -43,13 +43,35 @@ public class GatherSession
 
     private void complete()
     {
-        //TODO: Weighted outputs? Dynamic EXP? Pick resource that gets gathered? Temporarily, just gives the full location's output
         RPGRawResourceContainer output = this.location.getResources();
+
         for(RawResource r : RawResource.values())
         {
             if(output.has(r) && r.canGather(this.character))
             {
-                this.character.getRawResources().increase(r, output.get(r));
+                int skill = this.character.getSkillLevel(r.getSkill());
+                int required = r.getRequiredSkillLevel();
+
+                int accuracy;
+
+                if(skill / 10 == required / 10)
+                {
+                    accuracy = switch(skill % 10) {
+                        case 0 -> 72;
+                        case 1, 2, 3 -> 75;
+                        case 4, 5, 6 -> 80;
+                        case 7, 8, 9 -> 90;
+                        default -> 70;
+                    };
+                }
+                else accuracy = Math.min(100, 60 + skill - required);
+
+                int maxYield = output.get(r);
+                int actualYield = 0;
+
+                for(int i = 0; i < maxYield; i++) if(new SplittableRandom().nextInt(100) < accuracy) actualYield++;
+
+                this.character.getRawResources().increase(r, actualYield);
                 this.character.addSkillExp(r.getSkill(), new SplittableRandom().nextInt((int)(0.9 * r.getExp()), (int)(1.1 * r.getExp())) * this.character.getSkillLevel(r.getSkill()));
             }
         }
@@ -58,7 +80,7 @@ public class GatherSession
 
         this.player.DM(this.character.getName() + " finished gathering resources! Here's what was obtained:\n\n" + output.getFullOverview());
 
-        GATHERING_ADVENTURES.remove(this);
+        GATHER_SESSIONS.remove(this);
 
         END_TIMES.get(this.character.getCharacterID()).cancel(false);
         END_TIMES.remove(this.character.getCharacterID());
