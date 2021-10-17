@@ -466,26 +466,21 @@ public class RPGCharacter
     public int getStat(Stat s)
     {
         int core = this.getCoreStat(s);
-        int boost = this.classRPG.getBoosts().getOrDefault(s, 0);
         int loot = this.getEquipmentBoosts().getOrDefault(s, 0);
-        int level = this.level;
-
-        boost *= level;
 
         int stat;
 
-        if(s.equals(Stat.HEALTH))
-        {
-            stat = 10 + (core * 5) + (boost * 5) + loot;
-        }
-        else
-        {
-            stat = core + boost + loot;
-        }
+        //Stat Calculation from Loot and Core
+        if(s.equals(Stat.HEALTH)) stat = 10 + (core * 5) + loot;
+        else stat = core + loot;
 
-        int change = this.getChanges().getOrDefault(s, 0);
+        //Battle: Any stat changes from Spells
+        stat += this.getChanges().getOrDefault(s, 0);
 
-        return stat + change;
+        //RPG Class Stat Modifier
+        stat *= this.classRPG.getModifiers().getOrDefault(s, 1.0);
+
+        return stat;
     }
 
     //Stats - Core
@@ -543,7 +538,7 @@ public class RPGCharacter
         List<Stat> coreStatPool = new ArrayList<>(Arrays.asList(Stat.values()));
 
         //TODO: More weight based on value
-        if(!this.getRPGClass().equals(RPGClass.RECRUIT)) coreStatPool.addAll(this.getRPGClass().getBoosts().keySet());
+        if(!this.getRPGClass().equals(RPGClass.RECRUIT)) coreStatPool.addAll(this.getRPGClass().getModifiers().keySet());
 
         coreStatPool.removeIf(s -> s.equals(Stat.HEALTH));
 
