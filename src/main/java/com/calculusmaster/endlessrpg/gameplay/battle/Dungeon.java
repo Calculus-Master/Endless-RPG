@@ -109,11 +109,11 @@ public class Dungeon
             case BOSS -> {
                 EmbedBuilder embed = new EmbedBuilder()
                         .setTitle(this.location.getName())
-                        .setDescription(this.getBossRoomDescription() + "\n\n***A tall figure emerges, and you know it is the only obstacle between you and victory...***");
+                        .setDescription(this.getBossRoomDescription() + "\n\n***A mysterious figure emerges...\nIt is the only obstacle between you and victory...***");
 
                 this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
-                Executors.newSingleThreadScheduledExecutor().schedule(this::startBossFight, 15, TimeUnit.SECONDS);
+                Executors.newSingleThreadScheduledExecutor().schedule(this::startBossFight, 10, TimeUnit.SECONDS);
             }
             case TREASURE -> {
                 this.results.add("`NYI` – Treasure Event");
@@ -199,7 +199,8 @@ public class Dungeon
     private String getBossRoomDescription()
     {
         List<String> pool = new BufferedReader(new InputStreamReader(Objects.requireNonNull(EndlessRPG.class.getResourceAsStream("/descriptions/dungeon_boss.txt")))).lines().toList();
-        return pool.get(new SplittableRandom().nextInt(pool.size()));
+        String desc = pool.get(new SplittableRandom().nextInt(pool.size()));
+        return desc.replaceAll("(\\.\\.)", "...\n\n").replaceAll("wait", "*Wait*");
     }
 
     public static boolean isInDungeon(String ID)
