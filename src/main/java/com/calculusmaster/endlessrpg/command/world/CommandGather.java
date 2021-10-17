@@ -22,6 +22,7 @@ public class CommandGather extends Command
         boolean status = this.msg.length == 2 && this.msg[1].equals("status");
 
         RPGCharacter active = this.playerData.getActiveCharacter();
+        Location current = Realm.CURRENT.getLocation(this.playerData.getLocationID());
 
         if(status)
         {
@@ -32,9 +33,9 @@ public class CommandGather extends Command
         {
             //TODO: Direct selection of resource to gather?
             if(GatheringAdventure.END_TIMES.containsKey(active.getCharacterID())) this.response = active.getName() + " is currently gathering resources!";
+            else if(current.getResources().isEmpty()) this.response = current.getName() + " does not have any resources that can be gathered!";
             else
             {
-                Location current = Realm.CURRENT.getLocation(this.playerData.getLocationID());
                 GatheringAdventure g = GatheringAdventure.create(this.playerData, current);
 
                 g.start();
