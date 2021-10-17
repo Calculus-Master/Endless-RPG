@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.SplittableRandom;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class Dungeon
@@ -111,11 +113,7 @@ public class Dungeon
 
                 this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
-                //TODO: Dragon or something - cooler boss
-                Battle b = Battle.createDungeon(this.player.getID(), new AIPlayer(EnemyBuilder.createDefault(this.level + new SplittableRandom().nextInt(5, 11))));
-                b.setEvent(this.event);
-
-                b.sendTurnEmbed();
+                Executors.newSingleThreadScheduledExecutor().schedule(this::startBossFight, 15, TimeUnit.SECONDS);
             }
             case TREASURE -> {
                 this.results.add("`NYI` – Treasure Event");
@@ -126,6 +124,15 @@ public class Dungeon
                 this.advance();
             }
         }
+    }
+
+    private void startBossFight()
+    {
+        //TODO: Dragon or something - cooler boss
+        Battle b = Battle.createDungeon(this.player.getID(), new AIPlayer(EnemyBuilder.createDefault(this.level + new SplittableRandom().nextInt(5, 11))));
+        b.setEvent(this.event);
+
+        b.sendTurnEmbed();
     }
 
     public void addResult(String result)
