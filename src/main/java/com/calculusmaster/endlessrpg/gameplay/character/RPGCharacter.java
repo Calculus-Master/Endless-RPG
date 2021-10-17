@@ -478,7 +478,7 @@ public class RPGCharacter
         stat += this.getChanges().getOrDefault(s, 0);
 
         //RPG Class Stat Modifier
-        stat *= this.classRPG.getModifiers().getOrDefault(s, 1.0);
+        stat *= this.classRPG.getModifiers().getOrDefault(s, 1.0f);
 
         return stat;
     }

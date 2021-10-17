@@ -16,35 +16,35 @@ public enum RPGClass
             List.of(),
             List.of()),
     WARRIOR("Warrior", "A new soldier, somewhat adequate in the art of melee combat.",
-            List.of(Modifier.of(ATTACK, 1.05), Modifier.of(STRENGTH, 1.02)),
+            List.of(Modifier.of(ATTACK, 1.05f), Modifier.of(STRENGTH, 1.02f)),
             List.of(),
             List.of()),
     TANK("Tank", "A new frontline soldier, learning the ways of a strong Defense.",
-            List.of(Modifier.of(DEFENSE, 1.05)),
+            List.of(Modifier.of(DEFENSE, 1.05f)),
             List.of(),
             List.of()),
     KNIGHT("Knight", "A standard melee combatant, with training in both melee combat and Defense.",
-            List.of(Modifier.of(ATTACK, 1.05), Modifier.of(DEFENSE, 1.05)),
+            List.of(Modifier.of(ATTACK, 1.05f), Modifier.of(DEFENSE, 1.05f)),
             List.of(),
             List.of()),
     MAGE("Mage", "A new magic user, somewhat adequate in the art of magical combat.",
-            List.of(Modifier.of(ATTACK, 1.02), Modifier.of(INTELLECT, 1.05)),
+            List.of(Modifier.of(ATTACK, 1.02f), Modifier.of(INTELLECT, 1.05f)),
             List.of(),
             List.of()),
     WIZARD("Wizard", "A standard magic user, confident in magical combat.",
-            List.of(Modifier.of(INTELLECT, 1.1)),
+            List.of(Modifier.of(INTELLECT, 1.1f)),
             List.of(),
             List.of()),
     DARK_KNIGHT("Dark Knight", "A standard melee combatant, swayed to the side of Darkness.",
-            List.of(Modifier.of(ATTACK, 1.1)),
-            List.of(ElementalModifier.of(DARK, 1.2)),
-            List.of(ElementalModifier.of(DARK, 1.2)));
+            List.of(Modifier.of(ATTACK, 1.1f)),
+            List.of(ElementalModifier.of(DARK, 1.2f)),
+            List.of(ElementalModifier.of(DARK, 1.2f)));
 
     private final String name;
     private final String description;
-    private final Map<Stat, Double> modifiers;
-    private final Map<ElementType, Double> elementalDamage;
-    private final Map<ElementType, Double> elementalDefense;
+    private final Map<Stat, Float> modifiers;
+    private final Map<ElementType, Float> elementalDamage;
+    private final Map<ElementType, Float> elementalDefense;
 
     RPGClass(String name, String description, List<Modifier> modifiers, List<ElementalModifier> elementalDamage, List<ElementalModifier> elementalDefense)
     {
@@ -66,17 +66,17 @@ public enum RPGClass
         return this.description;
     }
 
-    public Map<ElementType, Double> getElementalDamageModifiers()
+    public Map<ElementType, Float> getElementalDamageModifiers()
     {
         return Map.copyOf(this.elementalDamage);
     }
 
-    public Map<ElementType, Double> getElementalDefenseModifiers()
+    public Map<ElementType, Float> getElementalDefenseModifiers()
     {
         return Map.copyOf(this.elementalDefense);
     }
 
-    public Map<Stat, Double> getModifiers()
+    public Map<Stat, Float> getModifiers()
     {
         return Map.copyOf(this.modifiers);
     }
@@ -90,7 +90,7 @@ public enum RPGClass
     {
         StringBuilder overview = new StringBuilder();
 
-        for(Map.Entry<Stat, Double> e : this.modifiers.entrySet())
+        for(Map.Entry<Stat, Float> e : this.modifiers.entrySet())
         {
             int percent = (int)((e.getValue() - 1.0) * 100);
             overview.append(Global.normalize(e.getKey().toString())).append(": ").append(percent > 0 ? "+" + percent + "%" : percent + "%").append("\n");
@@ -103,7 +103,7 @@ public enum RPGClass
     {
         StringBuilder overview = new StringBuilder();
 
-        for(Map.Entry<ElementType, Double> e : this.elementalDamage.entrySet())
+        for(Map.Entry<ElementType, Float> e : this.elementalDamage.entrySet())
         {
             int percent = (int)((e.getValue() - 1.0) * 100);
             overview.append(e.getKey().getIcon().getAsMention()).append(": ").append(percent > 0 ? "+" + percent + "%" : percent + "%").append("\n");
@@ -116,7 +116,7 @@ public enum RPGClass
     {
         StringBuilder overview = new StringBuilder();
 
-        for(Map.Entry<ElementType, Double> e : this.elementalDefense.entrySet())
+        for(Map.Entry<ElementType, Float> e : this.elementalDefense.entrySet())
         {
             int percent = (int)((e.getValue() - 1.0) * 100);
             overview.append(e.getKey().getIcon().getAsMention()).append(": ").append(percent > 0 ? "+" + percent + "%" : percent + "%").append("\n");
@@ -134,9 +134,9 @@ public enum RPGClass
     private static class ElementalModifier
     {
         ElementType element;
-        double value;
+        float value;
 
-        static ElementalModifier of(ElementType e, double v)
+        static ElementalModifier of(ElementType e, float v)
         {
             ElementalModifier m = new ElementalModifier();
             m.element = e;
@@ -148,9 +148,9 @@ public enum RPGClass
     private static class Modifier
     {
         Stat stat;
-        double value;
+        float value;
 
-        static Modifier of(Stat s, double v)
+        static Modifier of(Stat s, float v)
         {
             Modifier m = new Modifier();
             m.stat = s;
