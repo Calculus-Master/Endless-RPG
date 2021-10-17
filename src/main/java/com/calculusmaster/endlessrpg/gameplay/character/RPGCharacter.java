@@ -9,6 +9,7 @@ import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.spell.Spell;
 import com.calculusmaster.endlessrpg.gameplay.spell.SpellData;
+import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Mongo;
@@ -34,6 +35,8 @@ public class RPGCharacter
     private int level;
     private int experience;
     private final LinkedHashMap<Stat, Integer> stats = new LinkedHashMap<>();
+    private LinkedHashMap<GatheringSkill, Integer> skillLevels = new LinkedHashMap<>();
+    private LinkedHashMap<GatheringSkill, Integer> skillExperience = new LinkedHashMap<>();
     private RPGEquipment equipment;
     private List<String> spells;
     private RPGElementalContainer coreElementalDamage;
@@ -60,6 +63,8 @@ public class RPGCharacter
         c.setLevel(1);
         c.setExp(0);
         c.setCoreStats();
+        c.setSkillLevel();
+        c.setSkillExperience();
         c.setEquipment();
         c.setSpells();
         c.setCoreElementalDamage();
@@ -81,6 +86,8 @@ public class RPGCharacter
         c.setLevel(data.getInteger("level"));
         c.setExp(data.getInteger("exp"));
         c.setCoreStats(data.get("stats", Document.class));
+        c.setSkillLevel(data.get("skillLevel", Document.class));
+        c.setSkillExperience(data.get("skillExp", Document.class));
         c.setEquipment(data.get("equipment", Document.class));
         c.setSpells(data.getList("spells", String.class));
         c.setCoreElementalDamage(data.get("coreElementalDamage", Document.class));
@@ -110,7 +117,9 @@ public class RPGCharacter
                 .append("class", this.classRPG.toString())
                 .append("level", this.level)
                 .append("exp", this.experience)
-                .append("stats", Global.coreStatsDB(this.stats))
+                .append("stats", Global.serializedMap(this.stats, Stat.values()))
+                .append("skillLevel", Global.serializedMap(this.skillLevels, GatheringSkill.values()))
+                .append("skillExp", Global.serializedMap(this.skillExperience, GatheringSkill.values()))
                 .append("equipment", this.equipment.serialized())
                 .append("spells", this.spells)
                 .append("coreElementalDamage", this.coreElementalDamage.serialized())
@@ -174,6 +183,11 @@ public class RPGCharacter
     public void updateRawResources()
     {
         this.update(Updates.set("rawResources", this.rawResources.serialized()));
+    }
+
+    public void updateSkillExperience()
+    {
+        this.update(Updates.set("skillLevel", Global.serializedMap(this.skillLevels, GatheringSkill.values())), Updates.set("skillExp", Global.serializedMap(this.skillExperience, GatheringSkill.values())));
     }
 
     //Stat Changes
@@ -376,6 +390,75 @@ public class RPGCharacter
         }
 
         return boosts;
+    }
+
+    //Skill Level & Exp
+    public LinkedHashMap<GatheringSkill, Integer> getSkillExperience()
+    {
+        return this.skillExperience;
+    }
+
+    public LinkedHashMap<GatheringSkill, Integer> getSkillLevels()
+    {
+        return this.skillLevels;
+    }
+
+    public int getSkillExp(GatheringSkill skill)
+    {
+        return this.skillExperience.get(skill);
+    }
+
+    public int getSkillLevel(GatheringSkill skill)
+    {
+        return this.skillLevels.get(skill);
+    }
+
+    public int getRequiredSkillExp(int targetLevel)
+    {
+        return (int)(Math.pow(targetLevel, 2.1) + 100);
+    }
+
+    public void addSkillExp(GatheringSkill skill, int amount)
+    {
+        this.skillExperience.put(skill, this.skillExperience.get(skill) + amount);
+
+        int required = this.getRequiredSkillExp(this.getSkillLevel(skill) + 1);
+        while(this.skillExperience.get(skill) >= required)
+        {
+            this.skillExperience.put(skill, this.skillExperience.get(skill) - required);
+            this.increaseSkillLevel(skill);
+
+            required = this.getRequiredSkillExp(this.getSkillLevel(skill) + 1);
+        }
+    }
+
+    public void increaseSkillLevel(GatheringSkill skill)
+    {
+        this.skillLevels.put(skill, this.getSkillLevel(skill) + 1);
+    }
+
+    public void setSkillLevel()
+    {
+        this.skillLevels = new LinkedHashMap<>();
+        for(GatheringSkill s : GatheringSkill.values()) this.skillLevels.put(s, 1);
+    }
+
+    public void setSkillExperience()
+    {
+        this.skillExperience = new LinkedHashMap<>();
+        for(GatheringSkill s : GatheringSkill.values()) this.skillExperience.put(s, 0);
+    }
+
+    public void setSkillLevel(Document data)
+    {
+        this.skillLevels = new LinkedHashMap<>();
+        for(GatheringSkill s : GatheringSkill.values()) this.skillLevels.put(s, data.getInteger(s.toString()));
+    }
+
+    public void setSkillExperience(Document data)
+    {
+        this.skillExperience = new LinkedHashMap<>();
+        for(GatheringSkill s : GatheringSkill.values()) this.skillExperience.put(s, data.getInteger(s.toString()));
     }
 
     //Stats - Effective

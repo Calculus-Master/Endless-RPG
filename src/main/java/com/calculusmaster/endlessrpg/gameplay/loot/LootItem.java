@@ -103,7 +103,7 @@ public class LootItem
                 .append("lootID", this.lootID)
                 .append("type", this.lootType.toString())
                 .append("name", this.name)
-                .append("boosts", Global.coreStatsDB(this.boosts))
+                .append("boosts", Global.serializedMap(this.boosts, Stat.values()))
                 .append("elementalDamage", this.elementalDamage.serialized())
                 .append("elementalDefense", this.elementalDefense.serialized())
                 .append("requirements", this.requirements.serialized());
@@ -118,7 +118,7 @@ public class LootItem
 
     public void updateBoosts()
     {
-        Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("boosts", Global.coreStatsDB(this.boosts)));
+        Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("boosts", Global.serializedMap(this.boosts, Stat.values())));
     }
 
     public void updateElementalDamage()

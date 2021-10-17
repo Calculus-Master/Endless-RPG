@@ -1,6 +1,5 @@
 package com.calculusmaster.endlessrpg.util;
 
-import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.mongodb.BasicDBObject;
 
 import java.util.LinkedHashMap;
@@ -16,10 +15,10 @@ public class Global
         return null;
     }
 
-    public static BasicDBObject coreStatsDB(LinkedHashMap<Stat, Integer> stats)
+    public static <K extends Enum<K>> BasicDBObject serializedMap(LinkedHashMap<K, Integer> map, K[] values)
     {
         BasicDBObject data = new BasicDBObject();
-        for(Stat s : Stat.values()) data.put(s.toString(), stats.getOrDefault(s, 0));
+        for(K k : values) data.put(k.toString(), map.getOrDefault(k, 0));
         return data;
     }
 
