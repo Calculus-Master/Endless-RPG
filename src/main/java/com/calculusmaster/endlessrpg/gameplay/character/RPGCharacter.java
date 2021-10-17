@@ -38,6 +38,7 @@ public class RPGCharacter
     private List<String> spells;
     private RPGElementalContainer coreElementalDamage;
     private RPGElementalContainer coreElementalDefense;
+    private RPGRawResourceContainer rawResources;
 
     //Battle Only Fields
 
@@ -63,6 +64,7 @@ public class RPGCharacter
         c.setSpells();
         c.setCoreElementalDamage();
         c.setCoreElementalDefense();
+        c.setRawResources();
 
         return c;
     }
@@ -83,6 +85,7 @@ public class RPGCharacter
         c.setSpells(data.getList("spells", String.class));
         c.setCoreElementalDamage(data.get("coreElementalDamage", Document.class));
         c.setCoreElementalDefense(data.get("coreElementalDefense", Document.class));
+        c.setRawResources(data.get("rawResources", Document.class));
 
         return c;
     }
@@ -111,7 +114,8 @@ public class RPGCharacter
                 .append("equipment", this.equipment.serialized())
                 .append("spells", this.spells)
                 .append("coreElementalDamage", this.coreElementalDamage.serialized())
-                .append("coreElementalDefense", this.coreElementalDefense.serialized());
+                .append("coreElementalDefense", this.coreElementalDefense.serialized())
+                .append("rawResources", this.rawResources.serialized());
 
         Mongo.CharacterData.insertOne(d);
     }
@@ -165,6 +169,11 @@ public class RPGCharacter
     public void updateCoreElementalDefense()
     {
         this.update(Updates.set("coreElementalDefense", this.coreElementalDefense.serialized()));
+    }
+
+    public void updateRawResources()
+    {
+        this.update(Updates.set("rawResources", this.rawResources.serialized()));
     }
 
     //Stat Changes
@@ -240,6 +249,22 @@ public class RPGCharacter
     public boolean isDefeated()
     {
         return this.getHealth() <= 0;
+    }
+
+    //Raw Resources
+    public RPGRawResourceContainer getRawResources()
+    {
+        return this.rawResources;
+    }
+
+    public void setRawResources()
+    {
+        this.rawResources = new RPGRawResourceContainer();
+    }
+
+    public void setRawResources(Document resources)
+    {
+        this.rawResources = new RPGRawResourceContainer(resources);
     }
 
     //Core Elemental Defense
