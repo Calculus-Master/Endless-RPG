@@ -13,6 +13,7 @@ import com.calculusmaster.endlessrpg.command.loot.CommandLootInfo;
 import com.calculusmaster.endlessrpg.command.misc.CommandDeveloper;
 import com.calculusmaster.endlessrpg.command.spell.CommandSpellInfo;
 import com.calculusmaster.endlessrpg.command.spell.CommandSpells;
+import com.calculusmaster.endlessrpg.command.world.CommandGather;
 import com.calculusmaster.endlessrpg.command.world.CommandLocation;
 import com.calculusmaster.endlessrpg.command.world.CommandResources;
 import com.calculusmaster.endlessrpg.command.world.CommandTravel;
@@ -87,6 +88,9 @@ public class CommandHandler
 
         register("resources")
                 .setCommand(CommandResources::new);
+
+        register("gather")
+                .setCommand(CommandGather::new);
 
         register("dev")
                 .setCommand(CommandDeveloper::new);
