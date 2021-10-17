@@ -27,13 +27,14 @@ public class CommandGather extends Command
         if(status)
         {
             if(!GatheringAdventure.END_TIMES.containsKey(active.getCharacterID())) this.response = active.getName() + " is not currently gathering any resources!";
-            else this.response = active.getName() + " will be finished gathering resources in " + this.formatTime(GatheringAdventure.END_TIMES.get(active.getCharacterID()).getDelay(TimeUnit.SECONDS));
+            else this.response = active.getName() + " will be finished gathering resources in " + this.formatTime(GatheringAdventure.END_TIMES.get(active.getCharacterID()).getDelay(TimeUnit.SECONDS)) + "!";
         }
         else
         {
             //TODO: Direct selection of resource to gather?
             if(GatheringAdventure.END_TIMES.containsKey(active.getCharacterID())) this.response = active.getName() + " is currently gathering resources!";
             else if(current.getResources().isEmpty()) this.response = current.getName() + " does not have any resources that can be gathered!";
+            else if(!current.getResources().canGather(active)) this.response = active.getName() + " cannot gather any resources at " + current.getName() + "!";
             else
             {
                 GatheringAdventure g = GatheringAdventure.create(this.playerData, current);

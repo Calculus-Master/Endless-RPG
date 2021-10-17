@@ -5,6 +5,7 @@ import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import com.mongodb.BasicDBObject;
 import org.bson.Document;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 public class RPGRawResourceContainer
@@ -68,6 +69,11 @@ public class RPGRawResourceContainer
     public boolean isEmpty()
     {
         return this.resourceValues.values().stream().allMatch(i -> i == 0);
+    }
+
+    public boolean canGather(RPGCharacter character)
+    {
+        return !this.isEmpty() && Arrays.stream(RawResource.values()).filter(this::has).anyMatch(r -> r.canGather(character));
     }
 
     public int get(RawResource r)
