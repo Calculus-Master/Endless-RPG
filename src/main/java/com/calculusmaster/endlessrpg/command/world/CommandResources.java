@@ -3,7 +3,7 @@ package com.calculusmaster.endlessrpg.command.world;
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
-import com.calculusmaster.endlessrpg.gameplay.skills.GatheringSkill;
+import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
 import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 

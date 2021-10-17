@@ -1,9 +1,9 @@
-package com.calculusmaster.endlessrpg.gameplay.skills;
+package com.calculusmaster.endlessrpg.gameplay.world.skills;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.calculusmaster.endlessrpg.gameplay.skills.GatheringSkill.*;
+import static com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill.*;
 
 public enum RawResource
 {

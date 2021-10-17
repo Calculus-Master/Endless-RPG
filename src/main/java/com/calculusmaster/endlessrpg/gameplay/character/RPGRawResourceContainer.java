@@ -1,7 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.character;
 
-import com.calculusmaster.endlessrpg.gameplay.skills.GatheringSkill;
-import com.calculusmaster.endlessrpg.gameplay.skills.RawResource;
+import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
+import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import com.mongodb.BasicDBObject;
 import org.bson.Document;
 

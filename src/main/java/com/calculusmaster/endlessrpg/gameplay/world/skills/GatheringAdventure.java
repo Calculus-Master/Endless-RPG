@@ -1,4 +1,4 @@
-package com.calculusmaster.endlessrpg.gameplay.skills;
+package com.calculusmaster.endlessrpg.gameplay.world.skills;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
