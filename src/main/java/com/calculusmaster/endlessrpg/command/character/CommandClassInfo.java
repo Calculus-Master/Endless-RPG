@@ -23,7 +23,9 @@ public class CommandClassInfo extends Command
             this.embed
                     .setTitle(Global.normalize(clazz.toString()))
                     .setDescription("*" + clazz.getDescription() + "*")
-                    .addField("Modifiers", clazz.getModifierOverview(), false);
+                    .addField("Modifiers", clazz.getModifierOverview(), false)
+                    .addField("Elemental Damage Modifiers", clazz.getElementalDamageModifierOverview(), false)
+                    .addField("Elemental Defense Modifiers", clazz.getElementalDefenseModifierOverview(), false);
         }
 
         return this;
