@@ -66,7 +66,7 @@ public class EnemyBuilder
     private static void defaultWeapons(RPGCharacter enemy, int level)
     {
         //Weapon
-        int weaponLevel = enemy.getLevel() + 1 + new SplittableRandom().nextInt(3);
+        int weaponLevel = enemy.getLevel() > 3 ? new SplittableRandom().nextInt(enemy.getLevel() - 2, enemy.getLevel() + 2) : enemy.getLevel();
 
         List<LootType> weaponPool = Arrays.asList(LootType.SWORD, LootType.WAND);
         LootItem weapon = LootBuilder.reward(weaponPool.get(new SplittableRandom().nextInt(weaponPool.size())), weaponLevel);

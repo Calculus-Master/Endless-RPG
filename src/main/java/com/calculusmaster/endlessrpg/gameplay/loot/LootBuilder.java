@@ -29,12 +29,12 @@ public class LootBuilder
         return out;
     }
 
-    private static int rand(int min, int max) { return r.nextInt(max - min + 1) + min; }
+    private static int rand(int min, int max) { return r.nextInt(min, max); }
 
     public static LootItem rewardSword(int level)
     {
         LootItem sword = LootItem.create(LootType.SWORD)
-            .addBoost(Stat.ATTACK, rand(2, 5) * level + 2 + rand(1, level * 2));
+            .addBoost(Stat.ATTACK, (int)((2 * level + 2 + rand(0, level)) * r.nextInt(80, 120) / 100.0));
 
         return sword;
     }
@@ -43,7 +43,7 @@ public class LootBuilder
     {
         LootItem wand = LootItem.create(LootType.WAND)
                 .addBoost(Stat.ATTACK, level + rand(5, Math.max(6, level * 2)))
-                .addElementalDamage(ElementType.getRandom(), rand(2, 5) * level + rand(1, level));
+                .addElementalDamage(ElementType.getRandom(), rand(2, 5) * level + rand(0, level));
 
         wand.getRequirements()
                 .addStat(Stat.INTELLECT, level * 3);
