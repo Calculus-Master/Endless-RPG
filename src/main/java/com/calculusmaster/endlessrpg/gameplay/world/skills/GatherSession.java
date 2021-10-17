@@ -11,9 +11,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class GatheringAdventure
+public class GatherSession
 {
-    public static final List<GatheringAdventure> GATHERING_ADVENTURES = new ArrayList<>();
+    public static final List<GatherSession> GATHERING_ADVENTURES = new ArrayList<>();
     public static final Map<String, ScheduledFuture<?>> END_TIMES = new HashMap<>();
     private static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(5);
 
@@ -22,9 +22,9 @@ public class GatheringAdventure
     private PlayerDataQuery player;
     private Location location;
 
-    public static GatheringAdventure create(PlayerDataQuery player, Location location)
+    public static GatherSession create(PlayerDataQuery player, Location location)
     {
-        GatheringAdventure g = new GatheringAdventure();
+        GatherSession g = new GatherSession();
 
         g.setCharacter(player.getActiveCharacter());
         g.setPlayer(player);
