@@ -28,8 +28,7 @@ public class CommandLocation extends Command
                 .setTitle(Realm.CURRENT.getName())
                 .addField("Current Location", "**" + location.getName() + "**\nType: " + Global.normalize(location.getType().toString().replaceAll("_", " ")), false)
                 .addField("Current Weather", "**" + Global.normalize(location.getWeather().toString()) + "**\nEffects:\n" + location.getWeather().getEffects(), true)
-                .addField("Current Time", "**" + Global.normalize(location.getTime().toString()) + "**\nEffects:\n" + location.getTime().getEffects(), true)
-                .addBlankField(true);
+                .addField("Current Time", "**" + Global.normalize(location.getTime().toString()) + "**\nEffects:\n" + location.getTime().getEffects(), true);
 
         this.embed.addField(this.getResourcesOverview(location));
 
@@ -62,7 +61,7 @@ public class CommandLocation extends Command
             content.deleteCharAt(content.length() - 1);
         }
 
-        return new MessageEmbed.Field("Resource Overview", content.toString(), false);
+        return new MessageEmbed.Field("Resources", content.toString(), false);
     }
 
     private MessageEmbed.Field getVisitedOverview()
