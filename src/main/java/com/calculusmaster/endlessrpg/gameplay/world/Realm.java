@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg.gameplay.world;
 
 import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
+import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.calculusmaster.endlessrpg.util.helpers.IDHelper;
 import com.mongodb.client.model.Filters;
@@ -155,6 +156,24 @@ public class Realm
     {
         List<Location> all = new ArrayList<>(List.copyOf(this.locations));
 
+        //Make sure the Realm has one each of T1 resources
+        List<RawResource> guaranteed = new ArrayList<>(RawResource.getResources(1));
+        while(!guaranteed.isEmpty())
+        {
+            Location pick = all.get(new SplittableRandom().nextInt(all.size()));
+            if(!Arrays.asList(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON).contains(pick.getType()))
+            {
+                pick.getResources().set(guaranteed.get(0), 1);
+                guaranteed.remove(0);
+            }
+        }
+
+        //Dungeons have some High Tier Resources
+        int dungeonHighTier = new SplittableRandom().nextInt(1, 4);
+        for(Location l : all) if(l.getType().equals(LocationType.DUNGEON)) for(int i = 0; i < dungeonHighTier; i++) l.getResources().set(RawResource.getRandom(new SplittableRandom().nextInt(RawResource.MAX_TIER - 5, RawResource.MAX_TIER)), 1);
+
+        //Create columns
+
         List<List<Location>> columns = new ArrayList<>();
 
         //Hub
@@ -174,6 +193,23 @@ public class Realm
 
         //Final Kingdom
         columns.add(List.of(this.locations.get(this.locations.size() - 1)));
+
+        //Apply resources - Last set of locations guarantee some T10, Realm will have at least one of each T1
+        columns.get(columns.size() - 2).forEach(l -> l.getResources().set(RawResource.getRandom(RawResource.MAX_TIER), new SplittableRandom().nextInt(1, 4)));
+
+        for(List<Location> list : columns)
+        {
+            for(Location l : list)
+            {
+                if(!Arrays.asList(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON).contains(l.getType()))
+                {
+                    int amount = new SplittableRandom().nextInt(1, 6);
+                    for(int i = 0; i < amount; i++) l.getResources().set(RawResource.getRandom(), new SplittableRandom().nextInt(1, 4));
+                }
+            }
+        }
+
+        //Create realm map
 
         this.realmMap = new LinkedHashMap<>();
 

@@ -4,6 +4,7 @@ import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SplittableRandom;
 
 import static com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill.*;
 
@@ -154,5 +155,15 @@ public enum RawResource
     {
         for(RawResource r : RawResource.values()) if(r.getSkill().equals(skill) && r.getTier() == tier) return r;
         return null;
+    }
+
+    public static RawResource getRandom(int tier)
+    {
+        return getResources(tier).get(new SplittableRandom().nextInt(getResources(tier).size()));
+    }
+
+    public static RawResource getRandom()
+    {
+        return values()[new SplittableRandom().nextInt(values().length)];
     }
 }
