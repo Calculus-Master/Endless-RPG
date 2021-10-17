@@ -127,6 +127,11 @@ public class Location
         return this.name;
     }
 
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
     public LocationType getType()
     {
         return this.type;
@@ -150,6 +155,11 @@ public class Location
     public EnemyArchetype getEnemyArchetype()
     {
         return this.enemy;
+    }
+
+    public void setEnemyArchetype(EnemyArchetype enemy)
+    {
+        this.enemy = enemy;
     }
 
     public RPGRawResourceContainer getResources()
