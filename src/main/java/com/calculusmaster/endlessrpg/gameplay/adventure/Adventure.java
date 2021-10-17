@@ -123,7 +123,7 @@ public class Adventure
             }
             case BATTLE_ENEMY -> {
                 final SplittableRandom r = new SplittableRandom();
-                RPGCharacter enemy = EnemyArchetype.RANDOM.create(this.level);
+                RPGCharacter enemy = EnemyArchetype.DEFAULT.create(this.level);
 
                 boolean win = Battle.simulate(this.character, enemy, this.location);
 
@@ -161,7 +161,7 @@ public class Adventure
         List<String> results = new ArrayList<>();
 
         //Must defeat Bot to receive rewards! Mini Boss is slightly more difficult than other enemies that appear in Adventures
-        RPGCharacter miniBoss = EnemyArchetype.RANDOM.create(this.level + 1);
+        RPGCharacter miniBoss = EnemyArchetype.DEFAULT.create(this.level + 1);
         boolean win = Battle.simulate(this.character, miniBoss, this.location);
 
         if(win)
