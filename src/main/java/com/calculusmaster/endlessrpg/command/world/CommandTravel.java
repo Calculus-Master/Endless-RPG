@@ -60,7 +60,7 @@ public class CommandTravel extends Command
                 this.response = "Your character started traveling to " + l.getName() + "! Traveling will take about " + this.formatTime(TRAVEL_TIME.get(this.player.getId()).getDelay(TimeUnit.SECONDS)) + "!";
                 //TODO: Location travel requirements (fight an enemy to gain access, RPGCharacterRequirements field in Location objects)
             }
-            else this.response = "You cannot travel to this Location! You must have visited a nearby Location to be able to travel to `%s`! (If the Location is visible using the Location command, you must travel to the previous node before you are allowed to travel to this one)".formatted(l.getName());
+            else this.response = "You cannot travel to this Location! You must be at a node connected to %s before you are able to travel there!".formatted(l.getName());
         }
 
         return this;
