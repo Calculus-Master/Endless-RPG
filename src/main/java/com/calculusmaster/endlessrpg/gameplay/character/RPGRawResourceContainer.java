@@ -20,13 +20,13 @@ public class RPGRawResourceContainer
     public RPGRawResourceContainer(Document resources)
     {
         this.resourceValues = new LinkedHashMap<>();
-        for(RawResource r : RawResource.values()) this.resourceValues.put(r, resources.getInteger(r.toString()));
+        for(RawResource r : RawResource.values()) this.resourceValues.put(r, resources.getInteger(r.toString(), 0));
     }
 
     public BasicDBObject serialized()
     {
         BasicDBObject resources = new BasicDBObject();
-        for(RawResource r : RawResource.values()) resources.put(r.toString(), this.resourceValues.get(r));
+        for(RawResource r : RawResource.values()) if(this.resourceValues.get(r) > 0) resources.put(r.toString(), this.resourceValues.get(r));
         return resources;
     }
 
