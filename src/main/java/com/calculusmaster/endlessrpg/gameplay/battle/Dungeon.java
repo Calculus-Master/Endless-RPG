@@ -138,7 +138,8 @@ public class Dungeon
         this.current++;
         this.active = false;
 
-        this.sendEncounterEmbed();
+        if(this.isComplete()) this.win();
+        else this.sendEncounterEmbed();
     }
 
     public void sendStartEmbed()

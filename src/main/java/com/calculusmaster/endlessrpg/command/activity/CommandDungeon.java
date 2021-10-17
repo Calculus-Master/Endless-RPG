@@ -47,7 +47,6 @@ public class CommandDungeon extends Command
                 else
                 {
                     d.nextEncounter();
-                    if(d.isComplete()) d.win();
 
                     this.embed = null;
                 }
