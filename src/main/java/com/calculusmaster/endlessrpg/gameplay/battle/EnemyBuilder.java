@@ -1,5 +1,6 @@
 package com.calculusmaster.endlessrpg.gameplay.battle;
 
+import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
@@ -7,8 +8,11 @@ import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.SplittableRandom;
 
 public class EnemyBuilder 
@@ -26,7 +30,7 @@ public class EnemyBuilder
     //Archetypes
     public static RPGCharacter createDefault(int level)
     {
-        RPGCharacter enemy = RPGCharacter.create("Adventure AI");
+        RPGCharacter enemy = RPGCharacter.create(EnemyBuilder.getRandomName("bot_names"));
 
         EnemyBuilder.defaultClass(enemy);
         EnemyBuilder.defaultLevel(enemy, level);
@@ -40,6 +44,12 @@ public class EnemyBuilder
     private static void setLevel(RPGCharacter enemy, int target)
     {
         while(enemy.getLevel() < target) enemy.addExp(enemy.getExpRequired(enemy.getLevel() + 1));
+    }
+
+    private static String getRandomName(String file)
+    {
+        List<String> pool = new BufferedReader(new InputStreamReader(Objects.requireNonNull(EndlessRPG.class.getResourceAsStream("/names/" + file + ".txt")))).lines().toList();
+        return pool.get(new SplittableRandom().nextInt(pool.size()));
     }
 
     //Default
