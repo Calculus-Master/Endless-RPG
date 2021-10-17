@@ -10,11 +10,11 @@ import static com.calculusmaster.endlessrpg.gameplay.enums.Stat.*;
 public enum RPGClass
 {
     RECRUIT("The most basic class."),
-    WARRIOR("", Modifier.of(ATTACK, 1.05), Modifier.of(STRENGTH, 1.02)),
-    TANK("", Modifier.of(DEFENSE, 1.05)),
-    KNIGHT("", Modifier.of(ATTACK, 1.05), Modifier.of(DEFENSE, 1.05)),
-    MAGE("", Modifier.of(ATTACK, 1.02), Modifier.of(INTELLECT, 1.05)),
-    WIZARD("", Modifier.of(INTELLECT, 1.1));
+    WARRIOR("A new soldier, somewhat adequate in the art of melee combat.", Modifier.of(ATTACK, 1.05), Modifier.of(STRENGTH, 1.02)),
+    TANK("A new frontline soldier, learning the ways of a strong Defense.", Modifier.of(DEFENSE, 1.05)),
+    KNIGHT("A standard melee combatant, with training in both melee combat and Defense.", Modifier.of(ATTACK, 1.05), Modifier.of(DEFENSE, 1.05)),
+    MAGE("A new magic user, somewhat adequate in the art of magical combat.", Modifier.of(ATTACK, 1.02), Modifier.of(INTELLECT, 1.05)),
+    WIZARD("A standard magic user, confident in magical combat.", Modifier.of(INTELLECT, 1.1));
 
     private final String description;
     private final Map<Stat, Double> modifiers;
