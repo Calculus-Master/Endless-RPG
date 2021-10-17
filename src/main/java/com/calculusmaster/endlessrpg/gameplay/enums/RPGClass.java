@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.calculusmaster.endlessrpg.gameplay.enums.ElementType.DARK;
 import static com.calculusmaster.endlessrpg.gameplay.enums.Stat.*;
 
 public enum RPGClass
@@ -33,7 +34,11 @@ public enum RPGClass
     WIZARD("A standard magic user, confident in magical combat.",
             List.of(Modifier.of(INTELLECT, 1.1)),
             List.of(),
-            List.of());
+            List.of()),
+    DARK_KNIGHT("A standard melee combatant, swayed to the side of Darkness",
+            List.of(Modifier.of(ATTACK, 1.1)),
+            List.of(ElementalModifier.of(DARK, 1.2)),
+            List.of(ElementalModifier.of(DARK, 1.2)));
 
     private final String description;
     private final Map<Stat, Double> modifiers;
@@ -115,7 +120,7 @@ public enum RPGClass
 
     public static RPGClass cast(String input)
     {
-        return Global.castEnum(input.replaceAll("_", " "), values());
+        return Global.castEnum(input, values());
     }
 
     private static class ElementalModifier
