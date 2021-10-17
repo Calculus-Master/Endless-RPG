@@ -12,7 +12,8 @@ public enum RPGClass
 {
     RECRUIT(),
     WARRIOR(Modifier.of(ATTACK, 1.05)),
-    TANK(Modifier.of(DEFENSE, 1.05));
+    TANK(Modifier.of(DEFENSE, 1.05)),
+    KNIGHT(Modifier.of(ATTACK, 1.05), Modifier.of(DEFENSE, 1.05));
 
     private final Map<Stat, Double> modifiers;
     RPGClass(Modifier... modifiers)
