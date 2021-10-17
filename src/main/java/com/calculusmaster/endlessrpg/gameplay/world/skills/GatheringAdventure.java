@@ -36,18 +36,13 @@ public class GatheringAdventure
 
     public void start()
     {
-        ScheduledFuture<?> end = SCHEDULER.schedule(this::complete, 1, TimeUnit.HOURS);
+        ScheduledFuture<?> end = SCHEDULER.schedule(this::complete, 5, TimeUnit.SECONDS);
 
         END_TIMES.put(this.character.getCharacterID(), end);
     }
 
     private void complete()
     {
-        END_TIMES.get(this.character.getCharacterID()).cancel(true);
-        END_TIMES.remove(this.character.getCharacterID());
-
-        GATHERING_ADVENTURES.remove(this);
-
         //TODO: Weighted outputs? Dynamic EXP? Pick resource that gets gathered? Temporarily, just gives the full location's output
         RPGRawResourceContainer output = this.location.getResources();
         for(RawResource r : RawResource.values())
@@ -59,9 +54,14 @@ public class GatheringAdventure
             }
         }
 
+        this.character.completeUpdate();
+
         this.player.DM(this.character.getName() + " finished gathering resources! Here's what was obtained:\n\n" + output.getFullOverview());
 
-        this.character.completeUpdate();
+        GATHERING_ADVENTURES.remove(this);
+
+        END_TIMES.get(this.character.getCharacterID()).cancel(false);
+        END_TIMES.remove(this.character.getCharacterID());
     }
 
     private void setLocation(Location location)
