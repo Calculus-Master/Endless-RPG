@@ -9,6 +9,8 @@ import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.skills.GatheringSkill;
+import com.calculusmaster.endlessrpg.gameplay.skills.RawResource;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Mongo;
@@ -95,6 +97,16 @@ public class CommandDeveloper extends Command
                 case "devmode" -> {
                     DEV_MODE = !DEV_MODE;
                     this.event.getChannel().sendMessage("Developer Mode is now " + DEV_MODE).queue();
+                }
+                case "addrawresource" -> {
+                    PlayerDataQuery target = this.getMentions().size() > 0 ? new PlayerDataQuery(this.getMentions().get(0).getId()) : this.playerData;
+                    GatheringSkill s = GatheringSkill.cast(this.msg[2]);
+                    int tier = this.getInt(3);
+                    int amount = this.msg.length == 5 ? this.getInt(4) : 1;
+
+                    RPGCharacter active = target.getActiveCharacter();
+                    active.getRawResources().increase(RawResource.getResource(s, tier), amount);
+                    active.updateRawResources();
                 }
                 default -> throw new IllegalStateException("Invalid Developer Command. Input: " + this.msg[0]);
             }

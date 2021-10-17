@@ -1,5 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.skills;
 
+import com.calculusmaster.endlessrpg.util.Global;
+
 public enum GatheringSkill
 {
     MINING,
@@ -8,4 +10,9 @@ public enum GatheringSkill
     WOODCUTTING,
     FARMING,
     HUNTING;
+
+    public static GatheringSkill cast(String input)
+    {
+        return Global.castEnum(input, values());
+    }
 }
