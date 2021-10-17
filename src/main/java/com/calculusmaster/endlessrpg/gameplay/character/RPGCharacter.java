@@ -539,28 +539,32 @@ public class RPGCharacter
         final StringBuilder message = new StringBuilder(this.getName() + " is now Level " + this.getLevel()).append("\nRewards Earned:\n");
 
         //Grant Core Stat
+        int total = this.getLevel();
         List<Stat> coreStatPool = new ArrayList<>(Arrays.asList(Stat.values()));
 
-        if(!this.getRPGClass().equals(RPGClass.RECRUIT))
+        //TODO: More weight based on value
+        if(!this.getRPGClass().equals(RPGClass.RECRUIT)) coreStatPool.addAll(this.getRPGClass().getBoosts().keySet());
+
+        coreStatPool.removeIf(s -> s.equals(Stat.HEALTH));
+
+        Map<Stat, Integer> coreImprovements = new HashMap<>();
+        while(total > 0)
         {
-            for(Map.Entry<Stat, Integer> e : this.getRPGClass().getBoosts().entrySet())
-            {
-                for(int i = 0; i < e.getValue(); i++) coreStatPool.add(e.getKey());
-            }
+            Stat s = coreStatPool.get(r.nextInt(coreStatPool.size()));
+            this.stats.put(s, this.stats.get(s) + 1);
+
+            coreImprovements.put(s, coreImprovements.getOrDefault(s, 0) + 1);
+            total--;
         }
 
-        coreStatPool.remove(Stat.HEALTH);
-
-        Stat s = coreStatPool.get(r.nextInt(coreStatPool.size()));
-        this.stats.put(s, this.stats.get(s) + 1);
-
-        message.append("Core ").append(Global.normalize(s.toString())).append(" Improved!\n");
+        message.append("Core Stats Improved!\n");
+        for(Map.Entry<Stat, Integer> e : coreImprovements.entrySet()) message.append("- ").append(Global.normalize(e.getKey().toString())).append(": ").append(e.getValue()).append("\n");
 
         //Health
 
         this.stats.put(Stat.HEALTH, this.stats.get(Stat.HEALTH) + 2);
 
-        message.append("Health improved!\n");
+        message.append("Health improved to %s!\n".formatted(this.getStat(Stat.HEALTH)));
 
         //Grant Elemental Core Stat
         if(this.getLevel() % 20 == 0)
