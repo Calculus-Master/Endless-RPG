@@ -38,7 +38,11 @@ public enum RPGClass
     DARK_KNIGHT("Dark Knight", "A standard melee combatant, swayed to the side of Darkness.",
             List.of(Modifier.of(ATTACK, 1.1f)),
             List.of(ElementalModifier.of(DARK, 1.2f)),
-            List.of(ElementalModifier.of(DARK, 1.2f)));
+            List.of(ElementalModifier.of(DARK, 1.2f))),
+    SCOUT("Scout", "A quick soldier, with not many other talents.",
+            List.of(Modifier.of(SPEED, 1.3f), Modifier.of(DEFENSE, 0.8f)),
+            List.of(),
+            List.of());
 
     private final String name;
     private final String description;
