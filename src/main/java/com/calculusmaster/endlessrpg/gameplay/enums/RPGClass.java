@@ -5,15 +5,16 @@ import com.calculusmaster.endlessrpg.util.Global;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.calculusmaster.endlessrpg.gameplay.enums.Stat.ATTACK;
-import static com.calculusmaster.endlessrpg.gameplay.enums.Stat.DEFENSE;
+import static com.calculusmaster.endlessrpg.gameplay.enums.Stat.*;
 
 public enum RPGClass
 {
     RECRUIT(),
-    WARRIOR(Modifier.of(ATTACK, 1.05)),
+    WARRIOR(Modifier.of(ATTACK, 1.05), Modifier.of(STRENGTH, 1.02)),
     TANK(Modifier.of(DEFENSE, 1.05)),
-    KNIGHT(Modifier.of(ATTACK, 1.05), Modifier.of(DEFENSE, 1.05));
+    KNIGHT(Modifier.of(ATTACK, 1.05), Modifier.of(DEFENSE, 1.05)),
+    MAGE(Modifier.of(ATTACK, 1.02), Modifier.of(INTELLECT, 1.05)),
+    WIZARD(Modifier.of(INTELLECT, 1.1));
 
     private final Map<Stat, Double> modifiers;
     RPGClass(Modifier... modifiers)
