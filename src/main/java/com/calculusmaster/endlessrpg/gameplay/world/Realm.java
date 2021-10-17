@@ -4,6 +4,7 @@ import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Weather;
 import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
+import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.calculusmaster.endlessrpg.util.helpers.IDHelper;
 import com.mongodb.client.model.Filters;
@@ -266,6 +267,6 @@ public class Realm
     private void setName()
     {
         List<String> pool = new BufferedReader(new InputStreamReader(Objects.requireNonNull(EndlessRPG.class.getResourceAsStream("/names/realm_names.txt")))).lines().toList();
-        this.name = pool.get(new SplittableRandom().nextInt(pool.size()));
+        this.name = Global.normalize(pool.get(new SplittableRandom().nextInt(pool.size())));
     }
 }
