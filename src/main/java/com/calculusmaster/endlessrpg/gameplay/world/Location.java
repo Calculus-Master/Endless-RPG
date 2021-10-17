@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.world;
 
 import com.calculusmaster.endlessrpg.EndlessRPG;
+import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Time;
 import com.calculusmaster.endlessrpg.gameplay.enums.Weather;
@@ -22,6 +23,7 @@ public class Location
     private String name;
     private LocationType type;
     private Weather weather;
+    private RPGRawResourceContainer resources;
 
     private Location() {}
 
@@ -33,6 +35,7 @@ public class Location
         l.type = type;
         l.setName();
         l.weather = Weather.values()[new SplittableRandom().nextInt(Weather.values().length)];
+        l.resources = new RPGRawResourceContainer();
 
         return l;
     }
@@ -45,6 +48,7 @@ public class Location
         l.name = "Hub of " + name;
         l.type = LocationType.HUB;
         l.weather = Weather.CLEAR;
+        l.resources = new RPGRawResourceContainer();
 
         return l;
     }
@@ -57,6 +61,7 @@ public class Location
         l.name = "Kingdom of " + name;
         l.type = LocationType.FINAL_KINGDOM;
         l.weather = Weather.CLEAR; //TODO: Harshest weather?
+        l.resources = new RPGRawResourceContainer();
 
         return l;
     }
@@ -71,6 +76,7 @@ public class Location
         l.name = data.getString("name");
         l.type = LocationType.cast(data.getString("type"));
         l.weather = Weather.cast(data.getString("weather"));
+        l.resources = new RPGRawResourceContainer(data.get("resources", Document.class));
 
         return l;
     }
@@ -81,7 +87,8 @@ public class Location
                 .append("locationID", this.locationID)
                 .append("name", this.name)
                 .append("type", this.type.toString())
-                .append("weather", this.weather.toString());
+                .append("weather", this.weather.toString())
+                .append("resources", this.resources.serialized());
 
         Mongo.LocationData.insertOne(data);
     }
@@ -120,6 +127,11 @@ public class Location
     public Weather getWeather()
     {
         return this.weather;
+    }
+
+    public RPGRawResourceContainer getResources()
+    {
+        return this.resources;
     }
 
     private void setName()
