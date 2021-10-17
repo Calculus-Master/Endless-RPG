@@ -8,6 +8,7 @@ import com.calculusmaster.endlessrpg.gameplay.enums.Weather;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.calculusmaster.endlessrpg.util.helpers.IDHelper;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import org.bson.Document;
 
 import java.io.BufferedReader;
@@ -98,6 +99,11 @@ public class Location
         Mongo.LocationData.deleteOne(Filters.eq("locationID", this.locationID));
     }
 
+    public void updateWeather()
+    {
+        Mongo.LocationData.updateOne(Filters.eq("locationID", this.locationID), Updates.set("weather", this.weather.toString()));
+    }
+
     public Time getTime()
     {
         int h = LocalDateTime.now().getHour();
@@ -127,6 +133,11 @@ public class Location
     public Weather getWeather()
     {
         return this.weather;
+    }
+
+    public void setWeather(Weather weather)
+    {
+        this.weather = weather;
     }
 
     public RPGRawResourceContainer getResources()

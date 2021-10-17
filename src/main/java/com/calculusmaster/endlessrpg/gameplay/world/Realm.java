@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg.gameplay.world;
 
 import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
+import com.calculusmaster.endlessrpg.gameplay.enums.Weather;
 import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.calculusmaster.endlessrpg.util.helpers.IDHelper;
@@ -41,6 +42,21 @@ public class Realm
         Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.push("visited", CURRENT.getLocations().get(0).getID()));
 
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(Realm::init, 1, 1, TimeUnit.DAYS);
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(Realm::cycleWeather, 2, 2, TimeUnit.HOURS);
+    }
+
+    public static void cycleWeather()
+    {
+        Realm.CURRENT.getLocations().forEach(l -> {
+            if(!Arrays.asList(LocationType.HUB, LocationType.FINAL_KINGDOM).contains(l.getType()))
+            {
+                List<Weather> pool = Arrays.asList(Weather.values());
+                pool.remove(l.getWeather());
+
+                l.setWeather(pool.get(new SplittableRandom().nextInt(pool.size())));
+                l.updateWeather();
+            }
+        });
     }
 
     private Realm() {}

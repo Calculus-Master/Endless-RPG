@@ -108,6 +108,7 @@ public class CommandDeveloper extends Command
                     active.getRawResources().increase(RawResource.getResource(s, tier), amount);
                     active.updateRawResources();
                 }
+                case "cycleweather" -> Realm.cycleWeather();
                 default -> throw new IllegalStateException("Invalid Developer Command. Input: " + this.msg[0]);
             }
 
