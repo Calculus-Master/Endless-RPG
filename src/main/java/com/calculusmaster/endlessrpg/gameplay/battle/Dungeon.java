@@ -1,5 +1,6 @@
 package com.calculusmaster.endlessrpg.gameplay.battle;
 
+import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyBuilder;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AIPlayer;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
@@ -9,8 +10,11 @@ import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.SplittableRandom;
 import java.util.stream.Collectors;
 
@@ -103,7 +107,7 @@ public class Dungeon
             case BOSS -> {
                 EmbedBuilder embed = new EmbedBuilder()
                         .setTitle(this.location.getName())
-                        .setDescription("Boss fight!");//TODO: Epic introduction
+                        .setDescription(this.getBossRoomDescription() + "\n\n***A tall figure emerges, and you know it is the only obstacle between you and victory...***");
 
                 this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
@@ -157,9 +161,9 @@ public class Dungeon
 
         embed.setTitle(this.location.getName())
                 .setDescription("*Level %s Dungeon*\n".formatted(this.level) + "DUNGEON_DESCRIPTION")
-                .addField("Progress", "Encounter " + (this.current + 1) + "\n**Total:** Between " + this.randomCount()[0] + " and " + this.randomCount()[1], false)
+                .addField("Progress", "About to enter Encounter " + (this.current + 1) + "\n**Total:** Between " + this.randomCount()[0] + " and " + this.randomCount()[1], false)
                 .addField("Previous Encounter Results (" + Global.normalize(this.encounters.get(this.current - 1).toString()) + ")", results.toString(), false)
-                .addField("Next Encounter", new SplittableRandom().nextInt(10) < 5 ? Global.normalize(this.encounters.get(this.current).toString()) : "???", false)
+                .addField("Next Encounter", new SplittableRandom().nextInt(10) < 5 || this.encounters.get(this.current).equals(DungeonEncounter.BOSS) ? Global.normalize(this.encounters.get(this.current).toString()) : "???", false)
                 .setFooter("Use 'r!dungeon next' to continue further!");
 
         this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
@@ -182,6 +186,12 @@ public class Dungeon
         this.current = 0;
         this.active = false;
         this.results = new ArrayList<>();
+    }
+
+    private String getBossRoomDescription()
+    {
+        List<String> pool = new BufferedReader(new InputStreamReader(Objects.requireNonNull(EndlessRPG.class.getResourceAsStream("/descriptions/dungeon_boss.txt")))).lines().toList();
+        return pool.get(new SplittableRandom().nextInt(pool.size()));
     }
 
     public static boolean isInDungeon(String ID)
