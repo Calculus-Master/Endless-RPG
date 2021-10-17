@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.util;
 
 import com.calculusmaster.endlessrpg.command.core.CommandHandler;
+import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.mongo.ServerDataQuery;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
@@ -35,7 +36,8 @@ public class Listener extends ListenerAdapter
         {
             msg = msg.substring(prefix.length());
 
-            CommandHandler.parse(event, msg);
+            if(!msg.startsWith("create") && !PlayerDataQuery.isRegistered(event.getAuthor().getId())) event.getChannel().sendMessage("<@" + event.getAuthor().getId() + ">: You need to create a Character first!").queue();
+            else CommandHandler.parse(event, msg);
         }
     }
 
