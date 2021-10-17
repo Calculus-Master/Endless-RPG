@@ -149,7 +149,7 @@ public class Realm
         Collections.shuffle(this.locations);
 
         this.locations.add(0, Location.createRealmHub(this.name));
-        this.locations.add(1, Location.create(LocationType.DUNGEON));
+        this.locations.add(1, Location.create(LocationType.DUNGEON)); //TODO: Should be removed after dungeon testing
         this.locations.add(Location.createFinalKingdom(this.name));
     }
 
