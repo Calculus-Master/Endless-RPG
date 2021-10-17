@@ -30,9 +30,10 @@ public class RPGRawResourceContainer
         return resources;
     }
 
-    public void set(RawResource r, int value)
+    public RPGRawResourceContainer set(RawResource r, int value)
     {
         this.resourceValues.put(r, value);
+        return this;
     }
 
     public void increase(RawResource r, int amount)
