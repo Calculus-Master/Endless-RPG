@@ -2,9 +2,7 @@ package com.calculusmaster.endlessrpg.gameplay.battle.enemy;
 
 import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
-import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
-import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
-import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
+import com.calculusmaster.endlessrpg.gameplay.enums.*;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 
@@ -28,6 +26,50 @@ public class EnemyBuilder
     }
     
     //Archetypes
+    public static RPGCharacter createRuler(int level)
+    {
+        RPGCharacter ruler = RPGCharacter.create("Ruler");
+        boolean magic = new SplittableRandom().nextInt(100) < 50;
+
+        EnemyBuilder.setLevel(ruler, level + 15);
+        EnemyBuilder.defaultClass(ruler); //TODO: Ruler Class
+
+        LootItem weapon;
+        if(magic)
+        {
+            weapon = LootBuilder.rewardWand(ruler.getLevel())
+                    .addBoost(Stat.INTELLECT, ruler.getLevel() * 2)
+                    .addElementalDamage(ElementType.getRandom(), ruler.getStat(Stat.ATTACK) / 2)
+                    .addElementalDamage(ElementType.getRandom(), ruler.getStat(Stat.ATTACK) / 2)
+                    .addElementalDefense(ElementType.getRandom(), ruler.getStat(Stat.ATTACK) / 2);
+        }
+        else
+        {
+            weapon = LootBuilder.rewardSword(ruler.getLevel())
+                    .addBoost(Stat.STRENGTH, ruler.getLevel() * 3)
+                    .addElementalDamage(ElementType.getRandom(), ruler.getStat(Stat.ATTACK) / 2);
+        }
+
+        weapon.upload();
+        ruler.equipLoot(EquipmentType.RIGHT_HAND, weapon.getLootID());
+
+        List<LootType> armorTypes = Arrays.asList(LootType.HELMET, LootType.CHESTPLATE, LootType.GAUNTLETS, LootType.LEGGINGS, LootType.BOOTS);
+        for(LootType loot : armorTypes)
+        {
+            LootItem armor = LootBuilder.reward(loot, ruler.getLevel())
+                    .addBoost(Stat.HEALTH, 75)
+                    .addElementalDefense(ElementType.getRandom(), 40)
+                    .addElementalDefense(ElementType.getRandom(), 40)
+                    .addElementalDefense(ElementType.getRandom(), 40)
+                    .addElementalDefense(ElementType.getRandom(), 40);
+
+            armor.upload();
+            ruler.equipLoot(EquipmentType.values()[armorTypes.indexOf(loot)], armor.getLootID());
+        }
+
+        return ruler;
+    }
+
     public static RPGCharacter createDefault(int level)
     {
         RPGCharacter enemy = RPGCharacter.create(EnemyBuilder.getRandomName("bot_names"));

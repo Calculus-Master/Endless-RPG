@@ -9,7 +9,8 @@ import java.util.function.Function;
 public enum EnemyArchetype
 {
     DEFAULT(EnemyBuilder::createDefault),
-    RANDOM(l -> values()[new SplittableRandom().nextInt(values().length)].create(l));
+    RANDOM(l -> values()[new SplittableRandom().nextInt(values().length)].create(l)),
+    KINGDOM_RULER(EnemyBuilder::createRuler);
 
     private Function<Integer, RPGCharacter> builder;
 

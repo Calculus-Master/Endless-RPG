@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.battle;
 
 import com.calculusmaster.endlessrpg.EndlessRPG;
+import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyArchetype;
 import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyBuilder;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AIPlayer;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
@@ -158,7 +159,9 @@ public class Dungeon
 
     private void startKingFight()
     {
-        this.startBossFight(); //TODO: King Archetype
+        RPGCharacter ruler = EnemyArchetype.KINGDOM_RULER.create(this.level);
+        ruler.setName("Ruler of " + this.location.getName());
+        this.startBattle(new AIPlayer(ruler)); //TODO: King Minions?
     }
 
     private void startDragonFight()
