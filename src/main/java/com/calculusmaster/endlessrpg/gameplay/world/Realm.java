@@ -7,6 +7,7 @@ import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.calculusmaster.endlessrpg.util.helpers.IDHelper;
+import com.calculusmaster.endlessrpg.util.helpers.LoggerHelper;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
@@ -37,7 +38,7 @@ public class Realm
         }
 
         CURRENT = Realm.create();
-        CURRENT.upload();
+        Executors.newSingleThreadExecutor().execute(() -> CURRENT.upload());
 
         Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.set("location", CURRENT.getLocations().get(0).getID()));
         Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.push("visited", CURRENT.getLocations().get(0).getID()));
@@ -97,6 +98,8 @@ public class Realm
                 .append("locations", this.locations.stream().map(Location::getID).toList());
 
         Mongo.RealmData.insertOne(data);
+
+        LoggerHelper.info(this.getClass(), "Realm Database Upload Complete!");
     }
 
     public void delete()
