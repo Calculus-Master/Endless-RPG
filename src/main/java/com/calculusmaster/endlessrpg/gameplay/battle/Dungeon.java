@@ -129,22 +129,29 @@ public class Dungeon
                 DungeonEncounter enc = this.encounters.get(this.current);
                 EmbedBuilder embed = new EmbedBuilder().setTitle(this.location.getName());
 
-                if(enc.equals(DungeonEncounter.BOSS) || enc.equals(DungeonEncounter.FINAL_KINGDOM_MINI_BOSS))
-                    embed.setDescription(this.getBossRoomDescription() + "\n\n***A mysterious figure emerges...\nIt is the only obstacle between you and victory...***");
-                else if(enc.equals(DungeonEncounter.FINAL_KINGDOM_KING))
-                    embed.setDescription(this.getThroneDescription() + "\n\n***The ruler of " + this.location.getName() + " stands in front of the throne and eyes you coldly...You've made it this far, and this is the final stand...***");
-                else if(enc.equals(DungeonEncounter.FINAL_KINGDOM_BOSS))
-                    embed.setDescription("***You reach the top of the castle, to gaze upon the Realm and relax. Suddenly a massive roar greets you as you turn around to behold a fearsome dragon...This is the true test!***");
+                switch(enc)
+                {
+                    case BOSS -> {
+                        embed.setDescription(this.getBossRoomDescription() + "\n\n***A mysterious figure emerges...\nIt is the only obstacle between you and victory...***");
+                        Executors.newSingleThreadScheduledExecutor().schedule(this::startBossFight, 10, TimeUnit.SECONDS);
+                    }
+                    case FINAL_KINGDOM_MINI_BOSS -> {
+                        embed.setDescription(this.getBossRoomDescription() + "\n\n***A dark figure emerges, ready to defend at all costs...Nothing should stop you from reaching the Throne...***");
+                        Executors.newSingleThreadScheduledExecutor().schedule(this::startMiniBossFight, 10, TimeUnit.SECONDS);
+                    }
+                    case FINAL_KINGDOM_KING -> {
+                        embed.setDescription(this.getThroneDescription() + "\n\n***The ruler of " + this.location.getName() + " stands in front of the throne and eyes you coldly...You've made it this far, and this is the final stand...***");
+                        Executors.newSingleThreadScheduledExecutor().schedule(this::startKingFight, 10, TimeUnit.SECONDS);
+                    }
+                    case FINAL_KINGDOM_BOSS -> {
+                        embed.setDescription("***You reach the top of the castle, to gaze upon the Realm and relax. Suddenly a massive roar greets you as you turn around to behold a fearsome dragon...This is the true test!***");
+                        Executors.newSingleThreadScheduledExecutor().schedule(this::startDragonFight, 5, TimeUnit.SECONDS);
+                    }
+                }
 
                 this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
                 //TODO: Improve King and Dragon Descriptions
-                if(enc.equals(DungeonEncounter.BOSS) || enc.equals(DungeonEncounter.FINAL_KINGDOM_MINI_BOSS))
-                    Executors.newSingleThreadScheduledExecutor().schedule(this::startBossFight, 10, TimeUnit.SECONDS);
-                else if(enc.equals(DungeonEncounter.FINAL_KINGDOM_KING))
-                    Executors.newSingleThreadScheduledExecutor().schedule(this::startKingFight, 10, TimeUnit.SECONDS);
-                else if(enc.equals(DungeonEncounter.FINAL_KINGDOM_BOSS))
-                    Executors.newSingleThreadScheduledExecutor().schedule(this::startDragonFight, 5, TimeUnit.SECONDS);
             }
             case TREASURE -> {
                 this.results.add("`NYI` – Treasure Event");
@@ -167,6 +174,12 @@ public class Dungeon
     private void startDragonFight()
     {
         this.startBattle(new AIPlayer(EnemyArchetype.DRAGON.create(this.level + 50)));
+    }
+
+    private void startMiniBossFight()
+    {
+        //TODO: Dragon or something - cooler boss (this exists in Final Kingdom, but what about regular dungeons?)
+        this.startBattle(new AIPlayer(EnemyBuilder.createDefault(this.level + 2)));
     }
 
     private void startBossFight()
