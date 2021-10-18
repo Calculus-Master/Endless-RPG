@@ -166,7 +166,7 @@ public class Dungeon
 
     private void startDragonFight()
     {
-        this.startBossFight(); //TODO: Dragon Archetype
+        this.startBattle(new AIPlayer(EnemyArchetype.DRAGON.create(this.level + 50)));
     }
 
     private void startBossFight()

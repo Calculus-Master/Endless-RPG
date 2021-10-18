@@ -26,6 +26,29 @@ public class EnemyBuilder
     }
     
     //Archetypes
+    public static RPGCharacter createDragon(int level)
+    {
+        //TODO: Improve this and the Ruler, Dragons don't have any equipment
+        RPGCharacter dragon = RPGCharacter.create(EnemyBuilder.getRandomName("dragon_names"));
+
+        EnemyBuilder.setLevel(dragon, level * 10);
+
+        dragon.increaseCoreStat(Stat.HEALTH, 200 + level * 5);
+
+        ElementType affinity = ElementType.getRandom();
+
+        for(ElementType element : ElementType.values())
+        {
+            int damage = new SplittableRandom().nextInt(level * 5, level * (affinity.equals(element) ? 15 : 7));
+            dragon.getCoreElementalDamage().set(element, damage);
+
+            int defense = new SplittableRandom().nextInt(level * 6, level * (affinity.equals(element) ? 15 : 9));
+            dragon.getCoreElementalDefense().set(element, defense);
+        }
+
+        return dragon;
+    }
+
     public static RPGCharacter createRuler(int level)
     {
         RPGCharacter ruler = RPGCharacter.create("Ruler");

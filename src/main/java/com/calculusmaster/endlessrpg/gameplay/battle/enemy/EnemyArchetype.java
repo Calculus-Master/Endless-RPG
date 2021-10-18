@@ -10,7 +10,8 @@ public enum EnemyArchetype
 {
     DEFAULT(EnemyBuilder::createDefault),
     RANDOM(l -> values()[new SplittableRandom().nextInt(values().length)].create(l)),
-    KINGDOM_RULER(EnemyBuilder::createRuler);
+    KINGDOM_RULER(EnemyBuilder::createRuler),
+    DRAGON(EnemyBuilder::createDragon);
 
     private Function<Integer, RPGCharacter> builder;
 
