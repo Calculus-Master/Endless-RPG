@@ -4,6 +4,7 @@ import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyArchetype;
 import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyBuilder;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AIPlayer;
+import com.calculusmaster.endlessrpg.gameplay.battle.player.UserPlayer;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
@@ -24,6 +25,7 @@ public class Dungeon
     public static final List<Dungeon> DUNGEONS = new ArrayList<>();
 
     private PlayerDataQuery player;
+    private List<RPGCharacter> playerTeam;
     private Location location;
     private int level;
     private MessageReceivedEvent event;
@@ -114,13 +116,12 @@ public class Dungeon
 
                 this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
-                //TODO: Single team of RPGCharacters, health goes across multiple encounters
                 List<RPGCharacter> enemies = new ArrayList<>();
-                int number = this.isFinalKingdom ? 4 : this.player.getCharacterList().size();
+                int number = this.isFinalKingdom ? 4 : this.playerTeam.size();
                 Supplier<Integer> level = this.isFinalKingdom ? () -> this.level - 1 : () -> new SplittableRandom().nextInt(this.level - 1, this.level + 2);
                 for(int i = 0; i < number; i++) enemies.add(EnemyBuilder.createDefault(level.get()));
 
-                Battle b = Battle.createDungeon(this.player.getID(), new AIPlayer(enemies), this.location);
+                Battle b = Battle.createDungeon(new UserPlayer(this.player, this.playerTeam), new AIPlayer(enemies), this.location);
                 b.setEvent(this.event);
 
                 b.sendTurnEmbed();
@@ -188,7 +189,7 @@ public class Dungeon
 
     private void startBattle(AIPlayer ai)
     {
-        Battle b = Battle.createDungeon(this.player.getID(), ai, this.location);
+        Battle b = Battle.createDungeon(new UserPlayer(this.player, this.playerTeam), ai, this.location);
         b.setEvent(this.event);
 
         b.sendTurnEmbed();
@@ -319,6 +320,7 @@ public class Dungeon
     private void setPlayer(PlayerDataQuery player)
     {
         this.player = player;
+        this.playerTeam = new ArrayList<>(player.getCharacterList().stream().map(RPGCharacter::build).toList());
     }
 
     private void setLevel(int level)

@@ -58,12 +58,12 @@ public class Battle
         return b;
     }
 
-    public static Battle createDungeon(String userID, AIPlayer enemy, Location location)
+    public static Battle createDungeon(UserPlayer player, AIPlayer enemy, Location location)
     {
         Battle b = new Battle();
 
         b.setBattleType(BattleType.PVE);
-        b.createPlayers(userID, enemy);
+        b.createPlayers(player, enemy);
         b.setLocation(location);
         b.setup();
 
@@ -310,6 +310,13 @@ public class Battle
     {
         this.players = new ArrayList<>();
         this.players.add(new UserPlayer(userID));
+        this.players.add(enemy);
+    }
+
+    private void createPlayers(UserPlayer player, AIPlayer enemy)
+    {
+        this.players = new ArrayList<>();
+        this.players.add(player);
         this.players.add(enemy);
     }
 
