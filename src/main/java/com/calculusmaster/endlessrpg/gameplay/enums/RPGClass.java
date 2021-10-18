@@ -1,5 +1,6 @@
 package com.calculusmaster.endlessrpg.gameplay.enums;
 
+import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacterRequirements;
 import com.calculusmaster.endlessrpg.util.Global;
 
 import java.util.HashMap;
@@ -14,43 +15,60 @@ public enum RPGClass
     RECRUIT("Recruit", "The most basic class.",
             List.of(),
             List.of(),
-            List.of()),
+            List.of(),
+            new RPGCharacterRequirements()
+    ),
     WARRIOR("Warrior", "A new soldier, somewhat adequate in the art of melee combat.",
             List.of(Modifier.of(ATTACK, 1.05f), Modifier.of(STRENGTH, 1.02f)),
             List.of(),
-            List.of()),
+            List.of(),
+            new RPGCharacterRequirements()
+    ),
     TANK("Tank", "A new frontline soldier, learning the ways of a strong Defense.",
             List.of(Modifier.of(DEFENSE, 1.05f)),
             List.of(),
-            List.of()),
+            List.of(),
+            new RPGCharacterRequirements()
+                    .addCoreStat(DEFENSE, 2)
+    ),
     KNIGHT("Knight", "A standard melee combatant, with training in both melee combat and Defense.",
             List.of(Modifier.of(ATTACK, 1.05f), Modifier.of(DEFENSE, 1.05f)),
             List.of(),
-            List.of()),
+            List.of(),
+            new RPGCharacterRequirements()
+    ),
     MAGE("Mage", "A new magic user, somewhat adequate in the art of magical combat.",
             List.of(Modifier.of(ATTACK, 1.02f), Modifier.of(INTELLECT, 1.05f)),
             List.of(),
-            List.of()),
+            List.of(),
+            new RPGCharacterRequirements()
+    ),
     WIZARD("Wizard", "A standard magic user, confident in magical combat.",
             List.of(Modifier.of(INTELLECT, 1.1f)),
             List.of(),
-            List.of()),
+            List.of(),
+            new RPGCharacterRequirements()),
     DARK_KNIGHT("Dark Knight", "A standard melee combatant, swayed to the side of Darkness.",
             List.of(Modifier.of(ATTACK, 1.1f)),
             List.of(ElementalModifier.of(DARK, 1.2f)),
-            List.of(ElementalModifier.of(DARK, 1.2f))),
-    SCOUT("Scout", "A quick soldier, with not many other talents.",
+            List.of(ElementalModifier.of(DARK, 1.2f)),
+            new RPGCharacterRequirements()
+    ),
+    SCOUT("Scout", "A quick soldier with not many other talents.",
             List.of(Modifier.of(SPEED, 1.3f), Modifier.of(DEFENSE, 0.8f)),
             List.of(),
-            List.of());
+            List.of(),
+            new RPGCharacterRequirements()
+    );
 
     private final String name;
     private final String description;
     private final Map<Stat, Float> modifiers;
     private final Map<ElementType, Float> elementalDamage;
     private final Map<ElementType, Float> elementalDefense;
+    private final RPGCharacterRequirements requirements;
 
-    RPGClass(String name, String description, List<Modifier> modifiers, List<ElementalModifier> elementalDamage, List<ElementalModifier> elementalDefense)
+    RPGClass(String name, String description, List<Modifier> modifiers, List<ElementalModifier> elementalDamage, List<ElementalModifier> elementalDefense, RPGCharacterRequirements requirements)
     {
         this.name = name;
         this.description = description;
@@ -63,6 +81,8 @@ public enum RPGClass
 
         this.elementalDefense = new HashMap<>();
         for(ElementalModifier m : elementalDefense) this.elementalDefense.put(m.element, m.value);
+
+        this.requirements = requirements;
     }
 
     public String getDescription()
@@ -127,6 +147,11 @@ public enum RPGClass
         }
 
         return overview.isEmpty() ? "None": overview.toString();
+    }
+
+    public RPGCharacterRequirements getRequirements()
+    {
+        return this.requirements;
     }
 
     public static RPGClass cast(String input)
