@@ -152,6 +152,13 @@ public class Dungeon
 
                 this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
             }
+            case HEAL -> {
+                RPGCharacter chosen = this.playerTeam.get(new SplittableRandom().nextInt(this.playerTeam.size()));
+                int amount = (int)(chosen.getHealth() * (new SplittableRandom().nextInt(10, 70) / 100.0));
+
+                chosen.heal(amount);
+                this.results.add(chosen.getName() + " healed for " + amount + " Health at the Healing Fountain!");
+            }
             case FINAL_KINGDOM_HEAL -> {
                 for(RPGCharacter c : this.playerTeam) c.heal((int)(c.getHealth() * (new SplittableRandom().nextInt(10, 80) / 100.0)));
                 this.results.add("Your characters feel replenished at the Healing Fountain, and are ready for what's next!");
@@ -345,6 +352,7 @@ public class Dungeon
         TREASURE,
         LOOT,
         BOSS,
+        HEAL,
         //Final Kingdom Dungeon
         FINAL_KINGDOM_HEAL,
         FINAL_KINGDOM_MINI_BOSS,
@@ -353,7 +361,7 @@ public class Dungeon
 
         static DungeonEncounter getRandom()
         {
-            return Arrays.copyOfRange(values(), 0, 4)[new SplittableRandom().nextInt(4)];
+            return Arrays.copyOfRange(values(), 0, 4)[new SplittableRandom().nextInt(5)];
         }
     }
 }
