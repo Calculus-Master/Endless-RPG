@@ -144,14 +144,12 @@ public class Dungeon
                         Executors.newSingleThreadScheduledExecutor().schedule(this::startKingFight, 10, TimeUnit.SECONDS);
                     }
                     case FINAL_KINGDOM_BOSS -> {
-                        embed.setDescription("***You reach the top of the castle, to gaze upon the Realm and relax. Suddenly a massive roar greets you as you turn around to behold a fearsome dragon...This is the true test!***");
+                        embed.setDescription("***You reach the top of the castle, to gaze upon the Realm and relax. Your journey is finally complete...\nSuddenly a massive roar startles you, and you turn around to behold a fearsome dragon...This is the true test!***");
                         Executors.newSingleThreadScheduledExecutor().schedule(this::startDragonFight, 5, TimeUnit.SECONDS);
                     }
                 }
 
                 this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
-
-                //TODO: Improve King and Dragon Descriptions
             }
             case TREASURE -> {
                 this.results.add("`NYI` – Treasure Event");
