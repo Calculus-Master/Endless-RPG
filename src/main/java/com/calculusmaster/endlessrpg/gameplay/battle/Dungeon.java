@@ -12,12 +12,10 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.SplittableRandom;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class Dungeon
@@ -35,6 +33,8 @@ public class Dungeon
 
     private boolean active;
 
+    private boolean isFinalKingdom;
+
     public static Dungeon create(PlayerDataQuery player, Location location, int level, MessageReceivedEvent event)
     {
         Dungeon d = new Dungeon();
@@ -44,6 +44,22 @@ public class Dungeon
         d.setLevel(level);
         d.setEvent(event);
         d.createEncounters();
+        d.setup();
+
+        DUNGEONS.add(d);
+        return d;
+    }
+
+    public static Dungeon createFinalKingdom(PlayerDataQuery player, Location location, int level, MessageReceivedEvent event)
+    {
+        Dungeon d = new Dungeon();
+
+        d.setPlayer(player);
+        d.setLocation(location);
+        d.setLevel(level);
+        d.setEvent(event);
+        d.createFinalKingdomEncounters();
+        d.setup();
 
         DUNGEONS.add(d);
         return d;
@@ -99,21 +115,35 @@ public class Dungeon
 
                 //TODO: Single team of RPGCharacters, health goes across multiple encounters
                 List<RPGCharacter> enemies = new ArrayList<>();
-                for(int i = 0; i < this.player.getCharacterList().size(); i++) enemies.add(EnemyBuilder.createDefault(new SplittableRandom().nextInt(this.level - 1, this.level + 2)));
+                int number = this.isFinalKingdom ? 4 : this.player.getCharacterList().size();
+                Supplier<Integer> level = this.isFinalKingdom ? () -> this.level - 1 : () -> new SplittableRandom().nextInt(this.level - 1, this.level + 2);
+                for(int i = 0; i < number; i++) enemies.add(EnemyBuilder.createDefault(level.get()));
 
                 Battle b = Battle.createDungeon(this.player.getID(), new AIPlayer(enemies), this.location);
                 b.setEvent(this.event);
 
                 b.sendTurnEmbed();
             }
-            case BOSS -> {
-                EmbedBuilder embed = new EmbedBuilder()
-                        .setTitle(this.location.getName())
-                        .setDescription(this.getBossRoomDescription() + "\n\n***A mysterious figure emerges...\nIt is the only obstacle between you and victory...***");
+            case BOSS, FINAL_KINGDOM_MINI_BOSS, FINAL_KINGDOM_KING, FINAL_KINGDOM_BOSS -> {
+                DungeonEncounter enc = this.encounters.get(this.current);
+                EmbedBuilder embed = new EmbedBuilder().setTitle(this.location.getName());
+
+                if(enc.equals(DungeonEncounter.BOSS) || enc.equals(DungeonEncounter.FINAL_KINGDOM_MINI_BOSS))
+                    embed.setDescription(this.getBossRoomDescription() + "\n\n***A mysterious figure emerges...\nIt is the only obstacle between you and victory...***");
+                else if(enc.equals(DungeonEncounter.FINAL_KINGDOM_KING))
+                    embed.setDescription(this.getThroneDescription() + "\n\n***The ruler of " + this.location.getName() + " stands in front of the throne and eyes you coldly...You've made it this far, and this is the final stand...***");
+                else if(enc.equals(DungeonEncounter.FINAL_KINGDOM_BOSS))
+                    embed.setDescription("***You reach the top of the castle, to gaze upon the Realm and relax. Suddenly a massive roar greets you as you turn around to behold a fearsome dragon...This is the true test!***");
 
                 this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
-                Executors.newSingleThreadScheduledExecutor().schedule(this::startBossFight, 10, TimeUnit.SECONDS);
+                //TODO: Improve King and Dragon Descriptions
+                if(enc.equals(DungeonEncounter.BOSS) || enc.equals(DungeonEncounter.FINAL_KINGDOM_MINI_BOSS))
+                    Executors.newSingleThreadScheduledExecutor().schedule(this::startBossFight, 10, TimeUnit.SECONDS);
+                else if(enc.equals(DungeonEncounter.FINAL_KINGDOM_KING))
+                    Executors.newSingleThreadScheduledExecutor().schedule(this::startKingFight, 10, TimeUnit.SECONDS);
+                else if(enc.equals(DungeonEncounter.FINAL_KINGDOM_BOSS))
+                    Executors.newSingleThreadScheduledExecutor().schedule(this::startDragonFight, 5, TimeUnit.SECONDS);
             }
             case TREASURE -> {
                 this.results.add("`NYI` – Treasure Event");
@@ -126,10 +156,25 @@ public class Dungeon
         }
     }
 
+    private void startKingFight()
+    {
+        this.startBossFight(); //TODO: King Archetype
+    }
+
+    private void startDragonFight()
+    {
+        this.startBossFight(); //TODO: Dragon Archetype
+    }
+
     private void startBossFight()
     {
-        //TODO: Dragon or something - cooler boss
-        Battle b = Battle.createDungeon(this.player.getID(), new AIPlayer(EnemyBuilder.createDefault(this.level + new SplittableRandom().nextInt(5, 11))), this.location);
+        //TODO: Dragon or something - cooler boss (this exists in Final Kingdom, but what about regular dungeons?)
+        this.startBattle(new AIPlayer(EnemyBuilder.createDefault(this.level + new SplittableRandom().nextInt(5, 11))));
+    }
+
+    private void startBattle(AIPlayer ai)
+    {
+        Battle b = Battle.createDungeon(this.player.getID(), ai, this.location);
         b.setEvent(this.event);
 
         b.sendTurnEmbed();
@@ -184,13 +229,29 @@ public class Dungeon
 
     private void createEncounters()
     {
+        this.isFinalKingdom = false;
         this.encounters = new ArrayList<>();
 
         int number = new SplittableRandom().nextInt(5, 15);
-        this.encounters.add(DungeonEncounter.BATTLE);
-        for(int i = 0; i < number; i++) this.encounters.add(DungeonEncounter.values()[new SplittableRandom().nextInt(DungeonEncounter.values().length - 1)]);
+        for(int i = 0; i < number; i++) this.encounters.add(DungeonEncounter.getRandom());
         this.encounters.add(DungeonEncounter.BOSS);
+    }
 
+    private void createFinalKingdomEncounters()
+    {
+        this.isFinalKingdom = true;
+        this.encounters = new ArrayList<>();
+
+        int preMiniBoss = new SplittableRandom().nextInt(1, 4);
+        for(int i = 0; i < preMiniBoss; i++) this.encounters.add(DungeonEncounter.BATTLE);
+        int miniBoss = new SplittableRandom().nextInt(1, 4);
+        for(int i = 0; i < miniBoss; i++) this.encounters.add(DungeonEncounter.FINAL_KINGDOM_MINI_BOSS);
+        this.encounters.add(DungeonEncounter.FINAL_KINGDOM_KING);
+        this.encounters.add(DungeonEncounter.FINAL_KINGDOM_BOSS);
+    }
+
+    private void setup()
+    {
         this.current = 0;
         this.active = false;
         this.results = new ArrayList<>();
@@ -201,6 +262,12 @@ public class Dungeon
         List<String> pool = new BufferedReader(new InputStreamReader(Objects.requireNonNull(EndlessRPG.class.getResourceAsStream("/descriptions/dungeon_boss.txt")))).lines().toList();
         String desc = pool.get(new SplittableRandom().nextInt(pool.size()));
         return desc.replaceAll("(\\.\\.)", "...\n\n").replaceAll("wait", "*Wait*");
+    }
+
+    private String getThroneDescription()
+    {
+        List<String> pool = new BufferedReader(new InputStreamReader(Objects.requireNonNull(EndlessRPG.class.getResourceAsStream("/descriptions/dungeon_throne.txt")))).lines().toList();
+        return pool.get(new SplittableRandom().nextInt(pool.size()));
     }
 
     public static boolean isInDungeon(String ID)
@@ -252,9 +319,19 @@ public class Dungeon
 
     private enum DungeonEncounter
     {
+        //Regular Dungeon
         BATTLE,
         TREASURE,
         LOOT,
-        BOSS;
+        BOSS,
+        //Final Kingdom Dungeon
+        FINAL_KINGDOM_MINI_BOSS,
+        FINAL_KINGDOM_KING,
+        FINAL_KINGDOM_BOSS;
+
+        static DungeonEncounter getRandom()
+        {
+            return Arrays.copyOfRange(values(), 0, 4)[new SplittableRandom().nextInt(4)];
+        }
     }
 }
