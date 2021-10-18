@@ -26,13 +26,19 @@ public class CommandDungeon extends Command
 
         if(start)
         {
+            LocationType current = Realm.CURRENT.getLocation(this.playerData.getLocationID()).getType();
+
             if(Dungeon.isInDungeon(this.player.getId()) || Battle.isInBattle(this.player.getId())) this.response = "You are already in another Dungeon or Battle!";
-            else if(!Arrays.asList(LocationType.DUNGEON, LocationType.FINAL_KINGDOM).contains(Realm.CURRENT.getLocation(this.playerData.getLocationID()).getType())) this.response = "You have to be at a Dungeon Location to enter a Dungeon!";
+            else if(!Arrays.asList(LocationType.DUNGEON, LocationType.FINAL_KINGDOM).contains(current)) this.response = "You have to be at a Dungeon Location to enter a Dungeon!";
             else
             {
                 //TODO: Replace with Location level attribute
                 int averageLevel = this.playerData.getCharacterList().stream().map(RPGCharacter::build).mapToInt(RPGCharacter::getLevel).sum() / this.playerData.getCharacterList().size();
-                Dungeon d = Dungeon.create(this.playerData, Realm.CURRENT.getLocation(this.playerData.getLocationID()), averageLevel, this.event);
+
+                Dungeon d = current.equals(LocationType.FINAL_KINGDOM)
+                        ? Dungeon.createFinalKingdom(this.playerData, Realm.CURRENT.getLocation(this.playerData.getLocationID()), averageLevel, this.event)
+                        : Dungeon.create(this.playerData, Realm.CURRENT.getLocation(this.playerData.getLocationID()), averageLevel, this.event);
+
                 d.sendStartEmbed();
 
                 this.embed = null;
