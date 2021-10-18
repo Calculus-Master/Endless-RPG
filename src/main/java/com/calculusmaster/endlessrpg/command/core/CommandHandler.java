@@ -99,6 +99,9 @@ public class CommandHandler
         register("classinfo", "ci")
                 .setCommand(CommandClassInfo::new);
 
+        register("class")
+                .setCommand(CommandClass::new);
+
         register("dev")
                 .setCommand(CommandDeveloper::new);
     }
