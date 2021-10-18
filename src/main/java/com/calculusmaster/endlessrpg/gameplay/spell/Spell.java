@@ -54,8 +54,8 @@ public abstract class Spell
             double coreDEF = target.getCoreElementalDefense().percent(element);
 
             //Class - Percent Modifier of Total Elemental Attack/Defense
-            double classATK = user.getRPGClass().getElementalDamageModifiers().get(element);
-            double classDEF = target.getRPGClass().getElementalDefenseModifiers().get(element);
+            double classATK = user.getRPGClass().getElementalDamageModifiers().getOrDefault(element, 1.0f);
+            double classDEF = target.getRPGClass().getElementalDefenseModifiers().getOrDefault(element, 1.0f);
 
             int elementalATK = (int)(classATK * (equipmentATK + coreATK * attack));
             int elementalDEF = (int)(classDEF * (equipmentDEF + coreDEF * attack));
