@@ -36,6 +36,12 @@ public class LootBuilder
         LootItem sword = LootItem.create(LootType.SWORD)
             .addBoost(Stat.ATTACK, (int)((2 * level + 2 + rand(0, level)) * r.nextInt(80, 120) / 100.0));
 
+        if(r.nextInt(100) < 40)
+        {
+            int boost = new SplittableRandom().nextInt(level,(int)(1.5 * level) + rand(0, level));
+            sword.addElementalDamage(ElementType.getRandom(), boost);
+        }
+
         return sword;
     }
 
