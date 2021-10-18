@@ -152,6 +152,10 @@ public class Dungeon
 
                 this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
             }
+            case FINAL_KINGDOM_HEAL -> {
+                for(RPGCharacter c : this.playerTeam) c.heal((int)(c.getHealth() * (new SplittableRandom().nextInt(10, 80) / 100.0)));
+                this.results.add("Your characters feel replenished at the Healing Fountain, and are ready for what's next!");
+            }
             case TREASURE -> {
                 this.results.add("`NYI` – Treasure Event");
                 this.advance();
@@ -261,6 +265,7 @@ public class Dungeon
         for(int i = 0; i < preMiniBoss; i++) this.encounters.add(DungeonEncounter.BATTLE);
         int miniBoss = new SplittableRandom().nextInt(1, 4);
         for(int i = 0; i < miniBoss; i++) this.encounters.add(DungeonEncounter.FINAL_KINGDOM_MINI_BOSS);
+        this.encounters.add(DungeonEncounter.FINAL_KINGDOM_HEAL);
         this.encounters.add(DungeonEncounter.FINAL_KINGDOM_KING);
         this.encounters.add(DungeonEncounter.FINAL_KINGDOM_BOSS);
     }
@@ -341,6 +346,7 @@ public class Dungeon
         LOOT,
         BOSS,
         //Final Kingdom Dungeon
+        FINAL_KINGDOM_HEAL,
         FINAL_KINGDOM_MINI_BOSS,
         FINAL_KINGDOM_KING,
         FINAL_KINGDOM_BOSS;
