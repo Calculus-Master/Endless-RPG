@@ -38,7 +38,7 @@ public class LootBuilder
 
         if(r.nextInt(100) < 40)
         {
-            int boost = new SplittableRandom().nextInt(level,(int)(1.5 * level) + rand(0, level));
+            int boost = new SplittableRandom().nextInt(level / 2,(int)(1.5 * level) + rand(0, level));
             sword.addElementalDamage(ElementType.getRandom(), boost);
         }
 
