@@ -22,9 +22,6 @@ public abstract class Spell
         Weather weather = battle.getLocation().getWeather();
         Time time = battle.getLocation().getTime();
 
-        RPGElementalContainer userElementalDamage = user.getEquipment().combinedElementalDamage();
-        RPGElementalContainer targetElementalDefense = target.getEquipment().combinedElementalDefense();
-
         int attack = user.getStat(Stat.ATTACK);
         int defense = target.getStat(Stat.DEFENSE);
 
@@ -42,53 +39,59 @@ public abstract class Spell
 
         int damage = 0;
 
-        //Equipment
+        RPGElementalContainer userEquipmentED = user.getEquipment().combinedElementalDamage();
+        RPGElementalContainer targetEquipmentED = target.getEquipment().combinedElementalDefense();
+
+        //Elemental Damage
         for(ElementType element : ElementType.values())
         {
-            int eATK = userElementalDamage.get(element);
-            int eDEF = targetElementalDefense.get(element);
+            //Equipment - Flat values
+            int equipmentATK = userEquipmentED.get(element);
+            int equipmentDEF = targetEquipmentED.get(element);
+
+            //Core - Percent of Attack/Defense
+            double coreATK = user.getCoreElementalDamage().percent(element);
+            double coreDEF = target.getCoreElementalDefense().percent(element);
+
+            //Class - Percent Modifier of Total Elemental Attack/Defense
+            double classATK = user.getRPGClass().getElementalDamageModifiers().get(element);
+            double classDEF = target.getRPGClass().getElementalDefenseModifiers().get(element);
+
+            int elementalATK = (int)(classATK * (equipmentATK + coreATK * attack));
+            int elementalDEF = (int)(classDEF * (equipmentDEF + coreDEF * attack));
 
             switch(element)
             {
                 case LIGHT -> {
                     if(List.of(Weather.OVERCAST, Weather.RAIN).contains(weather))
                     {
-                        eATK *= 0.9;
-                        eDEF *= 0.9;
+                        elementalATK *= 0.9;
+                        elementalDEF *= 0.9;
                     }
 
                     if(time.equals(Time.DAY))
                     {
-                        eATK *= 1.02;
-                        eDEF *= 1.04;
+                        elementalATK *= 1.02;
+                        elementalDEF *= 1.04;
                     }
                 }
                 case DARK -> {
                     if(time.equals(Time.NIGHT))
                     {
-                        eATK *= 1.04;
-                        eDEF *= 1.02;
+                        elementalATK *= 1.04;
+                        elementalDEF *= 1.02;
                     }
                 }
                 case WATER -> {
                     if(List.of(Weather.RAIN).contains(weather))
                     {
-                        eATK *= 1.1;
-                        eDEF *= 1.2;
+                        elementalATK *= 1.1;
+                        elementalDEF *= 1.2;
                     }
                 }
             }
 
-            damage += Math.max(0, eATK - eDEF);
-        }
-
-        //Core Elemental Stats
-        for(ElementType element : ElementType.values())
-        {
-            int eATK = (int)(user.getCoreElementalDamage().percent(element) * attack);
-            int eDEF = (int)(target.getCoreElementalDefense().percent(element) * defense);
-
-            damage += Math.max(0, eATK - eDEF);
+            damage += Math.max(0, elementalATK - elementalDEF);
         }
 
         //Raw Attack and Defense
