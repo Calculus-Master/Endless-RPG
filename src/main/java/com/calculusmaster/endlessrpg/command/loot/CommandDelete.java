@@ -40,6 +40,7 @@ public class CommandDelete extends Command
 
                 int goldReward = (new Random().nextInt(5) + 1) * loot.getBoosts().values().stream().mapToInt(x -> x).sum() + Arrays.stream(ElementType.values()).mapToInt(e -> loot.getElementalDamage().get(e) + loot.getElementalDefense().get(e)).sum();
                 this.playerData.addGold(goldReward);
+                this.playerData.removeLootItem(loot.getLootID());
 
                 LootItem.delete(loot.getLootID());
 
