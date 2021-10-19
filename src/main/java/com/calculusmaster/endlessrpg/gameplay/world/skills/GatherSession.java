@@ -21,14 +21,16 @@ public class GatherSession
     private RPGCharacter character;
     private PlayerDataQuery player;
     private Location location;
+    private GatheringSkill skill;
 
-    public static GatherSession create(PlayerDataQuery player, Location location)
+    public static GatherSession create(PlayerDataQuery player, Location location, GatheringSkill skill)
     {
         GatherSession g = new GatherSession();
 
         g.setCharacter(player.getActiveCharacter());
         g.setPlayer(player);
         g.setLocation(location);
+        g.setSkill(skill);
 
         GATHER_SESSIONS.add(g);
         return g;
@@ -47,7 +49,7 @@ public class GatherSession
 
         for(RawResource r : RawResource.values())
         {
-            if(output.has(r) && r.canGather(this.character))
+            if(output.has(r) && r.canGather(this.character) && r.getSkill().equals(this.skill))
             {
                 int skill = this.character.getSkillLevel(r.getSkill());
                 int required = r.getRequiredSkillLevel();
@@ -89,6 +91,11 @@ public class GatherSession
     private void setLocation(Location location)
     {
         this.location = location;
+    }
+
+    private void setSkill(GatheringSkill skill)
+    {
+        this.skill = skill;
     }
 
     private void setPlayer(PlayerDataQuery player)
