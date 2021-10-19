@@ -164,7 +164,16 @@ public class Dungeon
                 this.results.add("Your characters feel replenished at the Healing Fountain, and are ready for what's next!");
             }
             case TREASURE -> {
-                this.results.add("`NYI` – Treasure Event");
+
+                //TODO: Mimic
+                if(new SplittableRandom().nextInt(100) < 20) this.results.add("Mimic");
+                else
+                {
+                    int gold = new SplittableRandom().nextInt(this.level, this.level * 25);
+                    this.player.addGold(gold);
+                    this.results.add("The Treasure Chest had " + gold + " Gold!");
+                }
+
                 this.advance();
             }
             case LOOT -> {
