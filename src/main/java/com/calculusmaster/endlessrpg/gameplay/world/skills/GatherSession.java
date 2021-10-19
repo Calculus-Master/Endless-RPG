@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg.gameplay.world.skills;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
+import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 
@@ -72,6 +73,15 @@ public class GatherSession
                 int actualYield = 0;
 
                 for(int i = 0; i < maxYield; i++) if(new SplittableRandom().nextInt(100) < accuracy) actualYield++;
+
+                if(
+                        this.skill.equals(GatheringSkill.MINING) && this.character.getRPGClass().equals(RPGClass.ADEPT_MINER)
+                        || this.skill.equals(GatheringSkill.FORAGING) && this.character.getRPGClass().equals(RPGClass.ADEPT_FORAGER)
+                        || this.skill.equals(GatheringSkill.FISHING) && this.character.getRPGClass().equals(RPGClass.ADEPT_FISHER)
+                        || this.skill.equals(GatheringSkill.WOODCUTTING) && this.character.getRPGClass().equals(RPGClass.ADEPT_LUMBERJACK)
+                        || this.skill.equals(GatheringSkill.FARMING) && this.character.getRPGClass().equals(RPGClass.ADEPT_FARMER)
+                        || this.skill.equals(GatheringSkill.HUNTING) && this.character.getRPGClass().equals(RPGClass.ADEPT_HUNTER))
+                    actualYield *= 1.3;
 
                 this.character.getRawResources().increase(r, actualYield);
                 this.character.addSkillExp(r.getSkill(), new SplittableRandom().nextInt((int)(0.9 * r.getExp()), (int)(1.1 * r.getExp())) * this.character.getSkillLevel(r.getSkill()));

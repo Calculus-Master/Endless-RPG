@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.enums;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacterRequirements;
+import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
 import com.calculusmaster.endlessrpg.util.Global;
 
 import java.util.HashMap;
@@ -59,7 +60,43 @@ public enum RPGClass
             List.of(),
             List.of(),
             new RPGCharacterRequirements()
-    );
+    ),
+    ADEPT_MINER("Adept Miner", "A class with respectable affinity towards mining resources.",
+            List.of(),
+            List.of(),
+            List.of(),
+            new RPGCharacterRequirements().addLevel(10).addSkill(GatheringSkill.MINING, 20)
+    ),
+    ADEPT_FORAGER("Adept Forager", "A class with respectable affinity towards foraging resources.",
+            List.of(),
+            List.of(),
+            List.of(),
+            new RPGCharacterRequirements().addLevel(10).addSkill(GatheringSkill.FORAGING, 20)
+    ),
+    ADEPT_FISHER("Adept Fisher", "A class with respectable affinity towards fishing resources.",
+            List.of(),
+            List.of(),
+            List.of(),
+            new RPGCharacterRequirements().addLevel(10).addSkill(GatheringSkill.FISHING, 20)
+    ),
+    ADEPT_LUMBERJACK("Adept Lumberjack", "A class with respectable affinity towards woodcutting.",
+            List.of(),
+            List.of(),
+            List.of(),
+            new RPGCharacterRequirements().addLevel(10).addSkill(GatheringSkill.WOODCUTTING, 20)
+    ),
+    ADEPT_FARMER("Adept Farmer", "A class with respectable affinity towards farming resources.",
+            List.of(),
+            List.of(),
+            List.of(),
+            new RPGCharacterRequirements().addLevel(10).addSkill(GatheringSkill.HUNTING, 20)
+    ),
+    ADEPT_HUNTER("Adept Hunter", "A class with respectable affinity towards hunting.",
+            List.of(),
+            List.of(),
+            List.of(),
+            new RPGCharacterRequirements().addLevel(10).addSkill(GatheringSkill.HUNTING, 20)
+    ),;
 
     private final String name;
     private final String description;

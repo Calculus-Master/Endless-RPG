@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg.gameplay.character;
 import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
+import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.mongodb.BasicDBObject;
 import org.bson.Document;
@@ -22,6 +23,7 @@ public class RPGCharacterRequirements
     private Map<Stat, Integer> coreStat;
     private Map<ElementType, Integer> elementalDamage;
     private Map<ElementType, Integer> elementalDefense;
+    private Map<GatheringSkill, Integer> skills;
 
     {
         this.level = 0;
@@ -30,6 +32,7 @@ public class RPGCharacterRequirements
         this.coreStat = new HashMap<>();
         this.elementalDamage = new HashMap<>();
         this.elementalDefense = new HashMap<>();
+        this.skills = new HashMap<>();
     }
 
     public BasicDBObject serialized()
@@ -42,6 +45,7 @@ public class RPGCharacterRequirements
         data.put("core_stat", serializeMap(this.coreStat));
         data.put("elemental_damage", serializeMap(this.elementalDamage));
         data.put("elemental_defense", serializeMap(this.elementalDefense));
+        data.put("skills", serializeMap(this.skills));
 
         return data;
     }
@@ -56,6 +60,7 @@ public class RPGCharacterRequirements
         req.coreStat = readSerializedMap(document.get("core_stat", Document.class), Stat::cast);
         req.elementalDamage = readSerializedMap(document.get("elemental_damage", Document.class), ElementType::cast);
         req.elementalDefense = readSerializedMap(document.get("elemental_defense", Document.class), ElementType::cast);
+        req.skills = readSerializedMap(document.get("skills", Document.class), GatheringSkill::cast);
 
         return req;
     }
@@ -106,6 +111,11 @@ public class RPGCharacterRequirements
         return this.elementalDefense;
     }
 
+    public Map<GatheringSkill, Integer> getSkills()
+    {
+        return this.skills;
+    }
+
     public RPGCharacterRequirements addLevel(int level)
     {
         this.level = level;
@@ -139,6 +149,12 @@ public class RPGCharacterRequirements
     public RPGCharacterRequirements addElementalDefense(ElementType e, int value)
     {
         this.elementalDefense.put(e, value);
+        return this;
+    }
+
+    public RPGCharacterRequirements addSkill(GatheringSkill skill, int value)
+    {
+        this.skills.put(skill, value);
         return this;
     }
 
@@ -188,6 +204,14 @@ public class RPGCharacterRequirements
             overview.add(s.toString());
         }
 
+        if(!this.skills.isEmpty())
+        {
+            StringBuilder s = new StringBuilder("Gathering Skill Level: ");
+            for(Map.Entry<GatheringSkill, Integer> e : this.skills.entrySet()) s.append(Global.normalize(e.getKey().toString())).append(" (").append(e.getValue()).append("), ");
+            s.deleteCharAt(s.length() - 1).deleteCharAt(s.length() - 1);
+            overview.add(s.toString());
+        }
+
         if(overview.isEmpty()) overview.add("None");
 
         StringBuilder out = new StringBuilder();
@@ -214,6 +238,9 @@ public class RPGCharacterRequirements
 
         //Elemental Defense
         if(!this.elementalDefense.isEmpty() && !this.elementalDefense.entrySet().stream().allMatch(e -> c.getEquipment().combinedElementalDefense().get(e.getKey()) >= e.getValue())) return false;
+
+        //Gathering Skill
+        if(!this.skills.isEmpty() && !this.skills.entrySet().stream().allMatch(e -> c.getSkillLevel(e.getKey()) >= e.getValue())) return false;
 
         return true;
     }
