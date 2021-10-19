@@ -88,7 +88,7 @@ public class CommandDeveloper extends Command
                     active.increaseCoreStat(s, amount);
                     active.completeUpdate();
                 }
-                case "newrealm" -> Realm.init();
+                case "newrealm" -> Realm.createNewRealm();
                 case "realmmap" -> this.event.getChannel().sendMessage(Realm.CURRENT.getRealmLayout().toString()).queue();
                 case "removecooldown" -> {
                     String ID = this.getMentions().size() > 0 ? this.getMentions().get(0).getId() : this.player.getId();

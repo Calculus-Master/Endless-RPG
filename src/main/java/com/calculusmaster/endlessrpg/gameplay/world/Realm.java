@@ -27,24 +27,30 @@ public class Realm
     private String name;
     private List<Location> locations;
     private LinkedHashMap<String, List<String>> realmMap;
+    private int time;
 
     public static void init()
     {
-        if(Mongo.RealmData.find().first() != null)
-        {
-            Realm.build(Mongo.RealmData.find().first().getString("realmID")).delete();
-            Mongo.LocationData.deleteMany(Filters.exists("locationID"));
-            Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.set("visited", new JSONArray()));
-        }
+        CURRENT = Realm.build(Objects.requireNonNull(Mongo.RealmData.find().first()).getString("realmID"));
+
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(Realm::realmUpdater, 1, 1, TimeUnit.HOURS);
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(Realm::cycleWeather, 2, 2, TimeUnit.HOURS);
+    }
+
+    public static void realmUpdater()
+    {
+        CURRENT.decreaseTime();
+
+        if(CURRENT.getTime() <= 0) Realm.createNewRealm();
+    }
+
+    public static void createNewRealm()
+    {
+        CURRENT.delete();
 
         CURRENT = Realm.create();
-        Executors.newSingleThreadExecutor().execute(() -> CURRENT.upload());
 
-        Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.set("location", CURRENT.getLocations().get(0).getID()));
-        Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.push("visited", CURRENT.getLocations().get(0).getID()));
-
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(Realm::init, 1, 1, TimeUnit.DAYS);
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(Realm::cycleWeather, 2, 2, TimeUnit.HOURS);
+        CURRENT.upload();
     }
 
     public static void cycleWeather()
@@ -71,6 +77,7 @@ public class Realm
         r.setName();
         r.createLocations();
         r.createRealmMap();
+        r.setTime(36);
 
         return r;
     }
@@ -84,6 +91,8 @@ public class Realm
         r.realmID = realmID;
         r.name = data.getString("name");
         r.locations = data.getList("locations", String.class).stream().map(Location::build).toList();
+        r.realmMap = r.buildRealmMap(data.get("realm_map", Document.class));
+        r.time = data.getInteger("time");
 
         return r;
     }
@@ -95,18 +104,33 @@ public class Realm
         Document data = new Document()
                 .append("realmID", this.realmID)
                 .append("name", this.name)
-                .append("locations", this.locations.stream().map(Location::getID).toList());
+                .append("locations", this.locations.stream().map(Location::getID).toList())
+                .append("realm_map", this.serializeRealmMap())
+                .append("time", this.time);
 
         Mongo.RealmData.insertOne(data);
+
+        Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.set("location", this.locations.get(0).getID()));
+        Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.push("visited", this.locations.get(0).getID()));
 
         LoggerHelper.info(this.getClass(), "Realm Database Upload Complete!");
     }
 
     public void delete()
     {
-        this.locations.forEach(Location::delete);
+        //this.locations.forEach(Location::delete);
 
         Mongo.RealmData.deleteOne(Filters.eq("realmID", this.realmID));
+
+        Mongo.LocationData.deleteMany(Filters.exists("locationID"));
+
+        Mongo.PlayerData.updateMany(Filters.exists("playerID"), Updates.set("visited", new JSONArray()));
+    }
+
+    public void decreaseTime()
+    {
+        this.time--;
+        Mongo.RealmData.updateOne(Filters.eq("realmID", this.realmID), Updates.inc("time", -1));
     }
 
     public String getName()
@@ -138,6 +162,22 @@ public class Realm
     public LinkedHashMap<String, List<String>> getRealmLayout()
     {
         return this.realmMap;
+    }
+
+    private LinkedHashMap<String, List<String>> buildRealmMap(Document document)
+    {
+        LinkedHashMap<String, List<String>> realmMap = new LinkedHashMap<>();
+
+        document.keySet().forEach(s -> realmMap.put(s, document.getList(s, String.class)));
+
+        return realmMap;
+    }
+
+    private Document serializeRealmMap()
+    {
+        Document serialized = new Document();
+        for(Map.Entry<String, List<String>> e : this.realmMap.entrySet()) serialized.append(e.getKey(), e.getValue());
+        return serialized;
     }
 
     private void createLocations()
@@ -265,6 +305,16 @@ public class Realm
         }
 
         for(Location l : columns.get(columns.size() - 1)) this.realmMap.put(l.getID(), new ArrayList<>());
+    }
+
+    private void setTime(int time)
+    {
+        this.time = time;
+    }
+
+    private int getTime()
+    {
+        return this.time;
     }
 
     private void setName()
