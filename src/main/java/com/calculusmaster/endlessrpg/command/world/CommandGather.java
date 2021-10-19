@@ -35,7 +35,6 @@ public class CommandGather extends Command
         }
         else if(gather)
         {
-            //TODO: Direct selection of resource to gather?
             if(GatherSession.END_TIMES.containsKey(active.getCharacterID())) this.response = active.getName() + " is currently gathering resources!";
             else if(current.getResources().isEmpty()) this.response = current.getName() + " does not have any resources that can be gathered!";
             else if(!current.getResources().canGather(active)) this.response = active.getName() + " cannot gather any resources at " + current.getName() + "!";

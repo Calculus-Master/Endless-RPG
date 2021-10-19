@@ -25,8 +25,7 @@ public class AIPlayer extends AbstractPlayer
     @Override
     public String getName()
     {
-        //TODO: Randomly picked RPG Character name
-        return "Bot";
+        return "The Enemy";
     }
 
     private static String generateID()

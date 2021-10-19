@@ -170,7 +170,7 @@ public class Battle
         {
             RPGCharacter b = this.battlers[i];
 
-            String overview = "(" + (i + 1) + ") *" + b.getOwner().getName() + "*'s **\"" + b.getName() + "\"**: ";
+            String overview = "(" + (i + 1) + ") " + (!b.isAI() ? b.getOwner().getName() + "'s " : "") + "**\"" + b.getName() + "\"**: ";
             if(b.isDefeated()) overview += "DEFEATED";
             else overview += "%s / %s HEALTH".formatted(b.getHealth(), b.getStat(Stat.HEALTH));
 
