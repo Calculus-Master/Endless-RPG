@@ -6,6 +6,8 @@ import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.util.Objects;
+
 public class CommandBattle extends Command
 {
     public CommandBattle(MessageReceivedEvent event, String msg)
@@ -18,8 +20,23 @@ public class CommandBattle extends Command
     {
         boolean pvp = this.msg.length == 2 && this.getMentions().size() > 0;
         boolean pve = this.msg.length == 2 && this.msg[1].equals("ai");
+        boolean info = this.msg.length == 3 && this.msg[1].equals("info") && this.isNumeric(2);
 
-        if(pvp)
+        if(info)
+        {
+            if(!Battle.isInBattle(this.player.getId())) this.response = "You are not in a battle!";
+            else
+            {
+                Battle b = Objects.requireNonNull(Battle.instance(this.player.getId()));
+                int target = this.getInt(2) - 1;
+
+                if(target < 0 || target >= b.getBattlers().length) this.response = "Invalid target!";
+                else this.embed
+                        .setTitle("Information for " + b.getBattlers()[target].getName())
+                        .setDescription(b.getBattlers()[target].getSummary());
+            }
+        }
+        else if(pvp)
         {
             String otherID = this.getMentions().get(0).getId();
 
