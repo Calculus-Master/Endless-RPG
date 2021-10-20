@@ -69,6 +69,12 @@ public abstract class Spell
                         elementalDEF *= 0.9;
                     }
 
+                    if(List.of(Weather.HARSH_SUN).contains(weather))
+                    {
+                        elementalATK *= 1.2;
+                        elementalDEF *= 1.2;
+                    }
+
                     if(time.equals(Time.DAY))
                     {
                         elementalATK *= 1.02;
@@ -87,6 +93,19 @@ public abstract class Spell
                     {
                         elementalATK *= 1.1;
                         elementalDEF *= 1.2;
+                    }
+
+                    if(List.of(Weather.HARSH_SUN).contains(weather))
+                    {
+                        elementalATK *= 0.9;
+                        elementalDEF *= 0.7;
+                    }
+                }
+                case FIRE -> {
+                    if(List.of(Weather.HARSH_SUN).contains(weather))
+                    {
+                        elementalATK *= 1.1;
+                        elementalDEF *= 1.1;
                     }
                 }
             }
