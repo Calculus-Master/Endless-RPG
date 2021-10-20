@@ -660,4 +660,59 @@ public class RPGCharacter
                 "RPG Class – %s\n".formatted(this.classRPG.toString()) +
                 "Core Stats – %s\n".formatted(this.stats.toString());
     }
+
+    public String getSummary()
+    {
+        List<String> summary = new ArrayList<>();
+
+        summary.add("Character Summary: **\"" + this.getName() + "\"**(" + this.getCharacterID() + ")");
+
+        summary.add("Class: " + this.getRPGClass().getName() + " - " + this.getRPGClass().getDescription());
+
+        summary.add("Level: " + this.getLevel());
+
+        summary.add("Experience: " + this.getExp() + " / " + this.getExpRequired(this.getLevel() + 1) + " XP");
+
+            StringBuilder spells = new StringBuilder();
+            for(int i = 0; i < this.getSpells().size(); i++) spells.append(this.getSpell(i).getName()).append(", ");
+            spells.deleteCharAt(spells.length() - 1).deleteCharAt(spells.length() - 1);
+
+        summary.add("Current Spells: " + spells);
+
+            StringBuilder equipment = new StringBuilder();
+
+            for(EquipmentType e : EquipmentType.values())
+            {
+                LootItem loot = this.getEquipment().getEquipmentLoot(e);
+
+                equipment.append("`").append(e.getStyledName()).append("`: ");
+
+                if(loot.isEmpty()) equipment.append("None\n");
+                else
+                {
+                    equipment.append(loot.getName());
+                    if(!loot.getLootType().isArmor()) equipment.append(" (").append(Global.normalize(loot.getLootType().toString())).append(")");
+                    equipment.append(" | Boosts: ").append(loot.getBoostsOverview()).append("\n");
+                }
+            }
+
+            equipment.deleteCharAt(equipment.length() - 1);
+
+        summary.add("Equipment:\n" + equipment);
+
+        summary.add("Elemental Damage:\n" + this.getEquipment().combinedElementalDamage().getOverview());
+        summary.add("Elemental Defense:\n" + this.getEquipment().combinedElementalDefense().getOverview());
+
+            StringBuilder stats = new StringBuilder();
+
+            for(Stat s : Stat.values()) stats.append(Global.normalize(s.toString())).append(": ").append(this.getStat(s)).append("\n");
+
+            stats.deleteCharAt(stats.length() - 1);
+
+            summary.add("Stats:\n" + stats);
+
+        StringBuilder out = new StringBuilder();
+        for(String s : summary) out.append(s).append("\n");
+        return out.deleteCharAt(out.length() - 1).toString();
+    }
 }
