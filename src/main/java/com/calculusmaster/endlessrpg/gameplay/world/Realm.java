@@ -211,6 +211,14 @@ public class Realm
             else this.locations.add(l);
         }
 
+        int unique = UniqueLocations.LOCATIONS.size() < 5 ? UniqueLocations.LOCATIONS.size() : new SplittableRandom().nextInt(1, 5);
+        for(int i = 0; i < unique; i++)
+        {
+            Location l = UniqueLocations.getRandom();
+            if(this.locations.stream().anyMatch(loc -> loc.getName().equals(l.getName()))) i--;
+            else this.locations.add(l);
+        }
+
         Collections.shuffle(this.locations);
 
         this.locations.add(0, Location.createRealmHub(this.name));

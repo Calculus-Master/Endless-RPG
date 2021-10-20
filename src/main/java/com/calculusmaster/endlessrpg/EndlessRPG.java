@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg;
 import com.calculusmaster.endlessrpg.command.core.CommandHandler;
 import com.calculusmaster.endlessrpg.command.economy.CommandShop;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
+import com.calculusmaster.endlessrpg.gameplay.world.UniqueLocations;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Listener;
 import com.calculusmaster.endlessrpg.util.PrivateInfo;
@@ -27,6 +28,7 @@ public class EndlessRPG
 
         LoggerHelper.init("Command", CommandHandler::init);
         LoggerHelper.init("Shop", CommandShop::init);
+        LoggerHelper.init("Unique Locations", UniqueLocations::init);
         LoggerHelper.init("Realm", Realm::init, true);
 
         JDABuilder bot = JDABuilder
