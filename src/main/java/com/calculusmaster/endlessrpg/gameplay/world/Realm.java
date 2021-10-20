@@ -276,7 +276,7 @@ public class Realm
         {
             for(Location l : list)
             {
-                if(!Arrays.asList(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON).contains(l.getType()))
+                if(!Arrays.asList(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON).contains(l.getType()) && !l.getName().contains(":star2:"))
                 {
                     int amount = new SplittableRandom().nextInt(1, 6);
                     for(int i = 0; i < amount; i++) l.getResources().set(RawResource.getRandom(), new SplittableRandom().nextInt(1, 4));
