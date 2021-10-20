@@ -342,6 +342,7 @@ public class Dungeon
     {
         this.player = player;
         this.playerTeam = new ArrayList<>(player.getCharacterList().stream().map(RPGCharacter::build).toList());
+        this.playerTeam.forEach(c -> c.forBattle(null));
     }
 
     private void setLevel(int level)

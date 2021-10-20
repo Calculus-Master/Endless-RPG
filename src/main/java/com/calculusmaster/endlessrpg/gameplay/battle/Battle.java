@@ -62,7 +62,7 @@ public class Battle
     {
         Battle b = new Battle();
 
-        player.team.forEach(c -> c.forBattle(player, false));
+        player.team.forEach(c -> c.setOwner(player));
 
         b.setBattleType(BattleType.PVE);
         b.createPlayers(player, enemy);

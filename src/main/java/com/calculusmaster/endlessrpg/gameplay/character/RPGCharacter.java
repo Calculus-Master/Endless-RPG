@@ -226,7 +226,7 @@ public class RPGCharacter
 
     public void setOwner(AbstractPlayer owner)
     {
-        this.owner = Optional.of(owner);
+        this.owner = owner == null ? Optional.empty() : Optional.of(owner);
     }
 
     public boolean isAI()
