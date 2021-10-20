@@ -90,7 +90,7 @@ public class CommandDeveloper extends Command
                 }
                 case "newrealm" -> Realm.createNewRealm();
                 case "realmmap" -> this.event.getChannel().sendMessage(Realm.CURRENT.getRealmLayout().toString()).queue();
-                case "completerealm" -> Realm.CURRENT.getLocations().forEach(l -> this.playerData.addVisitedLocation(l.getID()));
+                case "completerealm" -> Realm.CURRENT.getLocations().forEach(l -> { if(!this.playerData.getVisitedLocations().contains(l.getID())) this.playerData.addVisitedLocation(l.getID()); });
                 case "removecooldown" -> {
                     String ID = this.getMentions().size() > 0 ? this.getMentions().get(0).getId() : this.player.getId();
                     Collections.synchronizedMap(CommandTravel.TRAVEL_COOLDOWNS).get(ID).cancel(true);
