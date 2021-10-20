@@ -32,7 +32,9 @@ public class CommandDungeon extends Command
             else
             {
                 //TODO: Replace with Location level attribute
-                int dungeonLevel = this.playerData.getLevel() + Realm.CURRENT.getLocation(this.playerData.getLocationID()).getLevel();
+                int playerLevel = this.playerData.getLevel();
+                int dungeonLevel = playerLevel + Realm.CURRENT.getLocation(this.playerData.getLocationID()).getLevel();
+                if(dungeonLevel < 0) dungeonLevel = playerLevel;
 
                 Dungeon d = current.equals(LocationType.FINAL_KINGDOM)
                         ? Dungeon.createFinalKingdom(this.playerData, Realm.CURRENT.getLocation(this.playerData.getLocationID()), dungeonLevel, this.event)
