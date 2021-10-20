@@ -62,6 +62,8 @@ public class Battle
     {
         Battle b = new Battle();
 
+        player.team.forEach(c -> c.forBattle(player, false));
+
         b.setBattleType(BattleType.PVE);
         b.createPlayers(player, enemy);
         b.setLocation(location);

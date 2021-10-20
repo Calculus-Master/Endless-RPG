@@ -100,9 +100,14 @@ public class RPGCharacter
     //Creates the object with necessary Battle fields
     public void forBattle(AbstractPlayer owner)
     {
+        this.forBattle(owner, true);
+    }
+
+    public void forBattle(AbstractPlayer owner, boolean health)
+    {
         this.setOwner(owner);
 
-        this.setMaxHealth();
+        if(health) this.setMaxHealth();
 
         this.setChanges();
     }
