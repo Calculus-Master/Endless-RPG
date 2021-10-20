@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg.gameplay.world;
 
 import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyArchetype;
+import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Time;
@@ -26,6 +27,7 @@ public class Location
     private LocationType type;
     private Weather weather;
     private EnemyArchetype enemy;
+    private int level;
     private RPGRawResourceContainer resources;
 
     private Location() {}
@@ -39,6 +41,7 @@ public class Location
         l.setName();
         l.weather = Weather.getRandom();
         l.enemy = EnemyArchetype.RANDOM;
+        l.level = new SplittableRandom().nextInt(0, 6) - 3;
         l.resources = new RPGRawResourceContainer();
 
         return l;
@@ -53,6 +56,7 @@ public class Location
         l.type = LocationType.HUB;
         l.weather = Weather.CLEAR;
         l.enemy = EnemyArchetype.DEFAULT;
+        l.level = 0;
         l.resources = new RPGRawResourceContainer();
 
         return l;
@@ -67,6 +71,7 @@ public class Location
         l.type = LocationType.FINAL_KINGDOM;
         l.weather = Weather.CLEAR; //TODO: Harshest weather?
         l.enemy = EnemyArchetype.DEFAULT; //TODO: Special enemy type for Kingdoms?
+        l.level = 10;
         l.resources = new RPGRawResourceContainer();
 
         return l;
@@ -83,6 +88,7 @@ public class Location
         l.type = LocationType.cast(data.getString("type"));
         l.weather = Weather.cast(data.getString("weather"));
         l.enemy = EnemyArchetype.cast(data.getString("enemy"));
+        l.level = data.getInteger("level");
         l.resources = new RPGRawResourceContainer(data.get("resources", Document.class));
 
         return l;
@@ -96,6 +102,7 @@ public class Location
                 .append("type", this.type.toString())
                 .append("weather", this.weather.toString())
                 .append("enemy", this.enemy.toString())
+                .append("level", this.level)
                 .append("resources", this.resources.serialized());
 
         Mongo.LocationData.insertOne(data);
@@ -160,6 +167,21 @@ public class Location
     public void setEnemyArchetype(EnemyArchetype enemy)
     {
         this.enemy = enemy;
+    }
+
+    public int getLevel()
+    {
+        return this.level;
+    }
+
+    public int getEffectiveLevel(RPGCharacter c)
+    {
+        return c.getLevel() + this.level;
+    }
+
+    public void setLevel(int level)
+    {
+        this.level = level;
     }
 
     public RPGRawResourceContainer getResources()
