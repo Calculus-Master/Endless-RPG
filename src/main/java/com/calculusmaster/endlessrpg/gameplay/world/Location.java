@@ -37,7 +37,7 @@ public class Location
         l.locationID = IDHelper.create(8);
         l.type = type;
         l.setName();
-        l.weather = Weather.values()[new SplittableRandom().nextInt(Weather.values().length)];
+        l.weather = Weather.getRandom();
         l.enemy = EnemyArchetype.RANDOM;
         l.resources = new RPGRawResourceContainer();
 
