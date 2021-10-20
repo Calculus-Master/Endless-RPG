@@ -40,7 +40,7 @@ public class CommandTravel extends Command
             List<String> visited = this.playerData.getVisitedLocations();
 
             Location l = Realm.CURRENT.getLocation(target);
-            if(l == null) for(Location realmLocation : Realm.CURRENT.getLocations()) if(realmLocation.getName().equalsIgnoreCase(target)) l = realmLocation;
+            if(l == null) for(Location realmLocation : Realm.CURRENT.getLocations()) if(realmLocation.getName().replaceAll("(:star2:)", "").trim().equalsIgnoreCase(target.trim())) l = realmLocation;
             if(target.equalsIgnoreCase("hub")) l = Realm.CURRENT.getLocations().get(0);
             if(target.equalsIgnoreCase("latest")) l = Realm.CURRENT.getLocation(this.playerData.getVisitedLocations().get(this.playerData.getVisitedLocations().size() - 1));
 
