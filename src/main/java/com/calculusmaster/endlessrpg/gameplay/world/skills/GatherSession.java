@@ -5,6 +5,7 @@ import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
+import com.calculusmaster.endlessrpg.util.Global;
 
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -48,6 +49,9 @@ public class GatherSession
     {
         RPGRawResourceContainer output = this.location.getResources();
 
+        RPGRawResourceContainer resourceYield = new RPGRawResourceContainer();
+        int skillExp = 0;
+
         for(RawResource r : RawResource.values())
         {
             if(output.has(r) && r.canGather(this.character) && r.getSkill().equals(this.skill))
@@ -83,14 +87,17 @@ public class GatherSession
                         || this.skill.equals(GatheringSkill.HUNTING) && this.character.getRPGClass().equals(RPGClass.ADEPT_HUNTER))
                     actualYield *= 1.3;
 
-                this.character.getRawResources().increase(r, actualYield);
-                this.character.addSkillExp(r.getSkill(), new SplittableRandom().nextInt((int)(0.9 * r.getExp()), (int)(1.1 * r.getExp())) * this.character.getSkillLevel(r.getSkill()));
+                resourceYield.increase(r, actualYield);
+                skillExp += new SplittableRandom().nextInt((int)(0.9 * r.getExp()), (int)(1.1 * r.getExp())) * this.character.getSkillLevel(this.skill);
             }
         }
 
+        for(RawResource r : RawResource.values()) if(resourceYield.has(r)) this.character.getRawResources().increase(r, resourceYield.get(r));
+        if(skillExp != 0) this.character.addSkillExp(this.skill, skillExp);
+
         this.character.completeUpdate();
 
-        this.player.DM(this.character.getName() + " finished gathering resources! Here's what was obtained:\n\n" + output.getFullOverview());
+        this.player.DM(this.character.getName() + " finished gathering resources and earned a total of " + skillExp + " " + Global.normalize(this.skill.toString()) + " Experience! Collected Resources:\n\n" + resourceYield.getFullOverview());
 
         GATHER_SESSIONS.remove(this);
 
