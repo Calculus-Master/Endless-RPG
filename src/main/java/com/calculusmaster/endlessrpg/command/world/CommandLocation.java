@@ -22,6 +22,14 @@ public class CommandLocation extends Command
     @Override
     public Command run()
     {
+        boolean visited = this.msg.length == 2 && this.msg[1].equals("visited");
+
+        if(visited)
+        {
+            this.response = "***Your Exploration of " + Realm.CURRENT.getName() + ":***\n\n" + this.getFullVisitedOverview();
+            return this;
+        }
+
         Location location = Realm.CURRENT.getLocation(this.playerData.getLocationID());
 
         this.embed
@@ -70,7 +78,28 @@ public class CommandLocation extends Command
         LinkedHashMap<String, List<String>> layout = Realm.CURRENT.getRealmLayout();
         List<String> visited = this.playerData.getVisitedLocations();
 
-        content.append("*This is a list of locations you have visited and the locations you are able to visit beyond those.*\n\n");
+        content.append("*Note: This only shows your current location, and any locations it directly leads to (due to Discord Field character limits)! To view your whole exploration progress, use the `r!location visited` command!*\n\n");
+
+        Location l = Realm.CURRENT.getLocation(this.playerData.getLocationID());
+
+        content.append("**").append(l.getName()).append("** – ");
+
+        if(layout.get(l.getID()).isEmpty()) content.append("None (Path End)");
+        else
+        {
+            StringBuilder list = new StringBuilder();
+            for(String next : layout.get(l.getID())) list.append(visited.contains(next) ? "" : "`").append(Realm.CURRENT.getLocation(next).getName()).append(visited.contains(next) ? "" : "`").append(" | ");
+            content.append(list.delete(list.length() - 3, list.length()));
+        }
+
+        return new MessageEmbed.Field("Connected Locations", content.toString(), false);
+    }
+
+    private String getFullVisitedOverview()
+    {
+        StringBuilder content = new StringBuilder();
+        LinkedHashMap<String, List<String>> layout = Realm.CURRENT.getRealmLayout();
+        List<String> visited = this.playerData.getVisitedLocations();
 
         for(String s : visited)
         {
@@ -88,7 +117,7 @@ public class CommandLocation extends Command
             content.append("\n");
         }
 
-        return new MessageEmbed.Field("Realm Exploration Progress", content.toString(), false);
+        return content.toString();
     }
 
     private String formatTime(long time)
