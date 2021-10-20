@@ -76,6 +76,13 @@ public class PlayerDataQuery extends AbstractMongoQuery
         this.update(Updates.pull("characters", ID));
     }
 
+    public int getLevel()
+    {
+        int max = -1;
+        for(String s : this.getCharacterList()) max = Math.max(max, RPGCharacter.build(s).getLevel());
+        return max;
+    }
+
     //key: "selected"
     public int getSelected()
     {
