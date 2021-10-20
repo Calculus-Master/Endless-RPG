@@ -282,12 +282,11 @@ public class Dungeon
         this.isFinalKingdom = true;
         this.encounters = new ArrayList<>();
 
-        //TODO: Undisable
         int preMiniBoss = new SplittableRandom().nextInt(1, 4);
-        //for(int i = 0; i < preMiniBoss; i++) this.encounters.add(DungeonEncounter.BATTLE);
+        for(int i = 0; i < preMiniBoss; i++) this.encounters.add(DungeonEncounter.BATTLE);
         int miniBoss = new SplittableRandom().nextInt(1, 4);
-        //for(int i = 0; i < miniBoss; i++) this.encounters.add(DungeonEncounter.FINAL_KINGDOM_MINI_BOSS);
-        //this.encounters.add(DungeonEncounter.FINAL_KINGDOM_HEAL);
+        for(int i = 0; i < miniBoss; i++) this.encounters.add(DungeonEncounter.FINAL_KINGDOM_MINI_BOSS);
+        this.encounters.add(DungeonEncounter.FINAL_KINGDOM_HEAL);
         this.encounters.add(DungeonEncounter.FINAL_KINGDOM_KING);
         this.encounters.add(DungeonEncounter.FINAL_KINGDOM_BOSS);
     }
