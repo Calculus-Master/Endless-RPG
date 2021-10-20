@@ -65,7 +65,7 @@ public class CommandLocation extends Command
         if(location.getResources().isEmpty()) content.append("This location has no available resources!");
         else
         {
-            for(RawResource r : RawResource.values()) if(location.getResources().has(r)) content.append("`").append(r.getName()).append("`: ").append(Global.normalize(r.getSkill().toString())).append(" - Tier ").append(r.getTier()).append(" (Requires Skill Level ").append((r.getTier() - 1) * 10).append(")\n");
+            for(RawResource r : RawResource.values()) if(location.getResources().has(r)) content.append(location.getResources().get(r)).append("x `").append(r.getName()).append("`: ").append(Global.normalize(r.getSkill().toString())).append(" - Tier ").append(r.getTier()).append(" (Requires Skill Level ").append((r.getTier() - 1) * 10).append(")\n");
             content.deleteCharAt(content.length() - 1);
         }
 
