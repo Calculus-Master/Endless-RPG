@@ -103,6 +103,7 @@ public class Dungeon
 
     public void nextEncounter()
     {
+        System.out.println("Encounter: " + this.encounters.get(this.current));
         this.active = true;
 
         this.results = new ArrayList<>();
@@ -158,10 +159,14 @@ public class Dungeon
 
                 chosen.heal(amount);
                 this.results.add(chosen.getName() + " healed for " + amount + " Health at the Healing Fountain!");
+
+                this.advance();
             }
             case FINAL_KINGDOM_HEAL -> {
                 for(RPGCharacter c : this.playerTeam) c.heal((int)(c.getHealth() * (new SplittableRandom().nextInt(10, 80) / 100.0)));
                 this.results.add("Your characters feel replenished at the Healing Fountain, and are ready for what's next!");
+
+                this.advance();
             }
             case TREASURE -> {
 
