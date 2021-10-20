@@ -41,7 +41,7 @@ public class Location
         l.setName();
         l.weather = Weather.getRandom();
         l.enemy = EnemyArchetype.RANDOM;
-        l.level = new SplittableRandom().nextInt(0, 6) - 3;
+        l.level = switch(type) { case DUNGEON -> 3; case TOWN -> 0; default -> new SplittableRandom().nextInt(0, 6) - 3; };
         l.resources = new RPGRawResourceContainer();
 
         return l;
