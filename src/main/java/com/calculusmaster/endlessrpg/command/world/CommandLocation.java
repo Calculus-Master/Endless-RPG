@@ -22,7 +22,7 @@ public class CommandLocation extends Command
     @Override
     public Command run()
     {
-        boolean visited = this.msg.length == 2 && this.msg[1].equals("visited");
+        boolean visited = this.msg.length == 2 && (this.msg[1].equals("visited") || this.msg[1].equals("v"));
 
         if(visited)
         {
