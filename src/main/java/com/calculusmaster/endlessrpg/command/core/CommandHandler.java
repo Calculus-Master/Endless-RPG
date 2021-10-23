@@ -8,6 +8,7 @@ import com.calculusmaster.endlessrpg.command.character.*;
 import com.calculusmaster.endlessrpg.command.economy.CommandBalance;
 import com.calculusmaster.endlessrpg.command.economy.CommandBuy;
 import com.calculusmaster.endlessrpg.command.economy.CommandShop;
+import com.calculusmaster.endlessrpg.command.economy.CommandTrade;
 import com.calculusmaster.endlessrpg.command.loot.CommandDelete;
 import com.calculusmaster.endlessrpg.command.loot.CommandInventory;
 import com.calculusmaster.endlessrpg.command.loot.CommandLootInfo;
@@ -101,6 +102,9 @@ public class CommandHandler
 
         register("class")
                 .setCommand(CommandClass::new);
+
+        register("trade")
+                .setCommand(CommandTrade::new);
 
         register("dev")
                 .setCommand(CommandDeveloper::new);

@@ -53,6 +53,12 @@ public abstract class Command
         return this.msg[index].chars().allMatch(Character::isDigit);
     }
 
+    protected boolean isNumericAll(int startIndex)
+    {
+        for(int i = startIndex; i < this.msg.length; i++) if(!this.isNumeric(i)) return false;
+        return true;
+    }
+
     protected int getInt(int index)
     {
         return Integer.parseInt(this.msg[index]);
@@ -78,6 +84,11 @@ public abstract class Command
     protected List<Member> getMentions()
     {
         return this.event.getMessage().getMentionedMembers();
+    }
+
+    protected void send(String content)
+    {
+        this.event.getChannel().sendMessage(content).queue();
     }
 
     public abstract Command run();
