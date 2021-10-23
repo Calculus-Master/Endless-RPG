@@ -60,7 +60,7 @@ public class LootBuilder
 
         if(r.nextInt(100) < 40)
         {
-            int boost = varyP(s, 75, 125);
+            int boost = varyP(s, 20, 60);
             sword.addElementalDamage(ElementType.getRandom(), boost);
         }
 
