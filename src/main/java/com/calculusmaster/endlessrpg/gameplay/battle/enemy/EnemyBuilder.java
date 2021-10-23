@@ -60,7 +60,7 @@ public class EnemyBuilder
         LootItem weapon;
         if(magic)
         {
-            weapon = LootBuilder.rewardWand(ruler.getLevel())
+            weapon = LootBuilder.Wand(ruler.getLevel())
                     .addBoost(Stat.INTELLECT, ruler.getLevel() * 2)
                     .addElementalDamage(ElementType.getRandom(), ruler.getStat(Stat.ATTACK) / 2)
                     .addElementalDamage(ElementType.getRandom(), ruler.getStat(Stat.ATTACK) / 2)
@@ -68,7 +68,7 @@ public class EnemyBuilder
         }
         else
         {
-            weapon = LootBuilder.rewardSword(ruler.getLevel())
+            weapon = LootBuilder.Sword(ruler.getLevel())
                     .addBoost(Stat.STRENGTH, ruler.getLevel() * 3)
                     .addElementalDamage(ElementType.getRandom(), ruler.getStat(Stat.ATTACK) / 2);
         }
@@ -79,7 +79,7 @@ public class EnemyBuilder
         List<LootType> armorTypes = Arrays.asList(LootType.HELMET, LootType.CHESTPLATE, LootType.GAUNTLETS, LootType.LEGGINGS, LootType.BOOTS);
         for(LootType loot : armorTypes)
         {
-            LootItem armor = LootBuilder.reward(loot, ruler.getLevel())
+            LootItem armor = LootBuilder.create(loot, ruler.getLevel())
                     .addBoost(Stat.HEALTH, 75)
                     .addElementalDefense(ElementType.getRandom(), 40)
                     .addElementalDefense(ElementType.getRandom(), 40)
@@ -134,7 +134,7 @@ public class EnemyBuilder
         int weaponLevel = enemy.getLevel() > 3 ? new SplittableRandom().nextInt(enemy.getLevel() - 2, enemy.getLevel() + 2) : enemy.getLevel();
 
         List<LootType> weaponPool = Arrays.asList(LootType.SWORD, LootType.WAND);
-        LootItem weapon = LootBuilder.reward(weaponPool.get(new SplittableRandom().nextInt(weaponPool.size())), weaponLevel);
+        LootItem weapon = LootBuilder.create(weaponPool.get(new SplittableRandom().nextInt(weaponPool.size())), weaponLevel);
 
         weapon.upload();
 
@@ -145,7 +145,7 @@ public class EnemyBuilder
 
                 if(level > 25 && new SplittableRandom().nextInt(100) < 25)
                 {
-                    LootItem shield = LootBuilder.reward(LootType.SHIELD, weaponLevel + 1);
+                    LootItem shield = LootBuilder.create(LootType.SHIELD, weaponLevel + 1);
                     shield.upload();
 
                     enemy.equipLoot(EquipmentType.LEFT_HAND, shield.getLootID());
@@ -171,7 +171,7 @@ public class EnemyBuilder
         for(int i = 0; i < armorCount; i++)
         {
             LootType armorType = armorPool.get(i);
-            LootItem armor = LootBuilder.reward(armorType, armorLevel);
+            LootItem armor = LootBuilder.create(armorType, armorLevel);
 
             armor.upload();
             enemy.equipLoot(EquipmentType.values()[i], armor.getLootID());

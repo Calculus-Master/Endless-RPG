@@ -91,7 +91,7 @@ public class Adventure
                 else if(this.level < 80) amount = 3;
                 else amount = (int)(0.05 * this.level);
 
-                for(int i = 0; i < amount; i++) this.rewardLoot.add(LootBuilder.reward(LootType.getRandom(), this.level));
+                for(int i = 0; i < amount; i++) this.rewardLoot.add(LootBuilder.create(LootType.getRandom(), this.level));
             }
             case EARN_CORE_STAT -> {
                 final SplittableRandom r = new SplittableRandom();

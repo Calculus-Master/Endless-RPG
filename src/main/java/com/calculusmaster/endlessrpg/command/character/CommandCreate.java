@@ -53,7 +53,7 @@ public class CommandCreate extends Command
             //Starting Inventory
             if(this.playerData.getCharacterList().isEmpty())
             {
-                LootItem starterSword = LootBuilder.rewardSword(1).addBoost(Stat.ATTACK, 3);
+                LootItem starterSword = LootBuilder.Sword(1).addBoost(Stat.ATTACK, 3);
                 starterSword.upload();
 
                 c.equipLoot(EquipmentType.RIGHT_HAND, starterSword.getLootID());

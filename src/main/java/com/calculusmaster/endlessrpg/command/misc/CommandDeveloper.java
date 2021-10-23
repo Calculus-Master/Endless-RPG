@@ -51,7 +51,7 @@ public class CommandDeveloper extends Command
                 case "addloot" -> {
                     PlayerDataQuery target = this.getMentions().size() > 0 ? new PlayerDataQuery(this.getMentions().get(0).getId()) : this.playerData;
                     int activeLevel = target.getActiveCharacter().getLevel();
-                    LootItem loot = LootBuilder.reward(LootType.cast(this.msg[2]), activeLevel + 1);
+                    LootItem loot = LootBuilder.create(LootType.cast(this.msg[2]), activeLevel + 1);
                     loot.setRequirements();
                     loot.upload();
                     target.addLootItem(loot.getLootID());

@@ -10,17 +10,17 @@ public class LootBuilder
 {
     public static final SplittableRandom r = new SplittableRandom();
 
-    public static LootItem reward(LootType type, int level)
+    public static LootItem create(LootType type, int level)
     {
         LootItem out = switch(type) {
-            case SWORD -> LootBuilder.rewardSword(level);
-            case WAND -> LootBuilder.rewardWand(level);
-            case SHIELD -> LootBuilder.rewardShield(level);
-            case HELMET -> LootBuilder.rewardHelmet(level);
-            case CHESTPLATE -> LootBuilder.rewardChestplate(level);
-            case GAUNTLETS -> LootBuilder.rewardGauntlets(level);
-            case LEGGINGS -> LootBuilder.rewardLeggings(level);
-            case BOOTS -> LootBuilder.rewardBoots(level);
+            case SWORD -> LootBuilder.Sword(level);
+            case WAND -> LootBuilder.Wand(level);
+            case SHIELD -> LootBuilder.Shield(level);
+            case HELMET -> LootBuilder.Helmet(level);
+            case CHESTPLATE -> LootBuilder.Chestplate(level);
+            case GAUNTLETS -> LootBuilder.Gauntlets(level);
+            case LEGGINGS -> LootBuilder.Leggings(level);
+            case BOOTS -> LootBuilder.Boots(level);
             case NONE -> throw new IllegalStateException("Unexpected Loot Type \"NONE\" in LootBuilder!");
         };
 
@@ -29,27 +29,51 @@ public class LootBuilder
         return out;
     }
 
-    private static int rand(int min, int max) { return r.nextInt(min, max); }
+    private static int r(int min, int max) { return r.nextInt(min, max); }
 
-    public static LootItem rewardSword(int level)
+    private static int varyP(int input, int low, int high)
     {
+        return (int)((new SplittableRandom().nextInt(low, high + 1)) / 100.0 * input);
+    }
+
+    private static int varyV(int input, int low, int high)
+    {
+        return new SplittableRandom().nextInt(input - low, input + high + 1);
+    }
+
+    private static int standard(int level)
+    {
+        return varyP(r(1, 5) + level, 90, 110);
+    }
+
+    private static int armor(int level)
+    {
+        return varyP(level, 110, 120);
+    }
+
+    public static LootItem Sword(int level)
+    {
+        int s = standard(level);
+
         LootItem sword = LootItem.create(LootType.SWORD)
-            .addBoost(Stat.ATTACK, (int)((2 * level + 2 + rand(0, level)) * r.nextInt(80, 120) / 100.0));
+            .addBoost(Stat.ATTACK, s);
 
         if(r.nextInt(100) < 40)
         {
-            int boost = new SplittableRandom().nextInt(level / 2,(int)(1.5 * level) + rand(0, level));
+            int boost = varyP(s, 75, 125);
             sword.addElementalDamage(ElementType.getRandom(), boost);
         }
 
         return sword;
     }
 
-    public static LootItem rewardWand(int level)
+    public static LootItem Wand(int level)
     {
+        int s = standard(level);
+
         LootItem wand = LootItem.create(LootType.WAND)
-                .addBoost(Stat.ATTACK, level + rand(5, Math.max(6, level * 2)))
-                .addElementalDamage(ElementType.getRandom(), rand(2, 5) * level + rand(0, level));
+                .addBoost(Stat.ATTACK, (int)(0.25 * s))
+                .addElementalDamage(ElementType.getRandom(), (int)(0.75 * s));
 
         wand.getRequirements()
                 .addStat(Stat.INTELLECT, level * 3);
@@ -57,55 +81,55 @@ public class LootBuilder
         return wand;
     }
 
-    public static LootItem rewardShield(int level)
+    public static LootItem Shield(int level)
     {
         LootItem shield = LootItem.create(LootType.SHIELD)
-                .addBoost(Stat.DEFENSE, rand(2, 5) * level + 5 + rand(1, (int)(level * 1.5)));
+                .addBoost(Stat.DEFENSE, standard(level));
 
         shield.getRequirements()
-                .addStat(Stat.DEFENSE, Math.max(1, level / 2));
+                .addStat(Stat.DEFENSE, level - 1);
 
         return shield;
     }
 
     //Armor
 
-    public static LootItem rewardHelmet(int level)
+    public static LootItem Helmet(int level)
     {
         LootItem helmet = LootItem.create(LootType.HELMET)
-                .addBoost(Stat.DEFENSE, level * (r.nextInt(2) + 2));
+                .addBoost(Stat.DEFENSE, armor(level));
 
         return helmet;
     }
 
-    public static LootItem rewardChestplate(int level)
+    public static LootItem Chestplate(int level)
     {
         LootItem chestplate = LootItem.create(LootType.CHESTPLATE)
-                .addBoost(Stat.DEFENSE, level * (r.nextInt(2) + 2));
+                .addBoost(Stat.DEFENSE, armor(level));
 
         return chestplate;
     }
 
-    public static LootItem rewardGauntlets(int level)
+    public static LootItem Gauntlets(int level)
     {
         LootItem gauntlets = LootItem.create(LootType.GAUNTLETS)
-                .addBoost(Stat.DEFENSE, level * (r.nextInt(2) + 2));
+                .addBoost(Stat.DEFENSE, armor(level));
 
         return gauntlets;
     }
 
-    public static LootItem rewardLeggings(int level)
+    public static LootItem Leggings(int level)
     {
         LootItem leggings = LootItem.create(LootType.LEGGINGS)
-                .addBoost(Stat.DEFENSE, level * (r.nextInt(2) + 2));
+                .addBoost(Stat.DEFENSE, armor(level));
 
         return leggings;
     }
 
-    public static LootItem rewardBoots(int level)
+    public static LootItem Boots(int level)
     {
         LootItem boots = LootItem.create(LootType.BOOTS)
-                .addBoost(Stat.DEFENSE, level * (r.nextInt(2) + 2));
+                .addBoost(Stat.DEFENSE, armor(level));
 
         return boots;
     }
