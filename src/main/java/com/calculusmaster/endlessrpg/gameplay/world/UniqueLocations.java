@@ -15,11 +15,22 @@ public class UniqueLocations
 
     public static void init()
     {
-        LocationBuilder.of(LocationType.DESERT)
+        LocationBuilder
+                .of(LocationType.DESERT)
                 .withName("The Desolate Fields")
-                .withEnemy(EnemyArchetype.DEFAULT) //TODO Skeletons? or some other thing
+                .withEnemy(EnemyArchetype.SKELETON)
                 .withWeather(Weather.HARSH_SUN)
                 .withResource(RawResource.FARMING_T9, 20)
+                .register();
+
+        LocationBuilder
+                .of(LocationType.FOREST)
+                .withName("The Dual Forest")
+                .withEnemy(EnemyArchetype.TROLL)
+                .withWeather(Weather.OVERCAST)
+                .withResource(RawResource.WOODCUTTING_T7, 10)
+                .withResource(RawResource.WOODCUTTING_T8, 10)
+                .withResource(RawResource.WOODCUTTING_T9, 10)
                 .register();
     }
 
