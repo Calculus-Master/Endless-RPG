@@ -48,7 +48,8 @@ public enum RPGClass
             List.of(Modifier.of(INTELLECT, 1.1f)),
             List.of(),
             List.of(),
-            new RPGCharacterRequirements()),
+            new RPGCharacterRequirements()
+    ),
     DARK_KNIGHT("Dark Knight", "A standard melee combatant, swayed to the side of Darkness.",
             List.of(Modifier.of(ATTACK, 1.1f)),
             List.of(ElementalModifier.of(DARK, 1.2f)),
@@ -79,7 +80,7 @@ public enum RPGClass
             List.of(),
             new RPGCharacterRequirements().addLevel(10).addSkill(GatheringSkill.FISHING, 20)
     ),
-    ADEPT_LUMBERJACK("Adept Lumberjack", "A class with respectable affinity towards woodcutting.",
+    ADEPT_WOODCUTTER("Adept Woodcutter", "A class with respectable affinity towards woodcutting.",
             List.of(),
             List.of(),
             List.of(),
