@@ -479,11 +479,11 @@ public class RPGCharacter
         if(s.equals(Stat.HEALTH)) stat = 10 + (core * 5) + loot;
         else stat = core + loot;
 
-        //Battle: Any stat changes from Spells
-        stat += this.getChanges().getOrDefault(s, 0);
-
         //RPG Class Stat Modifier
         stat *= this.classRPG.getModifiers().getOrDefault(s, 1.0f);
+
+        //Battle: Any stat changes from Spells
+        stat += this.getChanges().getOrDefault(s, 0);
 
         return stat;
     }
