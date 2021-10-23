@@ -31,7 +31,7 @@ public class EnemyBuilder
         //TODO: Improve this and the Ruler, Dragons don't have any equipment
         RPGCharacter dragon = RPGCharacter.create(EnemyBuilder.getRandomName("dragon_names"));
 
-        EnemyBuilder.setLevel(dragon, level * 10);
+        EnemyBuilder.setNaturalLevel(dragon, level * 10);
 
         dragon.increaseCoreStat(Stat.HEALTH, 200 + level * 5);
 
@@ -54,7 +54,7 @@ public class EnemyBuilder
         RPGCharacter ruler = RPGCharacter.create("Ruler");
         boolean magic = new SplittableRandom().nextInt(100) < 50;
 
-        EnemyBuilder.setLevel(ruler, level + 15);
+        EnemyBuilder.setNaturalLevel(ruler, level + 15);
         EnemyBuilder.defaultClass(ruler); //TODO: Ruler Class
 
         LootItem weapon;
@@ -106,7 +106,7 @@ public class EnemyBuilder
     }
 
     //Helper
-    private static void setLevel(RPGCharacter enemy, int target)
+    private static void setNaturalLevel(RPGCharacter enemy, int target)
     {
         while(enemy.getLevel() < target) enemy.addExp(enemy.getExpRequired(enemy.getLevel() + 1));
     }
@@ -125,7 +125,7 @@ public class EnemyBuilder
 
     private static void defaultLevel(RPGCharacter enemy, int level)
     {
-        EnemyBuilder.setLevel(enemy, Math.max(1, new SplittableRandom().nextInt(level - 1, level + 2)));
+        EnemyBuilder.setNaturalLevel(enemy, Math.max(1, new SplittableRandom().nextInt(level - 1, level + 2)));
     }
 
     private static void defaultWeapons(RPGCharacter enemy, int level)

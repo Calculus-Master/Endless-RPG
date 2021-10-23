@@ -146,7 +146,7 @@ public class Dungeon
                         Executors.newSingleThreadScheduledExecutor().schedule(this::startKingFight, 10, TimeUnit.SECONDS);
                     }
                     case FINAL_KINGDOM_BOSS -> {
-                        embed.setDescription("***You reach the top of the castle, to gaze upon the Realm and relax. Your journey is finally complete...\nSuddenly a massive roar startles you, and you turn around to behold a fearsome dragon...This is the true test!***");
+                        embed.setDescription("***You reach the top of the castle, to gaze upon the Realm and relax. Your journey is finally complete...\nSuddenly you hear a massive roar and you turn around to behold a fearsome dragon...This is the true test!***");
                         Executors.newSingleThreadScheduledExecutor().schedule(this::startDragonFight, 5, TimeUnit.SECONDS);
                     }
                 }
@@ -197,7 +197,7 @@ public class Dungeon
 
     private void startDragonFight()
     {
-        this.startBattle(new AIPlayer(EnemyArchetype.DRAGON.create(this.level + 50)));
+        this.startBattle(new AIPlayer(EnemyArchetype.DRAGON.create(this.level)));
     }
 
     private void startMiniBossFight()
