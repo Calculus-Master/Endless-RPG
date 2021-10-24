@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg.gameplay.loot;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacterRequirements;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGElementalContainer;
 import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
+import com.calculusmaster.endlessrpg.gameplay.enums.LootTag;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.util.Global;
@@ -11,16 +12,14 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class LootItem
 {
     private String lootID;
     private LootType lootType;
     private String name;
+    private List<LootTag> tags;
     private LinkedHashMap<Stat, Integer> boosts;
     private RPGElementalContainer elementalDamage;
     private RPGElementalContainer elementalDefense;
@@ -35,6 +34,7 @@ public class LootItem
         EMPTY.setLootID("NONE");
         EMPTY.setLootType(LootType.NONE);
         EMPTY.setName("NONE");
+        EMPTY.setTags();
         EMPTY.setBoosts();
         EMPTY.setElementalDamage();
         EMPTY.setElementalDefense();
@@ -52,6 +52,7 @@ public class LootItem
         loot.setLootID(lootID);
         loot.setLootType(LootType.cast(data.getString("type")));
         loot.setName(data.getString("name"));
+        loot.setTags(data.getList("tags", String.class));
         loot.setBoosts(data.get("boosts", Document.class));
         loot.setElementalDamage(data.get("elementalDamage", Document.class));
         loot.setElementalDefense(data.get("elementalDefense", Document.class));
@@ -67,6 +68,7 @@ public class LootItem
         loot.setLootID();
         loot.setLootType(type);
         loot.setName(type.getRandomName());
+        loot.setTags();
         loot.setBoosts();
         loot.setElementalDamage();
         loot.setElementalDefense();
@@ -81,6 +83,9 @@ public class LootItem
 
         //Name
         copy.name = source.name;
+
+        //Tags
+        copy.tags = source.tags;
 
         //Boosts
         for(Map.Entry<Stat, Integer> e : source.getBoosts().entrySet()) copy.addBoost(e.getKey(), e.getValue());
@@ -103,6 +108,7 @@ public class LootItem
                 .append("lootID", this.lootID)
                 .append("type", this.lootType.toString())
                 .append("name", this.name)
+                .append("tags", this.tags.stream().map(LootTag::toString).toList())
                 .append("boosts", Global.serializedMap(this.boosts, Stat.values()))
                 .append("elementalDamage", this.elementalDamage.serialized())
                 .append("elementalDefense", this.elementalDefense.serialized())
@@ -226,6 +232,34 @@ public class LootItem
         this.setBoosts();
 
         for(String s : serial.keySet()) this.boosts.put(Stat.cast(s), serial.getInteger(s));
+    }
+
+    //Tags
+    public String getTagOverview()
+    {
+        StringBuilder out = new StringBuilder();
+        for(LootTag tag : this.tags) out.append(tag.getIcon());
+        return out.toString();
+    }
+
+    public List<LootTag> getTags()
+    {
+        return this.tags;
+    }
+
+    public void setTags()
+    {
+        this.tags = new ArrayList<>(List.of(LootTag.RANDOMIZED));
+    }
+
+    public void setTags(List<String> tags)
+    {
+        this.tags = tags.stream().map(LootTag::cast).toList();
+    }
+
+    public void addTag(LootTag tag)
+    {
+        this.tags.add(tag);
     }
 
     //Type

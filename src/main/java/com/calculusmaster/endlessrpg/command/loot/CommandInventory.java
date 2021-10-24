@@ -29,7 +29,7 @@ public class CommandInventory extends Command
 
             list
                     .append("**").append(i + 1).append(":** ")
-                    .append("*").append(loot.getName()).append("*")
+                    .append("*").append(loot.getName()).append("*").append(loot.getTagOverview())
                     .append(" | ").append(Global.normalize(loot.getLootType().toString()))
                     .append(" | Boosts: ").append(loot.getBoostsOverview())
                     .append(" | ").append(loot.getRequirements().check(active) ? ":white_check_mark:" : ":x:")

@@ -64,7 +64,7 @@ public class CommandInfo extends Command
             if(loot.isEmpty()) content.append("None\n");
             else
             {
-                content.append(loot.getName());
+                content.append(loot.getName()).append(loot.getTagOverview());
                 if(!loot.getLootType().isArmor()) content.append(" (").append(Global.normalize(loot.getLootType().toString())).append(")");
                 content.append(" | Boosts: ").append(loot.getBoostsOverview()).append("\n");
             }

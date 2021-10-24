@@ -66,7 +66,7 @@ public class CommandLootInfo extends Command
                     .addField(this.getElementalModifierField("Elemental Damage Modifiers", loot.getElementalDamage()))
                     .addField(this.getElementalModifierField("Elemental Defense Modifiers", loot.getElementalDefense()));
 
-            this.embed.setTitle(loot.getName());
+            this.embed.setTitle(loot.getName() + loot.getTagOverview());
         }
         else this.response = INVALID;
 
