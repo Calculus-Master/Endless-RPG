@@ -122,6 +122,11 @@ public class LootItem
         Mongo.LootData.deleteOne(Filters.eq("lootID", ID));
     }
 
+    public void updateTags()
+    {
+        Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("tags", this.tags));
+    }
+
     public void updateBoosts()
     {
         Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("boosts", Global.serializedMap(this.boosts, Stat.values())));

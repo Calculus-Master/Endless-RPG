@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg.gameplay.adventure;
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyBuilder;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+import com.calculusmaster.endlessrpg.gameplay.enums.LootTag;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
@@ -177,7 +178,11 @@ public class Adventure
                 miniBoss.getEquipment().remove(stolenLoot);
                 this.player.addLootItem(stolenLoot);
 
-                //TODO: Maybe add a flag or rarity value so the player can easily tell what loot was from the mini boss?
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    LootItem loot = LootItem.build(stolenLoot);
+                    loot.addTag(LootTag.MINI_BOSS);
+                    loot.updateTags();
+                });
 
                 results.add("*A piece of loot was stolen from the Mini Boss!*");
             }
