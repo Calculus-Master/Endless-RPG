@@ -16,16 +16,16 @@ public class CommandInventory extends Command
     @Override
     public Command run()
     {
+        RPGCharacter active = this.playerData.getActiveCharacter();
+
         int page = 10;
         int start = this.msg.length == 2 && this.isNumeric(1) ? (this.getInt(1) - 1) * page : 0;
-        int end = Math.min(start + page, this.playerData.getLoot().size());
-
-        RPGCharacter active = this.playerData.getActiveCharacter();
+        int end = Math.min(start + page, active.getLoot().size());
 
         StringBuilder list = new StringBuilder();
         for(int i = start; i < end; i++)
         {
-            LootItem loot = LootItem.build(this.playerData.getLoot().get(i));
+            LootItem loot = LootItem.build(active.getLoot().get(i));
 
             list
                     .append("**").append(i + 1).append(":** ")
@@ -39,7 +39,7 @@ public class CommandInventory extends Command
         this.embed
                 .setTitle(this.player.getName() + "'s Loot")
                 .setDescription(list.toString())
-                .setFooter("Showing %s to %s (Total: %s)".formatted(start + 1, end, this.playerData.getLoot().size()));
+                .setFooter("Showing %s to %s (Total: %s)".formatted(start + 1, end, active.getLoot().size()));
 
         return this;
     }

@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg.command.economy;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class CommandBuy extends Command
@@ -20,7 +21,8 @@ public class CommandBuy extends Command
         {
             int index = this.getInt(2) - 1;
 
-            if(index < 0 || index >= CommandShop.SHOP_LOOT.size()) this.response = "Invalid Shop Entry index!";
+            if(!Realm.CURRENT.getLocation(this.playerData.getLocationID()).getType().isTown()) this.response = "You must be in a Town to purchase Items from the Shop!";
+            else if(index < 0 || index >= CommandShop.SHOP_LOOT.size()) this.response = "Invalid Shop Entry index!";
             else
             {
                 int cost = CommandShop.SHOP_LOOT.get(index).cost;

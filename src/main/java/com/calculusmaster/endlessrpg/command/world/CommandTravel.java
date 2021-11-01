@@ -71,7 +71,7 @@ public class CommandTravel extends Command
         int speed = this.playerData.getActiveCharacter().getStat(Stat.SPEED);
         int time = Math.max(45 - (int)((Math.pow(speed, 1.2) / (1 + 2.6 * speed)) * 45), 5);
 
-        time = new SplittableRandom().nextInt((int)(time * 0.9), (int)(time * 1.1));
+        time = l.getType().equals(LocationType.HUB) ? 2 : new SplittableRandom().nextInt((int)(time * 0.9), (int)(time * 1.1));
 
         if(CommandDeveloper.isDevMode(this.player.getId())) time = 1;
         time = 1;
@@ -90,7 +90,8 @@ public class CommandTravel extends Command
         if(l.getType().equals(LocationType.FINAL_KINGDOM) && !visited.contains(l.getID()))
         {
             this.playerData.DM("You reached the " + l.getName() + "! You are given a sizable sum of gold from a stranger, who immediately disappears...What secrets lie within the " + l.getName() + "?");
-            this.playerData.addGold(new SplittableRandom().nextInt(500, 1000) + 1000);
+            this.playerData.getActiveCharacter().addGold(new SplittableRandom().nextInt(500, 1000) + 1000);
+            this.playerData.getActiveCharacter().updateGold();
         }
 
         if(!l.getType().equals(LocationType.HUB)) this.addCooldownTimer();

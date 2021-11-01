@@ -6,6 +6,7 @@ import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -29,11 +30,12 @@ public class CommandEquip extends Command
         {
             int target = this.getInt(1);
             RPGCharacter active = this.playerData.getActiveCharacter();
+            List<String> inv = Realm.CURRENT.getLocation(this.playerData.getLocationID()).getType().isTown() ? this.playerData.getLoot() : active.getLoot();
 
-            if(target < 1 || target > this.playerData.getLoot().size()) this.response = "Invalid index!";
+            if(target < 1 || target > inv.size()) this.response = "Invalid index!";
             else
             {
-                LootItem loot = LootItem.build(this.playerData.getLoot().get(target - 1));
+                LootItem loot = LootItem.build(inv.get(target - 1));
 
                 EquipmentType slot;
                 if(this.msg.length == 3) slot = EquipmentType.parse(this.msg[2]);

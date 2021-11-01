@@ -1,14 +1,18 @@
 package com.calculusmaster.endlessrpg.command.loot;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
+import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGElementalContainer;
 import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
 import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+
+import java.util.List;
 
 public class CommandLootInfo extends Command
 {
@@ -24,24 +28,26 @@ public class CommandLootInfo extends Command
 
         if(info)
         {
+            RPGCharacter active = this.playerData.getActiveCharacter();
+            List<String> source = Realm.CURRENT.getLocation(this.playerData.getLocationID()).getType().isTown() ? this.playerData.getLoot() : active.getLoot();
             LootItem loot = null;
 
             if(this.isNumeric(1))
             {
                 int lootIndex = this.getInt(1) - 1;
 
-                if(lootIndex < 0 || lootIndex >= this.playerData.getLoot().size())
+                if(lootIndex < 0 || lootIndex >= source.size())
                 {
                     this.response = "Invalid loot index!";
                     return this;
                 }
-                else loot = LootItem.build(this.playerData.getLoot().get(lootIndex));
+                else loot = LootItem.build(source.get(lootIndex));
 
-                this.embed.setFooter((lootIndex + 1) + " / " + this.playerData.getLoot().size());
+                this.embed.setFooter((lootIndex + 1) + " / " + source.size());
             }
             else if(EquipmentType.parse(this.msg[1]) != null)
             {
-                String ID = this.playerData.getActiveCharacter().getEquipment().getEquipmentID(EquipmentType.parse(this.msg[1]));
+                String ID = active.getEquipment().getEquipmentID(EquipmentType.parse(this.msg[1]));
 
                 if(ID.equals(LootItem.EMPTY.getLootID()))
                 {

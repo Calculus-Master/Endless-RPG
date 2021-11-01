@@ -177,7 +177,7 @@ public class PlayerDataQuery extends AbstractMongoQuery
 
     public int getMaxLootAmount()
     {
-        return 50; //TODO: Player Level, and adjusting the inventory size for that
+        return this.getLevel() * 50;
     }
 
     public void removeLootItem(String ID)

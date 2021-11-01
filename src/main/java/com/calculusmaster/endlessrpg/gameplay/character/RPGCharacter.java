@@ -42,6 +42,8 @@ public class RPGCharacter
     private RPGElementalContainer coreElementalDamage;
     private RPGElementalContainer coreElementalDefense;
     private RPGRawResourceContainer rawResources;
+    private int gold;
+    private List<String> loot;
 
     //Battle Only Fields
 
@@ -70,6 +72,8 @@ public class RPGCharacter
         c.setCoreElementalDamage();
         c.setCoreElementalDefense();
         c.setRawResources();
+        c.setGold();
+        c.setLoot();
 
         return c;
     }
@@ -93,6 +97,8 @@ public class RPGCharacter
         c.setCoreElementalDamage(data.get("coreElementalDamage", Document.class));
         c.setCoreElementalDefense(data.get("coreElementalDefense", Document.class));
         c.setRawResources(data.get("rawResources", Document.class));
+        c.setGold(data.getInteger("gold"));
+        c.setLoot(data.getList("loot", String.class));
 
         return c;
     }
@@ -129,7 +135,9 @@ public class RPGCharacter
                 .append("spells", this.spells)
                 .append("coreElementalDamage", this.coreElementalDamage.serialized())
                 .append("coreElementalDefense", this.coreElementalDefense.serialized())
-                .append("rawResources", this.rawResources.serialized());
+                .append("rawResources", this.rawResources.serialized())
+                .append("gold", this.gold)
+                .append("loot", this.loot);
 
         Mongo.CharacterData.insertOne(d);
     }
@@ -188,6 +196,16 @@ public class RPGCharacter
     public void updateRawResources()
     {
         this.update(Updates.set("rawResources", this.rawResources.serialized()));
+    }
+
+    public void updateGold()
+    {
+        this.update(Updates.set("gold", this.gold));
+    }
+
+    public void updateLoot()
+    {
+        this.update(Updates.set("loot", this.loot));
     }
 
     public void updateSkillExperience()
@@ -258,6 +276,21 @@ public class RPGCharacter
     public void damage(int amount)
     {
         this.setHealth(this.getHealth() - amount);
+
+        if(this.isDefeated() && this.gold > 0)
+        {
+            Executors.newSingleThreadExecutor().execute(() -> {
+                int loss = new SplittableRandom().nextInt((int)(this.gold * 0.05), (int)(this.gold * 0.3));
+
+                this.gold -= loss;
+                this.updateGold();
+
+                Mongo.PlayerData.find().forEach(d -> {
+                    PlayerDataQuery p = new PlayerDataQuery(d.getString("playerID"));
+                    if(p.getCharacterList().contains(this.getCharacterID())) p.DM(this.getName() + " was defeated and lost " + loss + " Gold!");
+                });
+            });
+        }
     }
 
     public void heal(int amount)
@@ -268,6 +301,74 @@ public class RPGCharacter
     public boolean isDefeated()
     {
         return this.getHealth() <= 0;
+    }
+
+    //Loot
+    public void setLoot(List<String> loot)
+    {
+        this.loot = loot;
+    }
+
+    public void setLoot()
+    {
+        this.loot = new ArrayList<>();
+    }
+
+    public void addLoot(String loot)
+    {
+        if(this.getLoot().size() >= this.getMaxLootAmount())
+        {
+            Executors.newSingleThreadExecutor().execute(() -> {
+                LootItem.delete(loot);
+
+                Mongo.PlayerData.find().forEach(d -> {
+                    PlayerDataQuery p = new PlayerDataQuery(d.getString("playerID"));
+                    if(p.getCharacterList().contains(this.getCharacterID())) p.DM(this.getName() + " is out of inventory space! Any newly acquired Loot will be permanently deleted!");
+                });
+            });
+        }
+        else this.loot.add(loot);
+    }
+
+    public void removeLoot(String... loot)
+    {
+        this.loot.removeAll(List.of(loot));
+    }
+
+    public List<String> getLoot()
+    {
+        return this.loot;
+    }
+
+    public int getMaxLootAmount()
+    {
+        return this.level * 30;
+    }
+
+    //Gold
+    public void setGold(int gold)
+    {
+        this.gold = gold;
+    }
+
+    public void setGold()
+    {
+        this.gold = 0;
+    }
+
+    public void addGold(int amount)
+    {
+        this.gold += amount;
+    }
+
+    public void removeGold(int amount)
+    {
+        this.gold = Math.max(0, this.gold - amount);
+    }
+
+    public int getGold()
+    {
+        return this.gold;
     }
 
     //Raw Resources

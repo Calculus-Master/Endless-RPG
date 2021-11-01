@@ -176,7 +176,7 @@ public class Adventure
                 String stolenLoot = miniBoss.getEquipment().asList().get(new SplittableRandom().nextInt(miniBoss.getEquipment().asList().size()));
 
                 miniBoss.getEquipment().remove(stolenLoot);
-                this.player.addLootItem(stolenLoot);
+                this.character.addLoot(stolenLoot);
 
                 Executors.newSingleThreadExecutor().execute(() -> {
                     LootItem loot = LootItem.build(stolenLoot);
@@ -203,7 +203,7 @@ public class Adventure
 
         if(this.rewardGold > 0)
         {
-            this.player.addGold(this.rewardGold);
+            this.character.addGold(this.rewardGold);
             results.add("**Gold:** `" + this.rewardGold + "`");
         }
 
@@ -219,7 +219,7 @@ public class Adventure
             for(LootItem loot : this.rewardLoot)
             {
                 loot.upload();
-                this.player.addLootItem(loot.getLootID());
+                this.character.addLoot(loot.getLootID());
 
                 lootText.append("`").append(loot.getName()).append("`, ");
             }

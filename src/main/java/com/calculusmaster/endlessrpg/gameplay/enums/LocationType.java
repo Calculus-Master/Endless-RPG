@@ -17,6 +17,11 @@ public enum LocationType
     LAKE,
     DESERT;
 
+    public boolean isTown()
+    {
+        return this.equals(HUB) || this.equals(TOWN);
+    }
+
     public static LocationType cast(String input)
     {
         return Global.castEnum(input, values());

@@ -6,6 +6,7 @@ import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -36,6 +37,11 @@ public class CommandCreate extends Command
                 int cost = (int)Math.pow(100 * this.playerData.getCharacterList().size(), 1.31);
                 cost -= cost % 100;
 
+                if(!Realm.CURRENT.getLocation(this.playerData.getLocationID()).getType().isTown())
+                {
+                    this.response = "You can only create Character in Towns or the Hub!";
+                    return this;
+                }
                 if(this.playerData.getGold() < cost)
                 {
                     this.response = "You don't have enough Gold to create a new Character! You need `" + cost + "` Gold!";

@@ -175,7 +175,8 @@ public class Dungeon
                 else
                 {
                     int gold = new SplittableRandom().nextInt(this.level, this.level * 25);
-                    this.player.addGold(gold);
+                    this.player.getActiveCharacter().addGold(gold);
+                    this.player.getActiveCharacter().updateGold();
                     this.results.add("The Treasure Chest had " + gold + " Gold!");
                 }
 
