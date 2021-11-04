@@ -44,7 +44,7 @@ public class CommandCreate extends Command
                 }
                 if(this.playerData.getGold() < cost)
                 {
-                    this.response = "You don't have enough Gold to create a new Character! You need `" + cost + "` Gold!";
+                    this.response = "You don't have enough Gold in your Bank to create a new Character! You need `" + cost + "` Gold!";
                     return this;
                 }
                 else
