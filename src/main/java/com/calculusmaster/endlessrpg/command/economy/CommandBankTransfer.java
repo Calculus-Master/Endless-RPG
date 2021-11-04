@@ -113,6 +113,7 @@ public class CommandBankTransfer extends Command
                     for(String id : transfers)
                     {
                         active.removeLoot(id);
+                        active.getEquipment().remove(id);
                         this.playerData.addLootItem(id);
                     }
 
@@ -130,6 +131,7 @@ public class CommandBankTransfer extends Command
                 }
 
                 active.updateLoot();
+                active.updateEquipment();
             }
         }
         else if(resources)
