@@ -32,7 +32,7 @@ public class CommandBank extends Command
                 .setTitle(this.player.getName() + "'s Bank")
                 .addField("Gold", "**" + this.playerData.getGold() + "**", false)
                 .addField("Loot", loot, false)
-                .setFooter("Deposit or Withdraw Gold, Loot and Resources using r!deposit or r!withdraw!");
+                .setFooter("Showing %s to %s (Total: %s)".formatted(start + 1, end, this.playerData.getLoot().size()));
 
         return this;
     }
