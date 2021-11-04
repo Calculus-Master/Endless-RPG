@@ -18,7 +18,7 @@ public class CommandBalance extends Command
 
         this.embed
                 .setTitle(this.player.getName() + "'s Balance")
-                .addField(active.getName() + "'s Balance", "**" + active.getGold() + "** Gold", false)
+                .addField(active.getName() + "'s Balance", "**" + active.getGold() + "** Gold!", false)
                 .addField("Your Balance", "**" + this.playerData.getGold() + "** Gold!", false)
                 .setFooter("Deposit Gold into your Player Bank at Towns using r!deposit.");
 
