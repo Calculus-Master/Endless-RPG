@@ -2,8 +2,10 @@ package com.calculusmaster.endlessrpg.mongo;
 
 import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
+import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
@@ -29,7 +31,8 @@ public class PlayerDataQuery extends AbstractMongoQuery
                 .append("gold", 100)
                 .append("location", Realm.CURRENT.getLocations().get(0).getID())
                 .append("visited", List.of(Realm.CURRENT.getLocations().get(0).getID()))
-                .append("loot", new JSONArray());
+                .append("loot", new JSONArray())
+                .append("resources", new RPGRawResourceContainer().serialized());
 
         Mongo.PlayerData.insertOne(data);
     }
@@ -183,5 +186,27 @@ public class PlayerDataQuery extends AbstractMongoQuery
     public void removeLootItem(String ID)
     {
         this.update(Updates.pull("loot", ID));
+    }
+
+    //key: "resources"
+    public RPGRawResourceContainer getResources()
+    {
+        return new RPGRawResourceContainer(this.document.get("resources", Document.class));
+    }
+
+    public void addResource(RawResource r, int amount)
+    {
+        RPGRawResourceContainer updated = this.getResources();
+        updated.increase(r, amount);
+
+        this.update(Updates.set("resources", updated.serialized()));
+    }
+
+    public void removeResource(RawResource r, int amount)
+    {
+        RPGRawResourceContainer updated = this.getResources();
+        updated.decrease(r, amount);
+
+        this.update(Updates.set("resources", updated.serialized()));
     }
 }
