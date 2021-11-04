@@ -63,7 +63,7 @@ public class CommandCreate extends Command
                 starterSword.upload();
 
                 c.equipLoot(EquipmentType.RIGHT_HAND, starterSword.getLootID());
-                this.playerData.addLootItem(starterSword.getLootID());
+                c.addLoot(starterSword.getLootID());
             }
 
             c.upload();
