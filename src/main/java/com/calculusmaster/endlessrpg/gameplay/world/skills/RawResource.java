@@ -137,6 +137,12 @@ public enum RawResource
         return c.getSkillLevel(this.getSkill()) >= this.getRequiredSkillLevel();
     }
 
+    public static RawResource cast(String input)
+    {
+        for(RawResource r : RawResource.values()) if(r.toString().equalsIgnoreCase(input) || (!r.getName().isEmpty() && r.getName().equalsIgnoreCase(input))) return r;
+        return null;
+    }
+
     public static List<RawResource> getResources(GatheringSkill skill)
     {
         List<RawResource> resources = new ArrayList<>();
