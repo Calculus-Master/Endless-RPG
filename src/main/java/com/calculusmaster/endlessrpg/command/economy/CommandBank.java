@@ -26,11 +26,11 @@ public class CommandBank extends Command
         int end = Math.min(start + page, this.playerData.getLoot().size());
 
         String loot = CommandInventory.createLootListInfo(this.playerData.getLoot(), start, end);
-        //TODO: Resources
 
         this.embed
                 .setTitle(this.player.getName() + "'s Bank")
                 .addField("Gold", "**" + this.playerData.getGold() + "**", false)
+                .addField("Resources", this.playerData.getResources().getFullOverview(), false)
                 .addField("Loot", loot, false)
                 .setFooter("Showing %s to %s (Total: %s)".formatted(start + 1, end, this.playerData.getLoot().size()));
 
