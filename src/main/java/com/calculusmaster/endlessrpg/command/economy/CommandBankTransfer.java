@@ -23,7 +23,7 @@ public class CommandBankTransfer extends Command
     {
         if(!Realm.CURRENT.getLocation(this.playerData.getLocationID()).getType().isTown())
         {
-            this.response = "You can only update your Bank in a Town or Hub!";
+            this.response = "You can only access your Bank in a Town or Hub!";
             return this;
         }
 
