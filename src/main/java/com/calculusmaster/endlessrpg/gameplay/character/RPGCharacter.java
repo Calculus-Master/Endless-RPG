@@ -10,6 +10,7 @@ import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.spell.Spell;
 import com.calculusmaster.endlessrpg.gameplay.spell.SpellData;
 import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
+import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Mongo;
@@ -280,14 +281,51 @@ public class RPGCharacter
         if(this.isDefeated() && this.gold > 0)
         {
             Executors.newSingleThreadExecutor().execute(() -> {
-                int loss = new SplittableRandom().nextInt((int)(this.gold * 0.05), (int)(this.gold * 0.3));
 
-                this.gold -= loss;
-                this.updateGold();
+                int lostGold = new SplittableRandom().nextInt((int)(this.gold * 0.05), (int)(this.gold * 0.3));
 
+                this.gold -= lostGold;
+
+                if(lostGold > 0) this.updateGold();
+
+                List<String> lostLoot = new ArrayList<>();
+
+                for(String l : this.getLoot())
+                {
+                    if(!this.equipment.asList().contains(l) && new SplittableRandom().nextInt(100) < 20) lostLoot.add(l);
+                    else if(new SplittableRandom().nextInt(100) < 5) lostLoot.add(l);
+                }
+
+                for(String l : lostLoot)
+                {
+                    this.removeLoot(l);
+                    if(this.equipment.asList().contains(l)) this.equipment.remove(l);
+                }
+
+                if(lostLoot.isEmpty())
+                {
+                    this.updateLoot();
+                    this.updateEquipment();
+                }
+
+                int lostResourceCount = 0;
+
+                for(RawResource r : RawResource.values())
+                {
+                    if(this.rawResources.has(r))
+                    {
+                        int lostAmount = new SplittableRandom().nextInt((int)(this.rawResources.get(r) * 0.1), (int)(this.rawResources.get(r) * 0.5));
+                        lostResourceCount += lostAmount;
+                        this.rawResources.decrease(r, lostAmount);
+                    }
+                }
+
+                if(lostResourceCount > 0) this.updateRawResources();
+
+                final String lostSummary = this.getName() + " was defeated and lost %s Gold, %s Loot Items, and %s Resources!".formatted(lostGold, lostLoot.size(), lostResourceCount);
                 Mongo.PlayerData.find().forEach(d -> {
                     PlayerDataQuery p = new PlayerDataQuery(d.getString("playerID"));
-                    if(p.getCharacterList().contains(this.getCharacterID())) p.DM(this.getName() + " was defeated and lost " + loss + " Gold!");
+                    if(p.getCharacterList().contains(this.getCharacterID())) p.DM(lostSummary);
                 });
             });
         }
