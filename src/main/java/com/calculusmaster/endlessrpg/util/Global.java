@@ -39,6 +39,7 @@ public class Global
     {
         List<String> keep = new ArrayList<>();
         Mongo.PlayerData.find().forEach(d -> keep.addAll(d.getList("loot", String.class)));
+        Mongo.CharacterData.find().forEach(d -> keep.addAll(d.getList("loot", String.class)));
 
         List<String> delete = new ArrayList<>();
         Mongo.LootData.find().forEach(d -> {
