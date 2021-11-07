@@ -1,7 +1,7 @@
 package com.calculusmaster.endlessrpg;
 
 import com.calculusmaster.endlessrpg.command.core.CommandHandler;
-import com.calculusmaster.endlessrpg.command.economy.CommandShop;
+import com.calculusmaster.endlessrpg.gameplay.world.LocationShop;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.gameplay.world.UniqueLocations;
 import com.calculusmaster.endlessrpg.util.Global;
@@ -27,9 +27,9 @@ public class EndlessRPG
         LoggerHelper.disableMongoLoggers();
 
         LoggerHelper.init("Command", CommandHandler::init);
-        LoggerHelper.init("Shop", CommandShop::init);
         LoggerHelper.init("Unique Locations", UniqueLocations::init);
         LoggerHelper.init("Realm", Realm::init, true);
+        LoggerHelper.init("Shop", LocationShop::init);
 
         JDABuilder bot = JDABuilder
                 .createDefault(PrivateInfo.TOKEN)
