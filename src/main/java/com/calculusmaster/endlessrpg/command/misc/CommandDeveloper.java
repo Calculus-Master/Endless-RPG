@@ -9,6 +9,7 @@ import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.world.LocationShop;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
 import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
@@ -111,6 +112,7 @@ public class CommandDeveloper extends Command
                     active.updateRawResources();
                 }
                 case "cycleweather" -> Realm.cycleWeather();
+                case "resetshops" -> LocationShop.createShops();
                 default -> throw new IllegalStateException("Invalid Developer Command. Input: " + this.msg[0]);
             }
 

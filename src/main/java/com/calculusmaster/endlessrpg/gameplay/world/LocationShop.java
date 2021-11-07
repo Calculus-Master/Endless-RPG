@@ -21,7 +21,7 @@ public class LocationShop
         Executors.newScheduledThreadPool(1).scheduleAtFixedRate(LocationShop::createShops, 0, 4, TimeUnit.HOURS);
     }
 
-    private static void createShops()
+    public static void createShops()
     {
         Realm.CURRENT.getLocations().forEach(l -> {
             if(l.getType().equals(LocationType.TOWN)) LocationShop.create(l);
