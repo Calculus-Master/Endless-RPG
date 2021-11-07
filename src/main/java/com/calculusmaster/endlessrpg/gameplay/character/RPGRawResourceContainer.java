@@ -66,6 +66,11 @@ public class RPGRawResourceContainer
         return this.get(r) != 0;
     }
 
+    public boolean has(GatheringSkill s)
+    {
+        return Arrays.stream(RawResource.values()).filter(r -> r.getSkill().equals(s)).anyMatch(this::has);
+    }
+
     public boolean isEmpty()
     {
         return this.resourceValues.values().stream().allMatch(i -> i == 0);

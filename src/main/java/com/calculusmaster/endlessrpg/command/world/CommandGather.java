@@ -6,10 +6,9 @@ import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.gameplay.world.skills.GatherSession;
 import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
-import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
+import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public class CommandGather extends Command
@@ -37,8 +36,8 @@ public class CommandGather extends Command
         {
             if(GatherSession.END_TIMES.containsKey(active.getCharacterID())) this.response = active.getName() + " is currently gathering resources!";
             else if(current.getResources().isEmpty()) this.response = current.getName() + " does not have any resources that can be gathered!";
+            else if(!current.getResources().has(GatheringSkill.cast(this.msg[1]))) this.response = current.getName() + " has no " + Global.normalize(this.msg[1]) + " resources!";
             else if(!current.getResources().canGather(active)) this.response = active.getName() + " cannot gather any resources at " + current.getName() + "!";
-            else if(Arrays.stream(RawResource.values()).filter(r -> current.getResources().get(r) != 0).filter(r -> r.getSkill().equals(GatheringSkill.cast(this.msg[1]))).toList().isEmpty()) this.response = current.getName() + " does not have any Resources of that Skill!";
             else
             {
                 GatherSession g = GatherSession.create(this.playerData, current, GatheringSkill.cast(this.msg[1]));
