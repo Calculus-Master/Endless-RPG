@@ -367,8 +367,8 @@ public class Dungeon
         BATTLE,
         TREASURE,
         LOOT,
-        BOSS,
         HEAL,
+        BOSS,
         //Final Kingdom Dungeon
         FINAL_KINGDOM_HEAL,
         FINAL_KINGDOM_MINI_BOSS,
@@ -377,7 +377,8 @@ public class Dungeon
 
         static DungeonEncounter getRandom()
         {
-            return Arrays.copyOfRange(values(), 0, 4)[new SplittableRandom().nextInt(5)];
+            DungeonEncounter[] pool = Arrays.copyOfRange(values(), 0, List.of(values()).indexOf(BOSS));
+            return pool[new SplittableRandom().nextInt(pool.length)];
         }
     }
 }
