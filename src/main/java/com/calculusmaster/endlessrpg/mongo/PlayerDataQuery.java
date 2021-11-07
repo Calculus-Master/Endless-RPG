@@ -28,7 +28,7 @@ public class PlayerDataQuery extends AbstractMongoQuery
                 .append("username", username)
                 .append("characters", new JSONArray())
                 .append("selected", 0)
-                .append("gold", 100)
+                .append("gold", 0)
                 .append("location", Realm.CURRENT.getLocations().get(0).getID())
                 .append("visited", List.of(Realm.CURRENT.getLocations().get(0).getID()))
                 .append("loot", new JSONArray())
