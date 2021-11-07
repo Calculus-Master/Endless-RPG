@@ -63,7 +63,7 @@ public class LocationShop
         for(int i = 0; i < amount; i++)
         {
             LootItem loot = LootBuilder.create(LootType.getRandom(), r.nextInt(5, 50));
-            int cost = loot.getBoosts().values().stream().mapToInt(x -> x).sum() * (new SplittableRandom().nextInt(2, 10) + 100);
+            int cost = new SplittableRandom().nextInt(100, 250) + loot.getBoosts().values().stream().mapToInt(x -> x * (new SplittableRandom().nextInt(2, 10))).sum();
             cost -= cost % 10;
 
             this.loot.add(new ShopEntry<>(loot, cost));
