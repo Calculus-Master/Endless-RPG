@@ -39,7 +39,7 @@ public class CommandCreate extends Command
 
                 if(!Realm.CURRENT.getLocation(this.playerData.getLocationID()).getType().isTown())
                 {
-                    this.response = "You can only create Character in Towns or the Hub!";
+                    this.response = "You can only create Characters in Towns or the Hub!";
                     return this;
                 }
                 if(this.playerData.getGold() < cost)
