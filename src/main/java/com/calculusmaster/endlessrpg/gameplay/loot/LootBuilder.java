@@ -4,7 +4,7 @@ import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 
-import java.util.SplittableRandom;
+import java.util.*;
 
 public class LootBuilder
 {
@@ -139,9 +139,32 @@ public class LootBuilder
         return armor;
     }
 
+    private static LootItem basicArmorElementalModifiers(LootItem armor)
+    {
+        int numElements;
+        int rand = r.nextInt(100);
+
+        if(rand < 40) return armor;
+        else if(rand < 80) numElements = 1;
+        else if(rand < 90) numElements = 2;
+        else if(rand < 95) numElements = 3;
+        else numElements = 4;
+
+        List<ElementType> elementsPool = new ArrayList<>(EnumSet.allOf(ElementType.class));
+        Collections.shuffle(elementsPool);
+        List<ElementType> elements = elementsPool.subList(0, numElements);
+
+        int power = armor.getBoost(Stat.DEFENSE) + armor.getBoost(Stat.HEALTH);
+        for(ElementType e : elements) armor.addElementalDefense(e, varyP(power, 50, 150));
+
+        return armor;
+    }
+
     public static LootItem Helmet(int level)
     {
         LootItem helmet = baseArmor(LootType.HELMET, level);
+
+        helmet = basicArmorElementalModifiers(helmet);
 
         return helmet;
     }
@@ -150,12 +173,16 @@ public class LootBuilder
     {
         LootItem chestplate = baseArmor(LootType.CHESTPLATE, level);
 
+        chestplate = basicArmorElementalModifiers(chestplate);
+
         return chestplate;
     }
 
     public static LootItem Gauntlets(int level)
     {
         LootItem gauntlets = baseArmor(LootType.GAUNTLETS, level);
+
+        gauntlets = basicArmorElementalModifiers(gauntlets);
 
         return gauntlets;
     }
@@ -164,12 +191,16 @@ public class LootBuilder
     {
         LootItem leggings = baseArmor(LootType.LEGGINGS, level);
 
+        leggings = basicArmorElementalModifiers(leggings);
+
         return leggings;
     }
 
     public static LootItem Boots(int level)
     {
         LootItem boots = baseArmor(LootType.BOOTS, level);
+
+        boots = basicArmorElementalModifiers(boots);
 
         return boots;
     }
