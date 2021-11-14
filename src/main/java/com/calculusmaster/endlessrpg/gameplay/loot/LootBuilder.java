@@ -76,7 +76,7 @@ public class LootBuilder
                 .addElementalDamage(ElementType.getRandom(), (int)(0.75 * s));
 
         wand.getRequirements()
-                .addStat(Stat.INTELLECT, level * 3);
+                .addStat(Stat.INTELLECT, varyV(level * 2,  level / 2, level * 3));
 
         return wand;
     }
