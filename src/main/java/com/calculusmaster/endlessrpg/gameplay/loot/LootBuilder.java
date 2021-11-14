@@ -154,8 +154,34 @@ public class LootBuilder
         Collections.shuffle(elementsPool);
         List<ElementType> elements = elementsPool.subList(0, numElements);
 
-        int power = armor.getBoost(Stat.DEFENSE) + armor.getBoost(Stat.HEALTH);
-        for(ElementType e : elements) armor.addElementalDefense(e, varyP(power, 50, 150));
+        int defense = armor.getBoost(Stat.DEFENSE);
+        int power = defense + armor.getBoost(Stat.HEALTH);
+        for(ElementType e : elements)
+        {
+            int style = r.nextInt(100);
+
+            //If no defense, skip this element
+            if(defense == 0) armor.addElementalDefense(e, 0);
+            //Low percentage of defense
+            else if(style < 50) armor.addElementalDefense(e, varyP(defense, 10, 40));
+            //Percentage of power (defense + health)
+            else if(style < 80) armor.addElementalDefense(e, varyP(power, 50, 100));
+            //Partial replacement of defense - higher percentage of defense, and a certain amount of defense is removed
+            else if(style < 95)
+            {
+                int transfer = varyP(defense, 50, 80);
+                int remove = varyP(transfer, 50, 90);
+
+                armor.addElementalDefense(e, transfer * 2);
+                armor.addBoost(Stat.DEFENSE, armor.getBoost(Stat.DEFENSE) - remove);
+            }
+            //Full replacement of defense - elemental defense is a high multiplier
+            else
+            {
+                armor.addElementalDefense(e, varyP(defense, 200, 400));
+                armor.addBoost(Stat.DEFENSE, 0);
+            }
+        }
 
         return armor;
     }
