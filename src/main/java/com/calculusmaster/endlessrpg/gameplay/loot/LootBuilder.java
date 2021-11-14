@@ -120,7 +120,7 @@ public class LootBuilder
             defense = varyP(defVal, 5, 75);
             health = varyP(hpVal, 5, 75);
         }
-        //"Single" Method: Armor is synergized as HEALTH or DEFENSE, the other stat is randomly chosen to get boosted
+        //"Synergy" Method: Armor is synergized as HEALTH or DEFENSE, the other stat is randomly chosen to get boosted
         else
         {
             boolean isDefense = r.nextInt(100) < 50;
@@ -141,10 +141,6 @@ public class LootBuilder
             case GAUNTLETS, BOOTS -> {
                 defense = varyP(defense, 85, 90);
                 health = varyP(defense, 75, 90);
-            }
-            case HELMET, LEGGINGS -> {
-                defense = varyP(defense, 95, 105);
-                health = varyP(defense, 90, 110);
             }
         }
 
