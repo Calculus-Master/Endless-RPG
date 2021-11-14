@@ -132,6 +132,22 @@ public class LootBuilder
             health = isDefense ? secondaryValue : primaryValue;
         }
 
+        switch(type)
+        {
+            case CHESTPLATE -> {
+                defense = varyP(defense, 105, 120);
+                health = varyP(defense, 115, 130);
+            }
+            case GAUNTLETS, BOOTS -> {
+                defense = varyP(defense, 85, 90);
+                health = varyP(defense, 75, 90);
+            }
+            case HELMET, LEGGINGS -> {
+                defense = varyP(defense, 95, 105);
+                health = varyP(defense, 90, 110);
+            }
+        }
+
         armor
                 .setBoost(Stat.DEFENSE, defense)
                 .setBoost(Stat.HEALTH, health);
