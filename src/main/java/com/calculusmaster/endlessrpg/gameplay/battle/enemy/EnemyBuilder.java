@@ -61,7 +61,7 @@ public class EnemyBuilder
         if(magic)
         {
             weapon = LootBuilder.Wand(ruler.getLevel())
-                    .addBoost(Stat.INTELLECT, ruler.getLevel() * 2)
+                    .setBoost(Stat.INTELLECT, ruler.getLevel() * 2)
                     .addElementalDamage(ElementType.getRandom(), ruler.getStat(Stat.ATTACK) / 2)
                     .addElementalDamage(ElementType.getRandom(), ruler.getStat(Stat.ATTACK) / 2)
                     .addElementalDefense(ElementType.getRandom(), ruler.getStat(Stat.ATTACK) / 2);
@@ -69,7 +69,7 @@ public class EnemyBuilder
         else
         {
             weapon = LootBuilder.Sword(ruler.getLevel())
-                    .addBoost(Stat.STRENGTH, ruler.getLevel() * 3)
+                    .setBoost(Stat.STRENGTH, ruler.getLevel() * 3)
                     .addElementalDamage(ElementType.getRandom(), ruler.getStat(Stat.ATTACK) / 2);
         }
 
@@ -80,7 +80,7 @@ public class EnemyBuilder
         for(LootType loot : armorTypes)
         {
             LootItem armor = LootBuilder.create(loot, ruler.getLevel())
-                    .addBoost(Stat.HEALTH, 75)
+                    .setBoost(Stat.HEALTH, 75)
                     .addElementalDefense(ElementType.getRandom(), 40)
                     .addElementalDefense(ElementType.getRandom(), 40)
                     .addElementalDefense(ElementType.getRandom(), 40)

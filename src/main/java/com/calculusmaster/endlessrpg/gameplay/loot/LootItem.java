@@ -88,7 +88,7 @@ public class LootItem
         copy.tags = source.tags;
 
         //Boosts
-        for(Map.Entry<Stat, Integer> e : source.getBoosts().entrySet()) copy.addBoost(e.getKey(), e.getValue());
+        for(Map.Entry<Stat, Integer> e : source.getBoosts().entrySet()) copy.setBoost(e.getKey(), e.getValue());
 
         //Requirements
         copy.requirements = source.requirements;
@@ -203,7 +203,7 @@ public class LootItem
     }
 
     //Boosts
-    public LootItem addBoost(Stat stat, int boost)
+    public LootItem setBoost(Stat stat, int boost)
     {
         this.boosts.put(stat, boost);
         return this;

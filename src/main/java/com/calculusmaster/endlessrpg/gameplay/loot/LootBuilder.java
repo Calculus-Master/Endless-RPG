@@ -56,7 +56,7 @@ public class LootBuilder
         int s = standard(level);
 
         LootItem sword = LootItem.create(LootType.SWORD)
-            .addBoost(Stat.ATTACK, s);
+            .setBoost(Stat.ATTACK, s);
 
         if(r.nextInt(100) < 40)
         {
@@ -72,7 +72,7 @@ public class LootBuilder
         int s = standard(level);
 
         LootItem wand = LootItem.create(LootType.WAND)
-                .addBoost(Stat.ATTACK, (int)(0.25 * s))
+                .setBoost(Stat.ATTACK, (int)(0.25 * s))
                 .addElementalDamage(ElementType.getRandom(), (int)(0.75 * s));
 
         wand.getRequirements()
@@ -84,7 +84,7 @@ public class LootBuilder
     public static LootItem Shield(int level)
     {
         LootItem shield = LootItem.create(LootType.SHIELD)
-                .addBoost(Stat.DEFENSE, standard(level));
+                .setBoost(Stat.DEFENSE, standard(level));
 
         shield.getRequirements()
                 .addStat(Stat.DEFENSE, level - 1);
@@ -133,8 +133,8 @@ public class LootBuilder
         }
 
         armor
-                .addBoost(Stat.DEFENSE, defense)
-                .addBoost(Stat.HEALTH, health);
+                .setBoost(Stat.DEFENSE, defense)
+                .setBoost(Stat.HEALTH, health);
 
         return armor;
     }
@@ -173,13 +173,13 @@ public class LootBuilder
                 int remove = varyP(transfer, 50, 90);
 
                 armor.addElementalDefense(e, transfer * 2);
-                armor.addBoost(Stat.DEFENSE, armor.getBoost(Stat.DEFENSE) - remove);
+                armor.setBoost(Stat.DEFENSE, armor.getBoost(Stat.DEFENSE) - remove);
             }
             //Full replacement of defense - elemental defense is a high multiplier
             else
             {
                 armor.addElementalDefense(e, varyP(defense, 200, 400));
-                armor.addBoost(Stat.DEFENSE, 0);
+                armor.setBoost(Stat.DEFENSE, 0);
             }
         }
 
