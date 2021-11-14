@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class Adventure
 {
-    public static int ADVENTURE_EVENT_INTERVAL = 15;
+    public static int ADVENTURE_EVENT_INTERVAL = 15 * 60;
 
     public static final List<Adventure> ADVENTURES = new ArrayList<>();
     public static final Map<String, ScheduledFuture<?>> END_TIMES = new HashMap<>();
@@ -67,7 +67,7 @@ public class Adventure
     //Called periodically throughout the adventure, for random events to proc
     private void event()
     {
-        if((this.eventLog.isEmpty() && this.progress == this.length - 1) || new Random().nextInt(100) < 20)
+        if((this.eventLog.isEmpty() && this.progress == this.length - 1) || new SplittableRandom().nextInt(100) < 40)
         {
             AdventureEvent random = AdventureEvent.getRandom();
             this.executeEvent(random);
