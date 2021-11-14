@@ -94,42 +94,82 @@ public class LootBuilder
 
     //Armor
 
+    private static LootItem baseArmor(LootType type, int level)
+    {
+        LootItem armor = LootItem.create(type);
+
+        int determinant = r.nextInt(100);
+
+        int defense, health;
+
+        //"Pooled" Method: 1 armor value, split into defense and health boosts
+        if(determinant < 33)
+        {
+            int value = armor(level);
+            int percDef = r.nextInt(100) + 1;
+
+            defense = varyP((int)(value * percDef / 100.0), 80, 120);
+            health = varyP((int)(value * (1 - percDef) / 100.0), 80, 120);
+        }
+        //"Independent" Method: 2 armor values, random percentage of each becomes a boost
+        else if(determinant < 50)
+        {
+            int defVal = armor(level);
+            int hpVal = armor(level);
+
+            defense = varyP(defVal, 5, 75);
+            health = varyP(hpVal, 5, 75);
+        }
+        //"Single" Method: Armor is synergized as HEALTH or DEFENSE, the other stat is randomly chosen to get boosted
+        else
+        {
+            boolean isDefense = r.nextInt(100) < 50;
+
+            int primaryValue = armor(level);
+            int secondaryValue = r.nextInt(10) < 3 ? varyP(primaryValue, 2, 10) : 0;
+
+            defense = isDefense ? primaryValue : secondaryValue;
+            health = isDefense ? secondaryValue : primaryValue;
+        }
+
+        armor
+                .addBoost(Stat.DEFENSE, defense)
+                .addBoost(Stat.HEALTH, health);
+
+        return armor;
+    }
+
     public static LootItem Helmet(int level)
     {
-        LootItem helmet = LootItem.create(LootType.HELMET)
-                .addBoost(Stat.DEFENSE, armor(level));
+        LootItem helmet = baseArmor(LootType.HELMET, level);
 
         return helmet;
     }
 
     public static LootItem Chestplate(int level)
     {
-        LootItem chestplate = LootItem.create(LootType.CHESTPLATE)
-                .addBoost(Stat.DEFENSE, armor(level));
+        LootItem chestplate = baseArmor(LootType.CHESTPLATE, level);
 
         return chestplate;
     }
 
     public static LootItem Gauntlets(int level)
     {
-        LootItem gauntlets = LootItem.create(LootType.GAUNTLETS)
-                .addBoost(Stat.DEFENSE, armor(level));
+        LootItem gauntlets = baseArmor(LootType.GAUNTLETS, level);
 
         return gauntlets;
     }
 
     public static LootItem Leggings(int level)
     {
-        LootItem leggings = LootItem.create(LootType.LEGGINGS)
-                .addBoost(Stat.DEFENSE, armor(level));
+        LootItem leggings = baseArmor(LootType.LEGGINGS, level);
 
         return leggings;
     }
 
     public static LootItem Boots(int level)
     {
-        LootItem boots = LootItem.create(LootType.BOOTS)
-                .addBoost(Stat.DEFENSE, armor(level));
+        LootItem boots = baseArmor(LootType.BOOTS, level);
 
         return boots;
     }
