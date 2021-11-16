@@ -29,21 +29,19 @@ public class LootBuilder
         return out;
     }
 
-    private static int r(int min, int max) { return r.nextInt(min, max); }
-
     private static int varyP(int input, int low, int high)
     {
-        return (int)((new SplittableRandom().nextInt(low, high + 1)) / 100.0 * input);
+        return (int)((r.nextInt(low, high + 1)) / 100.0 * input);
     }
 
     private static int varyV(int input, int low, int high)
     {
-        return new SplittableRandom().nextInt(input - low, input + high + 1);
+        return r.nextInt(input - low, input + high + 1);
     }
 
     private static int standard(int level)
     {
-        return varyP(r(1, 5) + level, 90, 110);
+        return varyP(r.nextInt(1, 5) + level, 90, 110);
     }
 
     private static int armor(int level)
@@ -98,38 +96,42 @@ public class LootBuilder
     {
         LootItem armor = LootItem.create(type);
 
-        int determinant = r.nextInt(100);
+        LootStyle style = new WeightedRandom<LootStyle>()
+                .with(LootStyle.ARMOR_BASE_POOLED, 3)
+                .with(LootStyle.ARMOR_BASE_INDEPENDENT, 2)
+                .with(LootStyle.ARMOR_BASE_SYNERGY, 5)
+                .pull();
 
-        int defense, health;
+        int defense = 0, health = 0;
 
-        //"Pooled" Method: 1 armor value, split into defense and health boosts
-        if(determinant < 33)
+        switch(style)
         {
-            int value = armor(level);
-            int percDef = r.nextInt(100) + 1;
+            //"Pooled" Method: 1 armor value, split into defense and health boosts
+            case ARMOR_BASE_POOLED -> {
+                int value = armor(level);
+                int percDef = r.nextInt(100) + 1;
 
-            defense = varyP((int)(value * percDef / 100.0), 80, 120);
-            health = varyP((int)(value * (1 - percDef) / 100.0), 80, 120);
-        }
-        //"Independent" Method: 2 armor values, random percentage of each becomes a boost
-        else if(determinant < 50)
-        {
-            int defVal = armor(level);
-            int hpVal = armor(level);
+                defense = varyP((int)(value * percDef / 100.0), 80, 120);
+                health = varyP((int)(value * (1 - percDef) / 100.0), 80, 120);
+            }
+            //"Independent" Method: 2 armor values, random percentage of each becomes a boost
+            case ARMOR_BASE_INDEPENDENT -> {
+                int defVal = armor(level);
+                int hpVal = armor(level);
 
-            defense = varyP(defVal, 5, 75);
-            health = varyP(hpVal, 5, 75);
-        }
-        //"Synergy" Method: Armor is synergized as HEALTH or DEFENSE, the other stat is randomly chosen to get boosted
-        else
-        {
-            boolean isDefense = r.nextInt(100) < 50;
+                defense = varyP(defVal, 5, 75);
+                health = varyP(hpVal, 5, 75);
+            }
+            //"Synergy" Method: Armor is synergized as HEALTH or DEFENSE, the other stat is randomly chosen to get boosted
+            case ARMOR_BASE_SYNERGY -> {
+                boolean isDefense = r.nextInt(100) < 50;
 
-            int primaryValue = armor(level);
-            int secondaryValue = r.nextInt(10) < 3 ? varyP(primaryValue, 2, 10) : 0;
+                int primaryValue = armor(level);
+                int secondaryValue = r.nextInt(10) < 3 ? varyP(primaryValue, 2, 10) : 0;
 
-            defense = isDefense ? primaryValue : secondaryValue;
-            health = isDefense ? secondaryValue : primaryValue;
+                defense = isDefense ? primaryValue : secondaryValue;
+                health = isDefense ? secondaryValue : primaryValue;
+            }
         }
 
         switch(type)
@@ -170,28 +172,32 @@ public class LootBuilder
         int power = defense + armor.getBoost(Stat.HEALTH);
         for(ElementType e : elements)
         {
-            int style = r.nextInt(100);
+            LootStyle style = new WeightedRandom<LootStyle>()
+                    .with(LootStyle.ELEMENTAL_ARMOR_LOW_PERCENT, 5)
+                    .with(LootStyle.ELEMENTAL_ARMOR_POWER_PERCENT, 4)
+                    .with(LootStyle.ELEMENTAL_ARMOR_PARTIAL_REPLACEMENT, 2)
+                    .with(LootStyle.ELEMENTAL_ARMOR_FULL_REPLACEMENT, 1)
+                    .pull();
 
-            //If no defense, skip this element
-            if(defense == 0) armor.addElementalDefense(e, 0);
-            //Low percentage of defense
-            else if(style < 50) armor.addElementalDefense(e, varyP(defense, 10, 40));
-            //Percentage of power (defense + health)
-            else if(style < 80) armor.addElementalDefense(e, varyP(power, 50, 100));
-            //Partial replacement of defense - higher percentage of defense, and a certain amount of defense is removed
-            else if(style < 95)
+            switch(style)
             {
-                int transfer = varyP(defense, 50, 80);
-                int remove = varyP(transfer, 50, 90);
+                //Low percentage of defense
+                case ELEMENTAL_ARMOR_LOW_PERCENT -> armor.addElementalDefense(e, varyP(defense, 10, 40));
+                //Percentage of power (defense + health)
+                case ELEMENTAL_ARMOR_POWER_PERCENT -> armor.addElementalDefense(e, varyP(power, 50, 100));
+                //Partial replacement of defense - higher percentage of defense, and a certain amount of defense is removed
+                case ELEMENTAL_ARMOR_PARTIAL_REPLACEMENT -> {
+                    int transfer = varyP(defense, 50, 80);
+                    int remove = varyP(transfer, 50, 90);
 
-                armor.addElementalDefense(e, transfer * 2);
-                armor.setBoost(Stat.DEFENSE, armor.getBoost(Stat.DEFENSE) - remove);
-            }
-            //Full replacement of defense - elemental defense is a high multiplier
-            else
-            {
-                armor.addElementalDefense(e, varyP(defense, 200, 400));
-                armor.setBoost(Stat.DEFENSE, 0);
+                    armor.addElementalDefense(e, transfer * 2);
+                    armor.setBoost(Stat.DEFENSE, armor.getBoost(Stat.DEFENSE) - remove);
+                }
+                //Full replacement of defense - elemental defense is a high multiplier
+                case ELEMENTAL_ARMOR_FULL_REPLACEMENT -> {
+                    armor.addElementalDefense(e, varyP(defense, 200, 400));
+                    armor.setBoost(Stat.DEFENSE, 0);
+                }
             }
         }
 
@@ -241,5 +247,42 @@ public class LootBuilder
         boots = basicArmorElementalModifiers(boots);
 
         return boots;
+    }
+
+    private enum LootStyle
+    {
+        ARMOR_BASE_POOLED,
+        ARMOR_BASE_INDEPENDENT,
+        ARMOR_BASE_SYNERGY,
+        ELEMENTAL_ARMOR_LOW_PERCENT,
+        ELEMENTAL_ARMOR_POWER_PERCENT,
+        ELEMENTAL_ARMOR_PARTIAL_REPLACEMENT,
+        ELEMENTAL_ARMOR_FULL_REPLACEMENT;
+    }
+
+    private static class WeightedRandom<T>
+    {
+        private final SplittableRandom r;
+        private final Map<T, Integer> weights;
+
+        WeightedRandom()
+        {
+            this.r = new SplittableRandom();
+            this.weights = new HashMap<>();
+        }
+
+        WeightedRandom<T> with(T item, int weight)
+        {
+            this.weights.put(item, weight);
+            return this;
+        }
+
+        T pull()
+        {
+            List<T> pool = new ArrayList<>();
+            for(Map.Entry<T, Integer> entry : this.weights.entrySet()) for(int i = 0; i < entry.getValue(); i++) pool.add(entry.getKey());
+
+            return pool.get(this.r.nextInt(pool.size()));
+        }
     }
 }
