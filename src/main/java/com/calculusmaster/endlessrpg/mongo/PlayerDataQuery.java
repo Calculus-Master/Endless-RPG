@@ -32,7 +32,8 @@ public class PlayerDataQuery extends AbstractMongoQuery
                 .append("location", Realm.CURRENT.getLocations().get(0).getID())
                 .append("visited", List.of(Realm.CURRENT.getLocations().get(0).getID()))
                 .append("loot", new JSONArray())
-                .append("resources", new RPGRawResourceContainer().serialized());
+                .append("resources", new RPGRawResourceContainer().serialized())
+                .append("party", new JSONArray());
 
         Mongo.PlayerData.insertOne(data);
     }
@@ -208,5 +209,31 @@ public class PlayerDataQuery extends AbstractMongoQuery
         updated.decrease(r, amount);
 
         this.update(Updates.set("resources", updated.serialized()));
+    }
+
+    //key: "party"
+    public List<String> getParty()
+    {
+        return this.document.getList("party", String.class);
+    }
+
+    public void addPartyCharacter(String characterID)
+    {
+        this.update(Updates.push("party", characterID));
+    }
+
+    public void removePartyCharacter(String characterID)
+    {
+        this.update(Updates.pull("party", characterID));
+    }
+
+    public void clearParty()
+    {
+        this.update(Updates.set("party", new JSONArray()));
+    }
+
+    public void setParty(List<String> party)
+    {
+        this.update(Updates.set("party", party));
     }
 }
