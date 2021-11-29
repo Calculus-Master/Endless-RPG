@@ -109,6 +109,9 @@ public class CommandHandler
         register("deposit", "withdraw")
                 .setCommand(CommandBankTransfer::new);
 
+        register("party", "team")
+                .setCommand(CommandParty::new);
+
         register("dev")
                 .setCommand(CommandDeveloper::new);
     }

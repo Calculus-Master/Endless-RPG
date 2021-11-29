@@ -214,6 +214,17 @@ public class RPGCharacter
         this.update(Updates.set("skillLevel", Global.serializedMap(this.skillLevels, GatheringSkill.values())), Updates.set("skillExp", Global.serializedMap(this.skillExperience, GatheringSkill.values())));
     }
 
+    //Misc
+    public String getListOverview()
+    {
+        String name = "\"" + this.getName() + "\"";
+        String level = "Level: " + this.getLevel();
+        String clazz = "Class: " + Global.normalize(this.getRPGClass().toString());
+        String statTotal = "Power: " + Arrays.stream(Stat.values()).mapToInt(this::getStat).sum();
+
+        return name + " | " + level + " | " + clazz + " | " + statTotal;
+    }
+
     //Stat Changes
     public LinkedHashMap<Stat, Integer> getChanges()
     {
