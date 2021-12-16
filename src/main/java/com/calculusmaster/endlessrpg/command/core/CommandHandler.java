@@ -1,9 +1,6 @@
 package com.calculusmaster.endlessrpg.command.core;
 
-import com.calculusmaster.endlessrpg.command.activity.CommandAdventure;
-import com.calculusmaster.endlessrpg.command.activity.CommandAttack;
-import com.calculusmaster.endlessrpg.command.activity.CommandBattle;
-import com.calculusmaster.endlessrpg.command.activity.CommandDungeon;
+import com.calculusmaster.endlessrpg.command.activity.*;
 import com.calculusmaster.endlessrpg.command.character.*;
 import com.calculusmaster.endlessrpg.command.economy.*;
 import com.calculusmaster.endlessrpg.command.loot.CommandDelete;
@@ -93,6 +90,9 @@ public class CommandHandler
 
         register("dungeon")
                 .setCommand(CommandDungeon::new);
+
+        register("newdungeon")
+                .setCommand(CommandNewDungeon::new);
 
         register("classinfo", "ci")
                 .setCommand(CommandClassInfo::new);

@@ -1,6 +1,7 @@
-package com.calculusmaster.endlessrpg.gameplay.battle;
+package com.calculusmaster.endlessrpg.gameplay.battle.dungeon;
 
 import com.calculusmaster.endlessrpg.EndlessRPG;
+import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyArchetype;
 import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyBuilder;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AIPlayer;
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+@Deprecated
 public class Dungeon
 {
     public static final List<Dungeon> DUNGEONS = new ArrayList<>();

@@ -44,6 +44,8 @@ public class CommandBattle extends Command
             else if(Battle.isInBattle(this.player.getId())) this.response = "You are already in a battle! Complete it to start another battle!";
             else if(Battle.isInBattle(otherID)) this.response = this.getMentions().get(0).getNickname() + " is already in a battle! They must complete it before joining another battle!";
             else if(!PlayerDataQuery.isRegistered(otherID)) this.response = this.getMentions().get(0).getNickname() + " does not have any characters to battle with!";
+            else if(new PlayerDataQuery(otherID).getParty().isEmpty()) this.response = this.getMentions().get(0).getNickname() + " has not setup a Party yet!";
+            else if(this.playerData.getParty().isEmpty()) this.response = "You need to setup a Party before battling!";
             else
             {
                 Battle b = Battle.createPVP(this.player.getId(), otherID);
@@ -56,6 +58,7 @@ public class CommandBattle extends Command
         else if(pve)
         {
             if(Battle.isInBattle(this.player.getId())) this.response = "You are already in a battle! Complete it to start another battle!";
+            else if(this.playerData.getParty().isEmpty()) this.response = "You need to setup a Party before battling!";
             else
             {
                 Battle b = Battle.createPVE(this.player.getId(), Realm.CURRENT.getLocation(this.playerData.getLocationID()));

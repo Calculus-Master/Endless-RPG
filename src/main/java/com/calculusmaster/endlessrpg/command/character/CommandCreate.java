@@ -65,6 +65,9 @@ public class CommandCreate extends Command
                 c.equipLoot(EquipmentType.RIGHT_HAND, starterSword.getLootID());
                 c.addLoot(starterSword.getLootID());
                 c.addGold(100);
+
+                //Auto-Add to Party
+                this.playerData.addPartyCharacter(c.getCharacterID());
             }
 
             c.upload();

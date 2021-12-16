@@ -1,5 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.battle;
 
+import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.Dungeon;
+import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.NewDungeon;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AIPlayer;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AbstractPlayer;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.UserPlayer;
@@ -28,6 +30,8 @@ public class Battle
     private List<String> turnResults;
 
     private Optional<MessageReceivedEvent> event = Optional.empty();
+
+    private boolean isDungeonBattle;
 
     //Creators
 
@@ -69,6 +73,23 @@ public class Battle
         b.setLocation(location);
         b.setup();
 
+        b.isDungeonBattle = true;
+        BATTLES.add(b);
+        return b;
+    }
+
+    public static Battle createDungeon(List<UserPlayer> players, AIPlayer enemy, Location location)
+    {
+        Battle b = new Battle();
+
+        players.forEach(p -> p.team.forEach(c -> c.setOwner(p)));
+
+        b.setBattleType(BattleType.PVE);
+        b.createPlayers(players, enemy);
+        b.setLocation(location);
+        b.setup();
+
+        b.isDungeonBattle = true;
         BATTLES.add(b);
         return b;
     }
@@ -90,7 +111,7 @@ public class Battle
 
         while(!b.isComplete()) b.submitAITurn();
 
-        return b.getWinner().ID.equals(player.ID);
+        return b.getWinner().stream().anyMatch(p -> p.ID.equals(player.ID));
     }
 
     //External
@@ -132,11 +153,26 @@ public class Battle
 
         EmbedBuilder embed = new EmbedBuilder();
 
-        AbstractPlayer winner = this.getWinner();
+        List<AbstractPlayer> winners = this.getWinner();
 
-        embed.setDescription(winner.getName() + " has won!");
+        embed.setDescription(winners.size() == 1 ? winners.get(0).getName() + " has won!" : winners.stream().map(AbstractPlayer::getName).collect(Collectors.joining(", ")));
 
         this.sendEmbed(embed);
+
+        if(this.isDungeonBattle)
+        {
+            List<UserPlayer> userPlayers = this.players.stream().filter(p -> p instanceof UserPlayer).map(p -> (UserPlayer)p).toList();
+            NewDungeon dungeon = NewDungeon.instance(userPlayers.get(0).ID);
+
+            if(winners.stream().allMatch(winner -> userPlayers.stream().anyMatch(p -> winner.ID.equals(p.ID))))
+            {
+                dungeon.addResult("You defeated all the enemies!");
+                dungeon.completeCurrentRoom();
+            }
+            else dungeon.fail();
+
+            dungeon.removeTag(NewDungeon.DungeonMetaTag.AWAITING_BATTLE_RESULTS);
+        }
 
         for(AbstractPlayer player : this.players)
         {
@@ -144,7 +180,7 @@ public class Battle
             {
                 Dungeon d = Objects.requireNonNull(Dungeon.instance(player.ID));
 
-                if(player.ID.equals(winner.ID))
+                if(winners.contains(player))
                 {
                     d.addResult("You defeated all the enemies!");
                     d.advance();
@@ -201,13 +237,40 @@ public class Battle
     //Common Utilities
     public boolean isComplete()
     {
-        return this.players.stream().anyMatch(AbstractPlayer::isDefeated);
+        List<RPGCharacter> remaining = Arrays.stream(this.battlers).filter(c -> !c.isDefeated()).toList();
+
+        if(this.battleType.equals(BattleType.PVP))
+        {
+            String owner = remaining.get(0).getOwnerID();
+            return remaining.stream().allMatch(c -> c.getOwnerID().equals(owner)) || remaining.stream().noneMatch(c -> c.getOwnerID().equals(owner));
+        }
+        else if(this.battleType.equals(BattleType.PVE)) return remaining.stream().allMatch(RPGCharacter::isAI) || remaining.stream().noneMatch(RPGCharacter::isAI);
+        else throw new NullPointerException("Battle Type is null!");
     }
 
-    public AbstractPlayer getWinner()
+    private List<AbstractPlayer> getWinner()
     {
-        if(!this.isComplete()) throw new IllegalStateException("Cannot find Battle Winner because Battle is not complete!");
-        else return this.players.get(0).isDefeated() ? this.players.get(1) : this.players.get(0);
+        if(!this.isComplete()) throw new IllegalStateException("Battle must be complete!");
+
+        List<RPGCharacter> remaining = Arrays.stream(this.battlers).filter(c -> !c.isDefeated()).toList();
+
+        return switch(this.battleType) {
+            case PVP -> new ArrayList<>(List.of(
+                            Arrays.stream(this.battlers)
+                            .findFirst()
+                            .get()
+                            .getOwner())
+            );
+            case PVE -> remaining.get(0).isAI()
+                    ? List.of(remaining.get(0).getOwner())
+                    : new ArrayList<>(
+                            Arrays.stream(this.battlers)
+                                    .filter(c -> !c.isAI())
+                                    .map(RPGCharacter::getOwner)
+                                    .distinct()
+                                    .toList()
+            );
+        };
     }
 
     private void advanceTurn()
@@ -268,6 +331,7 @@ public class Battle
         this.turn = 0;
         this.turnResults = new ArrayList<>();
         this.setBattlerTurnOrder();
+        this.isDungeonBattle = false;
     }
 
     private void setBattlerTurnOrder()
@@ -319,6 +383,12 @@ public class Battle
     {
         this.players = new ArrayList<>();
         this.players.add(player);
+        this.players.add(enemy);
+    }
+
+    private void createPlayers(List<UserPlayer> players, AIPlayer enemy)
+    {
+        this.players = new ArrayList<>(players);
         this.players.add(enemy);
     }
 

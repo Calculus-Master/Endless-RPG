@@ -2,7 +2,7 @@ package com.calculusmaster.endlessrpg.command.activity;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
-import com.calculusmaster.endlessrpg.gameplay.battle.Dungeon;
+import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.Dungeon;
 import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.Arrays;
 import java.util.Objects;
 
+@Deprecated
 public class CommandDungeon extends Command
 {
     public CommandDungeon(MessageReceivedEvent event, String msg)
