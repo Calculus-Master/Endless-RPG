@@ -15,6 +15,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -122,7 +124,43 @@ public class Dungeon
     {
         this.status = DungeonStatus.COMPLETE;
 
-        this.event.getChannel().sendMessage("You win the dungeon!").queue();
+        final EmbedBuilder embed = new EmbedBuilder();
+        final ExecutorService manager = Executors.newCachedThreadPool();
+
+        List<RPGCharacter> characters = new ArrayList<>();
+        this.players.stream().map(dp -> dp.party).forEach(list -> Collections.synchronizedList(characters).addAll(list));
+
+        List<String> contributionResults = new ArrayList<>();
+        double contributionSum = this.contributions.scores.values().stream().mapToInt(i -> i).sum();
+        for(RPGCharacter c : Collections.synchronizedList(characters))
+        {
+            double contributionPercentage = (double)this.contributions.scores.get(c.getCharacterID()) / contributionSum;
+
+            int shareGold = (int)(this.reward.gold * contributionPercentage);
+            int shareXP = (int)(this.reward.gold * contributionPercentage);
+
+            c.addGold(shareGold);
+            c.addExp(shareXP);
+
+            manager.execute(() -> {
+                if(shareGold != 0) c.updateGold();
+                if(shareXP != 0) c.updateExperience();
+            });
+
+            contributionResults.add("%s – Gold: %s, Experience: %s".formatted(c.getName(), shareGold, shareXP));
+        }
+
+        final String characterRewards = String.join("\n", contributionResults);
+        final String description = "Level " + this.level + " Dungeon `" + this.location.getName() + "`\nCompletion: " + (int)(this.map.getCompletion() * 100) + "%";
+
+        embed
+                .setTitle("Victory!")
+                .setDescription(description)
+                .addField("Character Rewards", characterRewards, false);
+
+        //TODO: Loot and Resource distributions (potentially by player contributions, not character based)
+
+        this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
         Dungeon.delete(this.leader.data.getID());
     }

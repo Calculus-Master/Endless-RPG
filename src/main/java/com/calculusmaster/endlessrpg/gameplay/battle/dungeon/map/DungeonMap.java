@@ -52,6 +52,14 @@ public class DungeonMap
         for(int r = 0; r < this.core.rows; r++) for(int c = 0; c < this.core.columns; c++) consumer.run(r, c);
     }
 
+    public double getCompletion()
+    {
+        int completed = 0;
+        for(int r = 0; r < this.core.rows; r++) for(int c = 0; c < this.core.columns; c++) if(this.rooms[r][c] != null && this.rooms[r][c].isComplete()) completed++;
+
+        return (double)completed / (double)(this.core.rooms);
+    }
+
     private interface RowColumnConsumer { void run(int r, int c); }
 
     public Coordinate getSpawn()
