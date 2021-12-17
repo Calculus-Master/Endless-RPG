@@ -287,6 +287,11 @@ public class Dungeon
         return this.reward;
     }
 
+    public boolean isValidLocation(Coordinate target)
+    {
+        return (target.row >= 0 && target.row < this.map.rows) && (target.column >= 0 && target.column < this.map.columns) && this.map.getRoom(target) != null;
+    }
+
     public MessageReceivedEvent getEvent()
     {
         return this.event;

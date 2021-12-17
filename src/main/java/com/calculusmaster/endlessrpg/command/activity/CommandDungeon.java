@@ -117,7 +117,7 @@ public class CommandDungeon extends Command
                 Direction dir = Direction.cast(this.msg[2]);
                 Coordinate target = dungeon.getPosition().shift(dir);
 
-                if(target.isInvalid(dungeon.getMap().core())) this.response = "You cannot move in that direction!";
+                if(!dungeon.isValidLocation(target)) this.response = "You cannot move in that direction!";
                 else
                 {
                     Executors.newSingleThreadScheduledExecutor().schedule(() -> dungeon.move(dir), 3, TimeUnit.SECONDS);
