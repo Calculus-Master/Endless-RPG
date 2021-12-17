@@ -66,7 +66,7 @@ public class CommandDungeon extends Command
             }
             else
             {
-                this.response = "You await your allies... (Dungeon Level: %s, Total Players: %s)".formatted(dungeon.getLevel(), dungeon.getPlayers().size());
+                this.response = "You await your allies... \n*(Dungeon Level: %s, Total Players: %s)*".formatted(dungeon.getLevel(), dungeon.getPlayers().size());
 
                 others.forEach(p -> p.DM("**" + this.player.getName() + "** has invited you to join them in conquering `" + location.getName() + "`!\nTo join, use `r!dungeon accept`. To deny their request, use `r!dungeon deny`. *Note: If you deny the request you will not be able to join the Dungeon again!*"));
             }
