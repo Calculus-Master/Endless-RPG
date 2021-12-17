@@ -33,8 +33,8 @@ public class Realm
     {
         CURRENT = Realm.build(Objects.requireNonNull(Mongo.RealmData.find().first()).getString("realmID"));
 
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(Realm::realmUpdater, 1, 1, TimeUnit.HOURS);
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(Realm::cycleWeather, 2, 2, TimeUnit.HOURS);
+        Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(Realm::realmUpdater, 1, 1, TimeUnit.HOURS);
+        Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(Realm::cycleWeather, 2, 2, TimeUnit.HOURS);
     }
 
     public static void realmUpdater()
