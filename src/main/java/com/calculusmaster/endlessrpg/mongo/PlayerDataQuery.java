@@ -142,11 +142,6 @@ public class PlayerDataQuery extends AbstractMongoQuery
         this.update(Updates.set("location", locationID));
     }
 
-    public void resetLocation()
-    {
-        this.setLocation("");
-    }
-
     //key: "visited"
     public List<String> getVisitedLocations()
     {
@@ -156,11 +151,6 @@ public class PlayerDataQuery extends AbstractMongoQuery
     public void addVisitedLocation(String locationID)
     {
         this.update(Updates.push("visited", locationID));
-    }
-
-    public void clearVisitedLocations()
-    {
-        this.update(Updates.set("visited", new JSONArray()));
     }
 
     //key: "loot"
