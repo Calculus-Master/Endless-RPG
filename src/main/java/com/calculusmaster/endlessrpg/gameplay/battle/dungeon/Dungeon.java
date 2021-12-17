@@ -7,6 +7,7 @@ import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.util.Coordinate;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.util.Direction;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
+import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
@@ -422,11 +423,13 @@ public class Dungeon
     {
         public int gold;
         public int xp;
+        public List<LootItem> loot;
         public RPGRawResourceContainer resources;
 
         {
             this.gold = 0;
             this.xp = 0;
+            this.loot = new ArrayList<>();
             this.resources = new RPGRawResourceContainer();
         }
     }
