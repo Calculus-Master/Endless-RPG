@@ -142,6 +142,17 @@ public class Battle
 
         this.turnResults.add(spellResult);
 
+        //On defeat
+        if(this.battlers[target].isDefeated())
+        {
+            if(this.isDungeonBattle && !this.battlers[this.turn].isAI())
+                Dungeon
+                        .instance(this.battlers[this.turn].getOwnerID())
+                        .contributions()
+                        .increase(this.battlers[this.turn].getCharacterID(), 1);
+
+        }
+
         this.advanceTurn();
     }
 
