@@ -31,6 +31,7 @@ public class Dungeon
 
     private DungeonStatus status;
     private DungeonReward reward;
+    private DungeonContributions contributions;
 
     private int level;
     private DungeonMap map;
@@ -213,8 +214,10 @@ public class Dungeon
 
         List<String> tips = new ArrayList<>(List.of(
                 "The Dungeon Leader makes the decisions for the group of where to travel and what to do in encounters.",
+                "Be careful with your decisions, they may change the outcome of your adventure!",
                 "In order to successfully leave the Dungeon, the boss must be defeated.",
-                "Once all player characters have been defeated, you automatically lose the Dungeon and leave without any rewards."
+                "Once all player characters have been defeated, you automatically lose the Dungeon and leave without any rewards.",
+                "If you succeed, rewards will be distributed among all characters based on their \"contribution\" to your adventure."
         ));
 
         tips.set(0, "- " + tips.get(0));
@@ -273,6 +276,7 @@ public class Dungeon
 
         this.status = DungeonStatus.WAITING_FOR_PLAYERS;
         this.reward = new DungeonReward();
+        this.contributions = new DungeonContributions();
 
         this.tags = EnumSet.noneOf(DungeonMetaTag.class);
     }
@@ -287,6 +291,11 @@ public class Dungeon
     public DungeonReward reward()
     {
         return this.reward;
+    }
+
+    public DungeonContributions contributions()
+    {
+        return this.contributions;
     }
 
     public boolean isValidLocation(Coordinate target)
@@ -417,6 +426,25 @@ public class Dungeon
     {
         AWAITING_BATTLE_RESULTS,
         AWAITING_INTERACTION;
+    }
+
+    public static class DungeonContributions
+    {
+        private LinkedHashMap<String, Integer> scores;
+
+        {
+            scores = new LinkedHashMap<>();
+        }
+
+        public void increase(String character, int amount)
+        {
+            this.scores.put(character, this.scores.getOrDefault(character, 0) + amount);
+        }
+
+        public void increase(int amount)
+        {
+            this.scores.forEach((character, score) -> this.increase(character, amount));
+        }
     }
 
     public static class DungeonReward
