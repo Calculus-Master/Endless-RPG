@@ -48,6 +48,12 @@ public abstract class Command
     protected static final String INVALID = "Invalid Command!";
 
     //For Commands
+    protected Command invalid(String msg)
+    {
+        this.response = msg;
+        return this;
+    }
+
     protected boolean isNumeric(int index)
     {
         return this.msg[index].chars().allMatch(Character::isDigit);

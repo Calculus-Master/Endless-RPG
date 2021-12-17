@@ -4,6 +4,7 @@ import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.Dungeon;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.util.Coordinate;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.util.Direction;
+import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
@@ -45,13 +46,12 @@ public class CommandDungeon extends Command
 
         if(enter)
         {
-            if(Dungeon.isInDungeon(this.player.getId()))
-            {
-                this.response = "You are already in a dungeon!";
-                return this;
-            }
+            if(Dungeon.isInDungeon(this.player.getId())) return this.invalid("You are already in a dungeon!");
 
             Location location = Realm.CURRENT.getLocation(this.playerData.getLocationID());
+
+            if(!location.getType().equals(LocationType.DUNGEON)) return this.invalid("This location does not have a dungeon!");
+
             List<PlayerDataQuery> others = this.getMentions().stream().map(ISnowflake::getId).map(PlayerDataQuery::new).toList();
 
             Dungeon dungeon = Dungeon.create(location, this.event, this.playerData, others);
