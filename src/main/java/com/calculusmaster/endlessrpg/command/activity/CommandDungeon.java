@@ -1,16 +1,20 @@
 package com.calculusmaster.endlessrpg.command.activity;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
-import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.Dungeon;
-import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
+import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.util.Coordinate;
+import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.util.Direction;
+import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
+import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
+import com.calculusmaster.endlessrpg.util.Global;
+import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-@Deprecated
 public class CommandDungeon extends Command
 {
     public CommandDungeon(MessageReceivedEvent event, String msg)
@@ -21,42 +25,123 @@ public class CommandDungeon extends Command
     @Override
     public Command run()
     {
-        boolean start = this.msg.length == 2 && (this.msg[1].equals("start") || this.msg[1].equals("enter"));
-        boolean next = this.msg.length == 2 && this.msg[1].equals("next");
+        //r!dungeon enter <optional @co-op>
+        boolean enter = this.msg.length >= 2 && this.msg[1].equals("enter");
 
-        if(start)
+        //r!dungeon <accept:deny>
+        boolean accept = this.msg.length == 2 && this.msg[1].equals("accept");
+        boolean deny = this.msg.length == 2 && this.msg[1].equals("deny");
+        //r!dungeon cancel
+        boolean cancel = this.msg.length == 2 && this.msg[1].equals("cancel");
+
+        //r!dungeon map
+        boolean map = this.msg.length == 2 && this.msg[1].equals("map");
+
+        //r!dungeon move <direction>
+        boolean move = this.msg.length == 3 && this.msg[1].equals("move") && Direction.cast(this.msg[2]) != null;
+
+        //r!dungeon interact <choice>
+        boolean interact = this.msg.length == 3 && this.msg[1].equals("interact") && this.isNumeric(2);
+
+        if(enter)
         {
-            LocationType current = Realm.CURRENT.getLocation(this.playerData.getLocationID()).getType();
+            if(Dungeon.isInDungeon(this.player.getId()))
+            {
+                this.response = "You are already in a dungeon!";
+                return this;
+            }
 
-            if(Dungeon.isInDungeon(this.player.getId()) || Battle.isInBattle(this.player.getId())) this.response = "You are already in another Dungeon or Battle!";
-            else if(!Arrays.asList(LocationType.DUNGEON, LocationType.FINAL_KINGDOM).contains(current)) this.response = "You have to be at a Dungeon Location to enter a Dungeon!";
+            Location location = Realm.CURRENT.getLocation(this.playerData.getLocationID());
+            List<PlayerDataQuery> others = this.getMentions().stream().map(ISnowflake::getId).map(PlayerDataQuery::new).toList();
+
+            Dungeon dungeon = Dungeon.create(location, this.event, this.playerData, others);
+
+            if(others.isEmpty())
+            {
+                this.embed = null;
+
+                dungeon.sendEmbed(Dungeon.DungeonEmbed.START);
+
+                dungeon.start();
+            }
             else
             {
-                //TODO: Replace with Location level attribute
-                int playerLevel = this.playerData.getLevel();
-                int dungeonLevel = playerLevel + Realm.CURRENT.getLocation(this.playerData.getLocationID()).getLevel();
-                if(dungeonLevel < 0) dungeonLevel = playerLevel;
+                this.response = "You await your allies... (Dungeon Level: %s, Total Players: %s)".formatted(dungeon.getLevel(), dungeon.getPlayers().size());
 
-                Dungeon d = current.equals(LocationType.FINAL_KINGDOM)
-                        ? Dungeon.createFinalKingdom(this.playerData, Realm.CURRENT.getLocation(this.playerData.getLocationID()), dungeonLevel, this.event)
-                        : Dungeon.create(this.playerData, Realm.CURRENT.getLocation(this.playerData.getLocationID()), dungeonLevel, this.event);
+                others.forEach(p -> p.DM("**" + this.player.getName() + "** has invited you to join them in conquering `" + location.getName() + "`!\nTo join, use `r!dungeon accept`. To deny their request, use `r!dungeon deny`. *Note: If you deny the request you will not be able to join the Dungeon again!*"));
+            }
+        }
+        else if(accept || deny || cancel)
+        {
+            Dungeon dungeon = Dungeon.instance(this.player.getId());
 
-                d.sendStartEmbed();
+            if(dungeon == null) this.response = "You are not in a Dungeon!";
+            else if((accept || deny) && dungeon.getLeader().data.getID().equals(this.player.getId())) this.response = "You are the leader! You cannot accept or deny a Dungeon request.";
+            else if(cancel && !dungeon.getLeader().data.getID().equals(this.player.getId())) this.response = "Only the leader can cancel the Dungeon adventure!";
+            else if((accept || deny) && !dungeon.getStatus().equals(Dungeon.DungeonStatus.WAITING_FOR_PLAYERS)) this.response = "The Dungeon has already started!";
+            else if(cancel)
+            {
+                Dungeon.delete(this.player.getId());
+
+                this.response = "You retreated from the Dungeon! No rewards earned!";
+            }
+            else
+            {
+                dungeon.setPlayerAccepted(this.player.getId(), accept);
+
+                if(accept) this.response = "You have joined **" + dungeon.getLeader().data.getUsername() + "** in the Dungeon!";
+                else if(deny) this.response = "You rejected **" + dungeon.getLeader().data.getUsername() + "**'s request to join them in the Dungeon...You cannot join back!";
+            }
+        }
+        else if(map)
+        {
+            if(!Dungeon.isInDungeon(this.player.getId())) this.response = "You are not in a Dungeon!";
+            else if(!Dungeon.instance(this.player.getId()).getStatus().equals(Dungeon.DungeonStatus.ADVENTURING)) this.response = "You have not entered the Dungeon yet (waiting for allies)!";
+            else
+            {
+                Dungeon.instance(this.player.getId()).sendEmbed(Dungeon.DungeonEmbed.MAP_EXPLORED);
 
                 this.embed = null;
             }
         }
-        else if(next)
+        else if(move)
         {
-            if(!Dungeon.isInDungeon(this.player.getId())) this.response = "You are not currently in a dungeon!";
+            Dungeon dungeon = Dungeon.instance(this.player.getId());
+
+            if(dungeon == null) this.response = "You are not in a Dungeon!";
+            else if(!dungeon.getLeader().data.getID().equals(this.player.getId())) this.response = "Only the Dungeon Leader is able to move your group through the Dungeon!";
+            else if(!dungeon.getStatus().equals(Dungeon.DungeonStatus.ADVENTURING)) this.response = "You have not entered the Dungeon yet (waiting for allies)!";
+            else if(!dungeon.current().isComplete()) this.response = "You can only move after the current encounter has been completed!";
             else
             {
-                Dungeon d = Objects.requireNonNull(Dungeon.instance(this.player.getId()));
+                Direction dir = Direction.cast(this.msg[2]);
+                Coordinate target = dungeon.getPosition().shift(dir);
 
-                if(d.isActive()) this.response = "You are actively in a Dungeon Encounter! You must wait for its completion to move to the next one!";
+                if(target.isInvalid(dungeon.getMap().core())) this.response = "You cannot move in that direction!";
                 else
                 {
-                    d.nextEncounter();
+                    Executors.newSingleThreadScheduledExecutor().schedule(() -> dungeon.move(dir), 3, TimeUnit.SECONDS);
+
+                    this.response = "Successfully moved " + Global.normalize(dir.toString()) + "! What awaits you?";
+                }
+            }
+        }
+        else if(interact)
+        {
+            Dungeon dungeon = Dungeon.instance(this.player.getId());
+
+            if(dungeon == null) this.response = "You are not in a Dungeon!";
+            else if(!dungeon.getLeader().data.getID().equals(this.player.getId())) this.response = "Only the Dungeon Leader is able to move your group through the Dungeon!";
+            else if(!dungeon.getStatus().equals(Dungeon.DungeonStatus.ADVENTURING)) this.response = "You have not entered the Dungeon yet (waiting for allies)!";
+            else if(!dungeon.hasTag(Dungeon.DungeonMetaTag.AWAITING_INTERACTION)) this.response = "There's nothing to interact with!";
+            else
+            {
+                int choice = this.getInt(2);
+
+                if(!dungeon.isChoiceValid(choice)) this.response = "Invalid choice!";
+                else
+                {
+                    dungeon.submitChoice(this.getInt(2));
 
                     this.embed = null;
                 }

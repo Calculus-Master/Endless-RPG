@@ -1,6 +1,6 @@
 package com.calculusmaster.endlessrpg.gameplay.battle.dungeon.room;
 
-import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.NewDungeon;
+import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.Dungeon;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.util.Coordinate;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public abstract class DungeonRoom
     private boolean isCompleted;
     private List<Integer> validChoices;
 
-    protected NewDungeon dungeon;
+    protected Dungeon dungeon;
     protected Coordinate position;
 
     public DungeonRoom(RoomType type, int... validChoices)
@@ -56,7 +56,7 @@ public abstract class DungeonRoom
         return this.validChoices.contains(choice);
     }
 
-    public void setDungeon(NewDungeon dungeon)
+    public void setDungeon(Dungeon dungeon)
     {
         this.dungeon = dungeon;
     }

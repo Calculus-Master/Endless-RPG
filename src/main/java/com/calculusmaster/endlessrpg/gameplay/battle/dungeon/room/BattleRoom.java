@@ -1,7 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.battle.dungeon.room;
 
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
-import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.NewDungeon;
+import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.Dungeon;
 import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyArchetype;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AIPlayer;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.UserPlayer;
@@ -47,7 +47,7 @@ public class BattleRoom extends DungeonRoom
         b.setEvent(this.dungeon.getEvent());
         b.sendTurnEmbed();
 
-        this.dungeon.addTag(NewDungeon.DungeonMetaTag.AWAITING_BATTLE_RESULTS);
+        this.dungeon.addTag(Dungeon.DungeonMetaTag.AWAITING_BATTLE_RESULTS);
     }
 
     private void createEnemies()

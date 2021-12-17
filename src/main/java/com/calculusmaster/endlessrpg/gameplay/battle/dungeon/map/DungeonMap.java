@@ -1,6 +1,6 @@
 package com.calculusmaster.endlessrpg.gameplay.battle.dungeon.map;
 
-import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.NewDungeon;
+import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.Dungeon;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.room.BossRoom;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.room.DungeonRoom;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.room.SpawnRoom;
@@ -36,7 +36,7 @@ public class DungeonMap
         });
     }
 
-    public void completeRoomSetup(NewDungeon dungeon)
+    public void completeRoomSetup(Dungeon dungeon)
     {
         this.iterateRooms((r, c) -> {
             if(this.rooms[r][c] != null)

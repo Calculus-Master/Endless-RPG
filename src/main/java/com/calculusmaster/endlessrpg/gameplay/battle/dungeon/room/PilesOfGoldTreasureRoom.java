@@ -1,7 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.battle.dungeon.room;
 
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
-import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.NewDungeon;
+import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.Dungeon;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AIPlayer;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.UserPlayer;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
@@ -65,7 +65,7 @@ public class PilesOfGoldTreasureRoom extends TreasureRoom
                     List<String> completed = new ArrayList<>();
                     while(completed.size() != targetsCount)
                     {
-                        NewDungeon.DungeonPlayer player = this.dungeon.getPlayers().get(new SplittableRandom().nextInt(this.dungeon.getPlayers().size()));
+                        Dungeon.DungeonPlayer player = this.dungeon.getPlayers().get(new SplittableRandom().nextInt(this.dungeon.getPlayers().size()));
                         RPGCharacter target = player.party.get(new SplittableRandom().nextInt(player.party.size()));
 
                         if(target.getHealth() > 0 && !completed.contains(target.getCharacterID()))

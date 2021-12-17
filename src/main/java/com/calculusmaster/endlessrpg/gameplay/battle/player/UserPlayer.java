@@ -1,6 +1,6 @@
 package com.calculusmaster.endlessrpg.gameplay.battle.player;
 
-import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.NewDungeon;
+import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.Dungeon;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 
@@ -21,7 +21,7 @@ public class UserPlayer extends AbstractPlayer
         this.initTeam();
     }
 
-    public UserPlayer(NewDungeon.DungeonPlayer dp)
+    public UserPlayer(Dungeon.DungeonPlayer dp)
     {
         this(dp.data, dp.party);
     }

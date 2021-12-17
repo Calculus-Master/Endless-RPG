@@ -1,7 +1,6 @@
 package com.calculusmaster.endlessrpg.gameplay.battle;
 
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.Dungeon;
-import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.NewDungeon;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AIPlayer;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AbstractPlayer;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.UserPlayer;
@@ -162,7 +161,7 @@ public class Battle
         if(this.isDungeonBattle)
         {
             List<UserPlayer> userPlayers = this.players.stream().filter(p -> p instanceof UserPlayer).map(p -> (UserPlayer)p).toList();
-            NewDungeon dungeon = NewDungeon.instance(userPlayers.get(0).ID);
+            Dungeon dungeon = Dungeon.instance(userPlayers.get(0).ID);
 
             if(winners.stream().allMatch(winner -> userPlayers.stream().anyMatch(p -> winner.ID.equals(p.ID))))
             {
@@ -171,22 +170,7 @@ public class Battle
             }
             else dungeon.fail();
 
-            dungeon.removeTag(NewDungeon.DungeonMetaTag.AWAITING_BATTLE_RESULTS);
-        }
-
-        for(AbstractPlayer player : this.players)
-        {
-            if(!player.team.get(0).isAI() && Dungeon.isInDungeon(player.ID))
-            {
-                Dungeon d = Objects.requireNonNull(Dungeon.instance(player.ID));
-
-                if(winners.contains(player))
-                {
-                    d.addResult("You defeated all the enemies!");
-                    d.advance();
-                }
-                else d.fail();
-            }
+            dungeon.removeTag(Dungeon.DungeonMetaTag.AWAITING_BATTLE_RESULTS);
         }
 
         //TODO: Battle win rewards
