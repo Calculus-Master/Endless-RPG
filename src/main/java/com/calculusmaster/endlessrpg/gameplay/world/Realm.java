@@ -58,12 +58,7 @@ public class Realm
         Realm.CURRENT.getLocations().forEach(l -> {
             if(!Arrays.asList(LocationType.HUB, LocationType.FINAL_KINGDOM).contains(l.getType()))
             {
-                Weather next;
-
-                do { next = Weather.getRandom(); }
-                while(next.equals(l.getWeather()));
-
-                l.setWeather(next);
+                l.setWeather(Weather.getRandom());
                 l.updateWeather();
             }
         });
