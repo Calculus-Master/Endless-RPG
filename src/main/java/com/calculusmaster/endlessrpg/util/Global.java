@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Global
 {
@@ -23,6 +25,11 @@ public class Global
         BasicDBObject data = new BasicDBObject();
         for(K k : values) data.put(k.toString(), map.getOrDefault(k, 0));
         return data;
+    }
+
+    public static void delay(Runnable r, int time, TimeUnit units)
+    {
+        Executors.newSingleThreadScheduledExecutor().schedule(r, time, units);
     }
 
     public static int randomValue(int min, int max)

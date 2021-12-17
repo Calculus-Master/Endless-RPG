@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class Dungeon
@@ -58,14 +59,14 @@ public class Dungeon
         switch(this.current().getType())
         {
             case TREASURE -> this.sendChoiceEmbed();
-            default -> this.current().execute(-1);
+            default -> Global.delay(() -> this.current().execute(-1), 5, TimeUnit.SECONDS);
         }
     }
 
     //To complete encounters that require user interaction
     public void submitChoice(int choice)
     {
-        this.current().execute(choice);
+        Global.delay(() -> this.current().execute(choice), 5, TimeUnit.SECONDS);
 
         this.tags.remove(DungeonMetaTag.AWAITING_INTERACTION);
     }
