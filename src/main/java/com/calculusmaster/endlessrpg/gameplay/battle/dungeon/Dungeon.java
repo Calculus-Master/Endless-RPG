@@ -92,6 +92,8 @@ public class Dungeon
     {
         this.status = DungeonStatus.ADVENTURING;
 
+        this.players.stream().map(dp -> dp.party).forEach(party -> party.forEach(c -> this.contributions.init(c)));
+
         this.sendEmbed(DungeonEmbed.ENCOUNTER);
     }
 
@@ -444,6 +446,11 @@ public class Dungeon
         public void increase(int amount)
         {
             this.scores.forEach((character, score) -> this.increase(character, amount));
+        }
+
+        public void init(RPGCharacter c)
+        {
+            this.scores.put(c.getCharacterID(), 0);
         }
     }
 
