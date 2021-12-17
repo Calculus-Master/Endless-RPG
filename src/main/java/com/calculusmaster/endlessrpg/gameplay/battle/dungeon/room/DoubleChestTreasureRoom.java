@@ -29,6 +29,7 @@ public class DoubleChestTreasureRoom extends TreasureRoom
     @Override
     public void execute(int choice)
     {
-
+        this.dungeon.addResult("Single Treasure Chest Rooms are currently a WIP.");
+        this.dungeon.completeCurrentRoom();
     }
 }

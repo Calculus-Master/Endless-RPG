@@ -42,6 +42,11 @@ public class SingleChestTreasureRoom extends TreasureRoom
                 //Result 1: Success
                 //Result 2: Battle, then success
                 //Result 3: Mimic
+
+                //TODO: WIP
+
+                this.dungeon.addResult("Single Treasure Chest Rooms are currently a WIP.");
+                this.dungeon.completeCurrentRoom();
             }
         }
     }
