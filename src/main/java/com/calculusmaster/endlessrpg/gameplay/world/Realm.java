@@ -55,13 +55,12 @@ public class Realm
 
     public static void cycleWeather()
     {
-        Realm.CURRENT.getLocations().forEach(l -> {
-            if(!Arrays.asList(LocationType.HUB, LocationType.FINAL_KINGDOM).contains(l.getType()))
-            {
-                l.setWeather(Weather.getRandom());
-                l.updateWeather();
-            }
-        });
+        Realm.CURRENT.getLocations().stream()
+                .filter(l -> !List.of(LocationType.HUB, LocationType.FINAL_KINGDOM).contains(l.getType()))
+                .forEach(l -> {
+                    l.setWeather(Weather.getRandom());
+                    l.updateWeather();
+                });
     }
 
     private Realm() {}
