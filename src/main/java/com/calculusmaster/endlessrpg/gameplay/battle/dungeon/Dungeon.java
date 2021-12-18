@@ -222,6 +222,16 @@ public class Dungeon
     public void fail()
     {
         this.status = DungeonStatus.COMPLETE;
+
+        final EmbedBuilder embed = new EmbedBuilder();
+
+        embed
+                .setTitle("Loss")
+                .setDescription("Level " + this.level + " Dungeon `" + this.location.getName() + "`\nCompletion: " + (int)(this.map.getCompletion() * 100) + "%\n**All rewards were lost to time... Hopefully future adventures fare better!");
+
+        this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
+
+        Dungeon.delete(this.leader.data.getID());
     }
 
     //Embed-Related
