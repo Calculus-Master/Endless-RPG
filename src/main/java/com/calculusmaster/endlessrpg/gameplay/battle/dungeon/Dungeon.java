@@ -165,7 +165,7 @@ public class Dungeon
             LootItem loot = lootPool.get(random.nextInt(lootPool.size()));
             DungeonPlayer player = playerContributions.pullWeighted();
 
-            player.data.addLootItem(loot.getLootID());
+            manager.execute(() -> player.data.addLootItem(loot.getLootID()));
             lootContributionResults.get(player).add(loot.getName());
 
             lootPool.remove(loot);
@@ -183,7 +183,7 @@ public class Dungeon
                 int amount = (int)(total * playerContributions.getPercent(p));
                 if(amount > 0)
                 {
-                    p.data.addResource(r, amount);
+                    manager.execute(() -> p.data.addResource(r, amount));
                     resourceContributionResults.get(p).add(Global.normalize(r.toString()) + "(" + amount + ")");
                 }
             });
