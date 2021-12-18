@@ -18,6 +18,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,9 @@ public class Dungeon
 
     private EnumSet<DungeonMetaTag> tags;
     private List<String> result;
+
+    private static final List<String> PLAYERS_ON_COOLDOWN = new ArrayList<>();
+    private static final Map<String, ScheduledFuture<?>> PLAYER_COOLDOWN_FUTURES = new HashMap<>();
 
     public static Dungeon create(Location location, MessageReceivedEvent event, PlayerDataQuery leader, List<PlayerDataQuery> others)
     {
@@ -217,6 +221,8 @@ public class Dungeon
         this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
         Dungeon.delete(this.leader.data.getID());
+
+        this.addCooldowns();
     }
 
     public void fail()
@@ -232,6 +238,8 @@ public class Dungeon
         this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
         Dungeon.delete(this.leader.data.getID());
+
+        this.addCooldowns();
     }
 
     //Embed-Related
@@ -383,6 +391,41 @@ public class Dungeon
         this.contributions = new DungeonContributions();
 
         this.tags = EnumSet.noneOf(DungeonMetaTag.class);
+    }
+
+    //Cooldowns
+    private void addCooldowns()
+    {
+        for(DungeonPlayer player : this.players) Dungeon.addDungeonCooldown(player.data.getID());
+    }
+
+    public static void addDungeonCooldown(String player)
+    {
+        Collections.synchronizedList(PLAYERS_ON_COOLDOWN).add(player);
+        ScheduledFuture<?> cooldown = Executors.newSingleThreadScheduledExecutor().schedule(() -> Dungeon.removeDungeonCooldown(player), 1, TimeUnit.HOURS);
+        Collections.synchronizedMap(PLAYER_COOLDOWN_FUTURES).put(player, cooldown);
+    }
+
+    public static void removeDungeonCooldown(String player)
+    {
+        Collections.synchronizedList(PLAYERS_ON_COOLDOWN).remove(player);
+        Collections.synchronizedMap(PLAYER_COOLDOWN_FUTURES).remove(player);
+    }
+
+    public static boolean isOnCooldown(String player)
+    {
+        return Collections.synchronizedList(PLAYERS_ON_COOLDOWN).contains(player);
+    }
+
+    public static String getDungeonCooldown(String player)
+    {
+        long total = Collections.synchronizedMap(PLAYER_COOLDOWN_FUTURES).get(player).getDelay(TimeUnit.SECONDS);
+
+        int hours = (int)total / 3600;
+        int minutes = ((int)total % 3600) / 60;
+        int seconds = ((int)total % 3600) % 60;
+
+        return "`%sH %sM %sS`".formatted(hours, minutes, seconds);
     }
 
     //Core Accessors

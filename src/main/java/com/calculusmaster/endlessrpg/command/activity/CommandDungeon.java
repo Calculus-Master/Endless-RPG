@@ -47,6 +47,7 @@ public class CommandDungeon extends Command
         if(enter)
         {
             if(Dungeon.isInDungeon(this.player.getId())) return this.invalid("You are already in a dungeon!");
+            else if(Dungeon.isOnCooldown(this.player.getId())) return this.invalid("You cannot enter a Dungeon for another " + Dungeon.getDungeonCooldown(this.player.getId()));
 
             Location location = Realm.CURRENT.getLocation(this.playerData.getLocationID());
 
