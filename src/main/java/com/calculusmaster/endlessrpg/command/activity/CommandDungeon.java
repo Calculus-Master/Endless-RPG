@@ -10,8 +10,10 @@ import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.entities.ISnowflake;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -53,7 +55,11 @@ public class CommandDungeon extends Command
 
             if(!location.getType().equals(LocationType.DUNGEON)) return this.invalid("This location does not have a dungeon!");
 
-            List<PlayerDataQuery> others = this.getMentions().stream().map(ISnowflake::getId).map(PlayerDataQuery::new).toList();
+            List<Member> invalidMembers = new ArrayList<>();
+            for(Member m : this.getMentions()) if(Dungeon.isInDungeon(m.getId()) || Dungeon.isOnCooldown(m.getId())) invalidMembers.add(m);
+
+            if(!invalidMembers.isEmpty()) this.playerData.DM(invalidMembers.size() + " of the allies you invited could not join your Dungeon! (This means that they are either already in a Dungeon, or on Dungeon cooldown. Only the remaining " + (this.getMentions().size() - invalidMembers.size()) + " will be invited.");
+            List<PlayerDataQuery> others = this.getMentions().stream().filter(m -> !invalidMembers.contains(m)).map(ISnowflake::getId).map(PlayerDataQuery::new).toList();
 
             Dungeon dungeon = Dungeon.create(location, this.event, this.playerData, others);
 
