@@ -155,6 +155,9 @@ public class Dungeon
         final SplittableRandom random = new SplittableRandom();
         final DungeonPlayerContributions playerContributions = new DungeonPlayerContributions(this, this.contributions);
 
+        Map<DungeonPlayer, List<String>> lootContributionResults = new HashMap<>();
+        this.players.forEach(p -> Collections.synchronizedMap(lootContributionResults).put(p, new ArrayList<>()));
+
         //Loot Distribution
         List<LootItem> lootPool = new ArrayList<>(List.copyOf(this.reward.loot));
         while(lootPool.size() > 0)
@@ -163,9 +166,13 @@ public class Dungeon
             DungeonPlayer player = playerContributions.pullWeighted();
 
             player.data.addLootItem(loot.getLootID());
+            lootContributionResults.get(player).add(loot.getName());
 
             lootPool.remove(loot);
         }
+
+        Map<DungeonPlayer, List<String>> resourceContributionResults = new HashMap<>();
+        this.players.forEach(p -> Collections.synchronizedMap(resourceContributionResults).put(p, new ArrayList<>()));
 
         //Resource Distribution
         for(RawResource r : Arrays.stream(RawResource.values()).filter(r -> this.reward.resources.has(r)).toList())
@@ -174,19 +181,38 @@ public class Dungeon
 
             this.players.forEach(p -> {
                 int amount = (int)(total * playerContributions.getPercent(p));
-                if(amount > 0) p.data.addResource(r, amount);
+                if(amount > 0)
+                {
+                    p.data.addResource(r, amount);
+                    resourceContributionResults.get(p).add(Global.normalize(r.toString()) + "(" + amount + ")");
+                }
             });
         }
 
-        final String characterRewards = String.join("\n", contributionResults);
+        //Embed Reward Fields
+
+        String characterRewards = String.join("\n", contributionResults);
         final String description = "Level " + this.level + " Dungeon `" + this.location.getName() + "`\nCompletion: " + (int)(this.map.getCompletion() * 100) + "%";
+
+        final StringBuilder playerRewardsLoot = new StringBuilder();
+        for(Map.Entry<DungeonPlayer, List<String>> entry : lootContributionResults.entrySet().stream().filter(e -> !e.getValue().isEmpty()).toList())
+            playerRewardsLoot.append(entry.getKey().data.getUsername()).append(": ").append(String.join(", ", entry.getValue())).append("\n");
+
+        final StringBuilder playerRewardsResource = new StringBuilder();
+        for(Map.Entry<DungeonPlayer, List<String>> entry : resourceContributionResults.entrySet().stream().filter(e -> !e.getValue().isEmpty()).toList())
+            playerRewardsResource.append(entry.getKey().data.getUsername()).append(": ").append(String.join(", ", entry.getValue())).append("\n");
+
+        //Empty Checks
+        if(characterRewards.isEmpty()) characterRewards = "None";
+        if(playerRewardsLoot.isEmpty()) playerRewardsLoot.append("None");
+        if(playerRewardsResource.isEmpty()) playerRewardsResource.append("None");
 
         embed
                 .setTitle("Victory!")
                 .setDescription(description)
-                .addField("Character Rewards", characterRewards, false);
-
-        //TODO: Loot and Resource distributions (potentially by player contributions, not character based)
+                .addField("Character Rewards", characterRewards, false)
+                .addField("Player Rewards - Loot", playerRewardsLoot.toString(), false)
+                .addField("Player Rewards - Resources", playerRewardsResource.toString(), false);
 
         this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
