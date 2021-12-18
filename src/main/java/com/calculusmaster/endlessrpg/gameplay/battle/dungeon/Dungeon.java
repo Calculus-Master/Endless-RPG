@@ -130,6 +130,7 @@ public class Dungeon
         List<RPGCharacter> characters = new ArrayList<>();
         this.players.stream().map(dp -> dp.party).forEach(list -> Collections.synchronizedList(characters).addAll(list));
 
+        //Gold and XP Distribution
         List<String> contributionResults = new ArrayList<>();
         double contributionSum = this.contributions.scores.values().stream().mapToInt(i -> i).sum();
         for(RPGCharacter c : Collections.synchronizedList(characters))
@@ -149,6 +150,32 @@ public class Dungeon
 
             contributionResults.add("%s – Gold: %s, Experience: %s".formatted(c.getName(), shareGold, shareXP));
         }
+
+        final LinkedHashMap<String, Integer> playerScores = new LinkedHashMap<>();
+        characters.forEach(c -> Collections.synchronizedMap(playerScores).put(c.getOwnerID(), playerScores.getOrDefault(c.getOwnerID(), 0) + this.contributions.scores.get(c.getCharacterID())));
+
+        final Map<String, Integer> playerContributionPercent = new HashMap<>(); //Values are x%
+        int totalScore = playerScores.values().stream().mapToInt(s -> s).sum();
+        playerScores.forEach((ID, score) -> playerContributionPercent.put(ID, (int)(100 * ((double)score / totalScore))));
+
+        final SplittableRandom random = new SplittableRandom();
+        List<String> playerPool = new ArrayList<>();
+        playerContributionPercent.forEach((id, val) -> {for(int i = 0; i < val; i++) playerPool.add(id);});
+        Collections.shuffle(playerPool);
+
+        //Loot Distribution
+        List<LootItem> lootPool = new ArrayList<>(List.copyOf(this.reward.loot));
+        while(lootPool.size() > 0)
+        {
+            LootItem loot = lootPool.get(random.nextInt(lootPool.size()));
+            DungeonPlayer player = this.getPlayer(playerPool.get(random.nextInt(playerPool.size())));
+
+            player.data.addLootItem(loot.getLootID());
+
+            lootPool.remove(loot);
+        }
+
+        //Resource Distribution
 
         final String characterRewards = String.join("\n", contributionResults);
         final String description = "Level " + this.level + " Dungeon `" + this.location.getName() + "`\nCompletion: " + (int)(this.map.getCompletion() * 100) + "%";
@@ -341,6 +368,11 @@ public class Dungeon
     public boolean isValidLocation(Coordinate target)
     {
         return (target.row >= 0 && target.row < this.map.rows) && (target.column >= 0 && target.column < this.map.columns) && this.map.getRoom(target) != null;
+    }
+
+    private DungeonPlayer getPlayer(String ID)
+    {
+        return this.players.stream().filter(dp -> dp.data.getID().equals(ID)).findFirst().orElseThrow(() -> {throw new IllegalStateException("Couldn't find player of ID %s in Dungeon!".formatted(ID));});
     }
 
     public MessageReceivedEvent getEvent()
