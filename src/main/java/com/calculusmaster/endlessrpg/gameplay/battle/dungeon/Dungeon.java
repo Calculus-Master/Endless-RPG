@@ -9,6 +9,7 @@ import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
+import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -167,6 +168,15 @@ public class Dungeon
         }
 
         //Resource Distribution
+        for(RawResource r : Arrays.stream(RawResource.values()).filter(r -> this.reward.resources.has(r)).toList())
+        {
+            int total = this.reward.resources.get(r);
+
+            this.players.forEach(p -> {
+                int amount = (int)(total * playerContributions.getPercent(p));
+                if(amount > 0) p.data.addResource(r, amount);
+            });
+        }
 
         final String characterRewards = String.join("\n", contributionResults);
         final String description = "Level " + this.level + " Dungeon `" + this.location.getName() + "`\nCompletion: " + (int)(this.map.getCompletion() * 100) + "%";
@@ -507,6 +517,11 @@ public class Dungeon
             Collections.shuffle(playerPool);
 
             return playerPool.get(0);
+        }
+
+        public double getPercent(DungeonPlayer player)
+        {
+            return (double)(this.scores.get(player)) / this.scores.values().stream().mapToInt(i -> i).sum();
         }
     }
 
