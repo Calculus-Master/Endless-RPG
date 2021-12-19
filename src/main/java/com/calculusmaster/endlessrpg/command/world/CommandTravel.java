@@ -57,7 +57,7 @@ public class CommandTravel extends Command
             {
                 this.addTravelTime(l, visited, current);
 
-                this.response = "Your character started traveling to `" + l.getName() + "`! Time: " + this.formatTime(TRAVEL_TIME.get(this.player.getId()).getDelay(TimeUnit.SECONDS) + 1) + "!";
+                this.response = "Your character started traveling to `" + l.getName() + "` (" + this.formatTime(TRAVEL_TIME.get(this.player.getId()).getDelay(TimeUnit.SECONDS) + 1) + ")!";
                 //TODO: Location travel requirements (fight an enemy to gain access, RPGCharacterRequirements field in Location objects)
             }
             else this.response = "You cannot travel to this Location! You must be at a node connected to %s before you are able to travel there!".formatted(l.getName());
@@ -120,9 +120,10 @@ public class CommandTravel extends Command
 
     private String formatTime(long time)
     {
-        int seconds = (int)(time % 60);
-        int minutes = (int)(time / 60);
+        int hours = (int)(time / 3600);
+        int minutes = (int)((time % 3600) / 60);
+        int seconds = (int)((time % 3600) % 60);
 
-        return minutes + "M " + seconds + "S";
+        return hours + "H " + minutes + "M " + seconds + "S";
     }
 }
