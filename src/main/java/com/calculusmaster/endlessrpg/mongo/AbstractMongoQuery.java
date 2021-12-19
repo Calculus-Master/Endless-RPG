@@ -31,7 +31,7 @@ public abstract class AbstractMongoQuery
     {
         this.database.updateOne(this.query, update);
 
-        LoggerHelper.warn(this.getClass(), "Database Update: " + this.database.getNamespace().getCollectionName() + ", Update Query: " + update);
+        LoggerHelper.warn(this.getClass(), "Database Update: " + this.database.getNamespace().getCollectionName() + ", " + update);
 
         this.update();
     }
@@ -40,7 +40,7 @@ public abstract class AbstractMongoQuery
     {
         this.database.updateOne(this.query, Arrays.asList(updates));
 
-        LoggerHelper.warn(this.getClass(), "Database Update: " + this.database.getNamespace().getCollectionName() + ", Update Query: " + Arrays.stream(updates).map(Object::toString).collect(Collectors.joining(", ")));
+        LoggerHelper.warn(this.getClass(), "Database Update: " + this.database.getNamespace().getCollectionName() + ", " + Arrays.stream(updates).map(Object::toString).collect(Collectors.joining(" | ")));
 
         this.update();
     }
