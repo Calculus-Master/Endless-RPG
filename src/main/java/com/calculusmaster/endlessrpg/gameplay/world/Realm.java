@@ -270,12 +270,45 @@ public class Realm
         {
             for(Location l : list)
             {
-                if(!Arrays.asList(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON).contains(l.getType()) && !l.getName().contains(":star2:"))
+                if(!List.of(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON).contains(l.getType()) && !l.getName().contains(":star2:"))
                 {
                     int amount = new SplittableRandom().nextInt(1, 6);
                     for(int i = 0; i < amount; i++) l.getResources().set(RawResource.getRandom(), new SplittableRandom().nextInt(1, 4));
                 }
             }
+        }
+
+        //Set Location Levels to increase the further they are from the hub
+        int effectiveLength = columns.size() - 1; //Excludes the Final Kingdom
+        int thresholdHigh = effectiveLength - (int)(0.2 * effectiveLength); //Furthest % are High
+        int thresholdLow = 1 + (int)(effectiveLength * 0.4); //Closest % are Low
+
+        int[] thresholdHighLevels = {2, 4}; //Levels will be between these, inclusive
+        int[] thresholdLowLevels = {3, 5}; //Levels will be between these, inclusive (and negated)
+
+        final SplittableRandom random = new SplittableRandom();
+
+        List<LocationType> skippedLocations = List.of(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON, LocationType.TOWN);
+
+        for(int i = 0; i < columns.size(); i++)
+        {
+            if(i >= thresholdHigh)
+            {
+                for(Location low : columns.get(i))
+                {
+                    if(!skippedLocations.contains(low.getType()))
+                        low.setLevel(random.nextInt(thresholdHighLevels[0], thresholdHighLevels[1] + 1));
+                }
+            }
+            else if(i <= thresholdLow)
+            {
+                for(Location low : columns.get(i))
+                {
+                    if(!skippedLocations.contains(low.getType()))
+                        low.setLevel(random.nextInt(thresholdLowLevels[0], thresholdLowLevels[1] + 1) * -1);
+                }
+            }
+            //If the Location is between the thresholds, we use the randomly assigned level in the Location.create() method
         }
 
         //Create realm map
