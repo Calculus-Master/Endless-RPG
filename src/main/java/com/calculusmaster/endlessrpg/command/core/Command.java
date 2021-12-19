@@ -103,7 +103,7 @@ public abstract class Command
     {
         if(this.response.isEmpty() && this.embed == null) return;
 
-        if(!this.response.isEmpty()) this.event.getChannel().sendMessage(this.playerData.getMention() + ": " + this.response).queue();
+        if(!this.response.isEmpty()) this.event.getChannel().sendMessage(this.playerData.getMention() + "\n" + this.response).queue();
         else this.event.getChannel().sendMessageEmbeds(this.buildResponseEmbed()).queue();
     }
 
