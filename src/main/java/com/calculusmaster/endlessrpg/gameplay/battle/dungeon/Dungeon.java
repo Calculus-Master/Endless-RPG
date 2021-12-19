@@ -365,9 +365,12 @@ public class Dungeon
 
             if(this.isReady())
             {
-                this.sendEmbed(DungeonEmbed.START);
+                this.event.getChannel().sendMessage("You are entering `" + this.location.getName() + "`!" + this.players.stream().map(dp -> dp.data).map(PlayerDataQuery::getMention).collect(Collectors.joining(" "))).queue();
 
-                this.start();
+                Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+                    this.sendEmbed(DungeonEmbed.START);
+                    this.start();
+                }, 5, TimeUnit.SECONDS);
             }
         }
         else
