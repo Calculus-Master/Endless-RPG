@@ -73,7 +73,7 @@ public class Realm
         r.setName();
         r.createLocations();
         r.createRealmMap();
-        r.setTime(36);
+        r.setTime(24 * 7);
 
         return r;
     }
