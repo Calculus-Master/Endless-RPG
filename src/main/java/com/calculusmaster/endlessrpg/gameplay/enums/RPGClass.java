@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.calculusmaster.endlessrpg.gameplay.enums.ElementType.DARK;
+import static com.calculusmaster.endlessrpg.gameplay.enums.ElementType.LIGHT;
 import static com.calculusmaster.endlessrpg.gameplay.enums.Stat.*;
 
 public enum RPGClass
@@ -54,6 +55,12 @@ public enum RPGClass
             List.of(Modifier.of(ATTACK, 1.1f)),
             List.of(ElementalModifier.of(DARK, 1.2f)),
             List.of(ElementalModifier.of(DARK, 1.2f)),
+            new RPGCharacterRequirements()
+    ),
+    HOLY_KNIGHT("Holy Knight", "A standard melee combatant, led by the power of the light.",
+            List.of(Modifier.of(ATTACK, 1.05f), Modifier.of(DEFENSE, 1.05f)),
+            List.of(ElementalModifier.of(LIGHT, 1.2f)),
+            List.of(ElementalModifier.of(LIGHT, 1.2f)),
             new RPGCharacterRequirements()
     ),
     SCOUT("Scout", "A quick soldier with not many other talents.",
