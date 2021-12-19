@@ -6,6 +6,7 @@ import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.tasks.Achievement;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -68,6 +69,9 @@ public class CommandCreate extends Command
 
                 //Auto-Add to Party
                 this.playerData.addPartyCharacter(c.getCharacterID());
+
+                //Achievement
+                this.playerData.addAchievement(Achievement.CREATE_A_CHARACTER);
             }
 
             c.upload();

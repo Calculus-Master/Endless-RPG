@@ -4,6 +4,7 @@ import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.tasks.Achievement;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import com.calculusmaster.endlessrpg.util.Mongo;
@@ -33,7 +34,8 @@ public class PlayerDataQuery extends AbstractMongoQuery
                 .append("visited", List.of(Realm.CURRENT.getLocations().get(0).getID()))
                 .append("loot", new JSONArray())
                 .append("resources", new RPGRawResourceContainer().serialized())
-                .append("party", new JSONArray());
+                .append("party", new JSONArray())
+                .append("achievements", new JSONArray());
 
         Mongo.PlayerData.insertOne(data);
     }
@@ -225,5 +227,20 @@ public class PlayerDataQuery extends AbstractMongoQuery
     public void setParty(List<String> party)
     {
         this.update(Updates.set("party", party));
+    }
+
+    //key: "achievements"
+    public void addAchievement(Achievement achievement)
+    {
+        if(this.getAchievements().stream().noneMatch(s -> achievement.toString().equals(s)))
+        {
+            achievement.grant(this);
+            this.update(Updates.push("achievements", achievement));
+        }
+    }
+
+    public List<String> getAchievements()
+    {
+        return this.document.getList("achievements", String.class);
     }
 }
