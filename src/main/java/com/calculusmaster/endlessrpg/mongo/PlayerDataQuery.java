@@ -5,6 +5,7 @@ import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.tasks.Achievement;
+import com.calculusmaster.endlessrpg.gameplay.tasks.Quest;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import com.calculusmaster.endlessrpg.util.Mongo;
@@ -35,7 +36,8 @@ public class PlayerDataQuery extends AbstractMongoQuery
                 .append("loot", new JSONArray())
                 .append("resources", new RPGRawResourceContainer().serialized())
                 .append("party", new JSONArray())
-                .append("achievements", new JSONArray());
+                .append("achievements", new JSONArray())
+                .append("quests", new JSONArray());
 
         Mongo.PlayerData.insertOne(data);
     }
@@ -242,5 +244,26 @@ public class PlayerDataQuery extends AbstractMongoQuery
     public List<String> getAchievements()
     {
         return this.document.getList("achievements", String.class);
+    }
+
+    //key: "quests"
+    public List<String> getQuestIDs()
+    {
+        return this.document.getList("quests", String.class);
+    }
+
+    public List<Quest> getQuests()
+    {
+        return this.getQuestIDs().stream().map(Quest::build).toList();
+    }
+
+    public void addQuest(String questID)
+    {
+        this.update(Updates.push("quests", questID));
+    }
+
+    public void removeQuest(String questID)
+    {
+        this.update(Updates.pull("quests", questID));
     }
 }
