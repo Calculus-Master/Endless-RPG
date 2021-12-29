@@ -87,11 +87,6 @@ public class CoreMapGenerator
         System.out.printf("Boss Room: (%s, %s) (Distance: %s)%n", this.boss.row, this.boss.column, (int)(this.boss.distance(this.spawn)));
     }
 
-    public static void main(String[] args)
-    {
-        new CoreMapGenerator(10, 10).addBossRoom().print();
-    }
-
     //Returns the location of the Boss Room (the furthest away from spawn)
     private CoreMapGenerator addBossRoom()
     {
