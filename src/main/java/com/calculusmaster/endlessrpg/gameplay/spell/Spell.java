@@ -8,6 +8,7 @@ import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.SplittableRandom;
 
 public abstract class Spell
 {
@@ -19,6 +20,8 @@ public abstract class Spell
 
     protected int calculateDamage(RPGCharacter user, RPGCharacter target, Battle battle)
     {
+        final SplittableRandom r = new SplittableRandom();
+
         Weather weather = battle.getLocation().getWeather();
         Time time = battle.getLocation().getTime();
 
@@ -75,6 +78,12 @@ public abstract class Spell
                         elementalDEF *= 1.2;
                     }
 
+                    if(List.of(Weather.FOG).contains(weather))
+                    {
+                        elementalATK *= 1.2;
+                        elementalDEF *= 1.15;
+                    }
+
                     if(time.equals(Time.DAY))
                     {
                         elementalATK *= 1.02;
@@ -115,6 +124,9 @@ public abstract class Spell
 
         //Raw Attack and Defense
         damage += Math.max(0, attack - defense);
+
+        //Other Modifiers
+        if(weather.equals(Weather.FOG) && r.nextInt(100) < 25) damage *= (int)(damage * 0.75);
 
         return damage;
     }
