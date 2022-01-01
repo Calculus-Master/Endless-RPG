@@ -6,10 +6,10 @@ import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.room.DungeonRoom;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.util.Coordinate;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.util.Direction;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
-import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
-import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -636,13 +636,13 @@ public class Dungeon
         public int gold;
         public int xp;
         public List<LootItem> loot;
-        public RPGRawResourceContainer resources;
+        public RawResourceContainer resources;
 
         {
             this.gold = 0;
             this.xp = 0;
             this.loot = new ArrayList<>();
-            this.resources = new RPGRawResourceContainer();
+            this.resources = new RawResourceContainer();
         }
     }
 

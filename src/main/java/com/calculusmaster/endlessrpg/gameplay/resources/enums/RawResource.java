@@ -1,6 +1,7 @@
-package com.calculusmaster.endlessrpg.gameplay.world.skills;
+package com.calculusmaster.endlessrpg.gameplay.resources.enums;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.SplittableRandom;
 
 import static com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill.*;
 
-public enum RawResource
+public enum RawResource implements Resource
 {
     //Mining
     MINING_T1(MINING, 1, "Copper"),
@@ -100,11 +101,13 @@ public enum RawResource
         return this.skill;
     }
 
+    @Override
     public int getTier()
     {
         return this.tier;
     }
 
+    @Override
     public String getName()
     {
         return this.name.isEmpty() ? this.toString() : this.name; //TODO: Actual names

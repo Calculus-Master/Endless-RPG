@@ -3,10 +3,10 @@ package com.calculusmaster.endlessrpg.gameplay.world;
 import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyArchetype;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
-import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Time;
 import com.calculusmaster.endlessrpg.gameplay.enums.Weather;
+import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.calculusmaster.endlessrpg.util.helpers.IDHelper;
 import com.mongodb.client.model.Filters;
@@ -28,7 +28,7 @@ public class Location
     private Weather weather;
     private EnemyArchetype enemy;
     private int level;
-    private RPGRawResourceContainer resources;
+    private RawResourceContainer resources;
 
     private Location() {}
 
@@ -42,7 +42,7 @@ public class Location
         l.weather = Weather.getRandom();
         l.enemy = EnemyArchetype.RANDOM;
         l.level = switch(type) { case DUNGEON -> new SplittableRandom().nextInt(1, 4); case TOWN -> 0; default -> new SplittableRandom().nextInt(0, 6) - 3; };
-        l.resources = new RPGRawResourceContainer();
+        l.resources = new RawResourceContainer();
 
         return l;
     }
@@ -57,7 +57,7 @@ public class Location
         l.weather = Weather.CLEAR;
         l.enemy = EnemyArchetype.DEFAULT;
         l.level = 0;
-        l.resources = new RPGRawResourceContainer();
+        l.resources = new RawResourceContainer();
 
         return l;
     }
@@ -72,7 +72,7 @@ public class Location
         l.weather = Weather.CLEAR; //TODO: Harshest weather?
         l.enemy = EnemyArchetype.DEFAULT; //TODO: Special enemy type for Kingdoms?
         l.level = 10;
-        l.resources = new RPGRawResourceContainer();
+        l.resources = new RawResourceContainer();
 
         return l;
     }
@@ -89,7 +89,7 @@ public class Location
         l.weather = Weather.cast(data.getString("weather"));
         l.enemy = EnemyArchetype.cast(data.getString("enemy"));
         l.level = data.getInteger("level");
-        l.resources = new RPGRawResourceContainer(data.get("resources", Document.class));
+        l.resources = new RawResourceContainer(data.get("resources", Document.class));
 
         return l;
     }
@@ -184,7 +184,7 @@ public class Location
         this.level = level;
     }
 
-    public RPGRawResourceContainer getResources()
+    public RawResourceContainer getResources()
     {
         return this.resources;
     }

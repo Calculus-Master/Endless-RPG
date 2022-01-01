@@ -1,8 +1,8 @@
 package com.calculusmaster.endlessrpg.gameplay.player;
 
-import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
-import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
+import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
 
@@ -15,7 +15,7 @@ public class TradeOffer
 
     private int gold;
     private List<String> loot;
-    private RPGRawResourceContainer resources;
+    private RawResourceContainer resources;
 
     public TradeOffer(PlayerDataQuery player)
     {
@@ -23,7 +23,7 @@ public class TradeOffer
 
         this.gold = 0;
         this.loot = new ArrayList<>();
-        this.resources = new RPGRawResourceContainer();
+        this.resources = new RawResourceContainer();
     }
 
     public void clear()
@@ -103,10 +103,10 @@ public class TradeOffer
 
     public void clearResources()
     {
-        this.resources = new RPGRawResourceContainer();
+        this.resources = new RawResourceContainer();
     }
 
-    public RPGRawResourceContainer getResources()
+    public RawResourceContainer getResources()
     {
         return this.resources;
     }

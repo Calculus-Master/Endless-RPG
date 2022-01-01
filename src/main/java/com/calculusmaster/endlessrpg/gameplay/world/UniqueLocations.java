@@ -3,7 +3,7 @@ package com.calculusmaster.endlessrpg.gameplay.world;
 import com.calculusmaster.endlessrpg.gameplay.battle.enemy.EnemyArchetype;
 import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Weather;
-import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 
 import java.util.ArrayList;
 import java.util.List;

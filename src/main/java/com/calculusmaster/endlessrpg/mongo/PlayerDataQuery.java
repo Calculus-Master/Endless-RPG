@@ -2,12 +2,12 @@ package com.calculusmaster.endlessrpg.mongo;
 
 import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
-import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.gameplay.tasks.Achievement;
 import com.calculusmaster.endlessrpg.gameplay.tasks.Quest;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
-import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
@@ -34,7 +34,7 @@ public class PlayerDataQuery extends AbstractMongoQuery
                 .append("location", Realm.CURRENT.getLocations().get(0).getID())
                 .append("visited", List.of(Realm.CURRENT.getLocations().get(0).getID()))
                 .append("loot", new JSONArray())
-                .append("resources", new RPGRawResourceContainer().serialized())
+                .append("resources", new RawResourceContainer().serialized())
                 .append("party", new JSONArray())
                 .append("achievements", new JSONArray())
                 .append("quests", new JSONArray());
@@ -184,14 +184,14 @@ public class PlayerDataQuery extends AbstractMongoQuery
     }
 
     //key: "resources"
-    public RPGRawResourceContainer getResources()
+    public RawResourceContainer getResources()
     {
-        return new RPGRawResourceContainer(this.document.get("resources", Document.class));
+        return new RawResourceContainer(this.document.get("resources", Document.class));
     }
 
     public void addResource(RawResource r, int amount)
     {
-        RPGRawResourceContainer updated = this.getResources();
+        RawResourceContainer updated = this.getResources();
         updated.increase(r, amount);
 
         this.update(Updates.set("resources", updated.serialized()));
@@ -199,7 +199,7 @@ public class PlayerDataQuery extends AbstractMongoQuery
 
     public void removeResource(RawResource r, int amount)
     {
-        RPGRawResourceContainer updated = this.getResources();
+        RawResourceContainer updated = this.getResources();
         updated.decrease(r, amount);
 
         this.update(Updates.set("resources", updated.serialized()));

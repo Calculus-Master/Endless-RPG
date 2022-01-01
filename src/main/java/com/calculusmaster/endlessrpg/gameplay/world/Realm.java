@@ -3,7 +3,7 @@ package com.calculusmaster.endlessrpg.gameplay.world;
 import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Weather;
-import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.calculusmaster.endlessrpg.util.helpers.IDHelper;

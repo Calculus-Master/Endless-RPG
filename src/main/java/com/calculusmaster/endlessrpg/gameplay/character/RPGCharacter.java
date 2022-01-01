@@ -7,10 +7,11 @@ import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.gameplay.spell.Spell;
 import com.calculusmaster.endlessrpg.gameplay.spell.SpellData;
 import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
-import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Mongo;
@@ -42,7 +43,7 @@ public class RPGCharacter
     private List<String> spells;
     private RPGElementalContainer coreElementalDamage;
     private RPGElementalContainer coreElementalDefense;
-    private RPGRawResourceContainer rawResources;
+    private RawResourceContainer rawResources;
     private int gold;
     private List<String> loot;
 
@@ -421,19 +422,19 @@ public class RPGCharacter
     }
 
     //Raw Resources
-    public RPGRawResourceContainer getRawResources()
+    public RawResourceContainer getRawResources()
     {
         return this.rawResources;
     }
 
     public void setRawResources()
     {
-        this.rawResources = new RPGRawResourceContainer();
+        this.rawResources = new RawResourceContainer();
     }
 
     public void setRawResources(Document resources)
     {
-        this.rawResources = new RPGRawResourceContainer(resources);
+        this.rawResources = new RawResourceContainer(resources);
     }
 
     //Core Elemental Defense

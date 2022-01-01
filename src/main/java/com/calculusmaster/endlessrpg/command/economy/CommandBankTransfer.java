@@ -2,9 +2,9 @@ package com.calculusmaster.endlessrpg.command.economy;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
-import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
+import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
-import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -137,7 +137,7 @@ public class CommandBankTransfer extends Command
         else if(resources)
         {
             boolean all = this.msg[2].equals("all");
-            RPGRawResourceContainer transfer;
+            RawResourceContainer transfer;
 
             if(deposit)
             {

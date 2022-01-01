@@ -1,8 +1,8 @@
 package com.calculusmaster.endlessrpg.gameplay.tasks;
 
-import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
-import com.calculusmaster.endlessrpg.gameplay.world.skills.RawResource;
+import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 
 import java.util.ArrayList;
@@ -50,12 +50,12 @@ public enum Achievement
     {
         int gold;
         List<LootItem> loot;
-        RPGRawResourceContainer resources;
+        RawResourceContainer resources;
 
         {
             this.gold = 0;
             this.loot = new ArrayList<>();
-            this.resources = new RPGRawResourceContainer();
+            this.resources = new RawResourceContainer();
         }
 
         String summary()
@@ -83,7 +83,7 @@ public enum Achievement
             return this;
         }
 
-        AchievementReward withResources(Supplier<RPGRawResourceContainer> resources)
+        AchievementReward withResources(Supplier<RawResourceContainer> resources)
         {
             this.resources = resources.get();
             return this;

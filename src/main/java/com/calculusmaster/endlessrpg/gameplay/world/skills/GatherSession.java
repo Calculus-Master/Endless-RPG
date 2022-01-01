@@ -1,8 +1,9 @@
 package com.calculusmaster.endlessrpg.gameplay.world.skills;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
-import com.calculusmaster.endlessrpg.gameplay.character.RPGRawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
+import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
@@ -47,9 +48,9 @@ public class GatherSession
 
     private void complete()
     {
-        RPGRawResourceContainer output = this.location.getResources();
+        RawResourceContainer output = this.location.getResources();
 
-        RPGRawResourceContainer resourceYield = new RPGRawResourceContainer();
+        RawResourceContainer resourceYield = new RawResourceContainer();
         int skillExp = 0;
 
         for(RawResource r : RawResource.values())
