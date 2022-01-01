@@ -61,22 +61,6 @@ public class Battle
         return b;
     }
 
-    public static Battle createDungeon(UserPlayer player, AIPlayer enemy, Location location)
-    {
-        Battle b = new Battle();
-
-        player.team.forEach(c -> c.setOwner(player));
-
-        b.setBattleType(BattleType.PVE);
-        b.createPlayers(player, enemy);
-        b.setLocation(location);
-        b.setup();
-
-        b.isDungeonBattle = true;
-        BATTLES.add(b);
-        return b;
-    }
-
     public static Battle createDungeon(List<UserPlayer> players, AIPlayer enemy, Location location)
     {
         Battle b = new Battle();
@@ -122,14 +106,12 @@ public class Battle
 
     public static Battle instance(String ID)
     {
-        return Battle.isInBattle(ID) ? BATTLES.stream().filter(b -> b.getPlayers().stream().anyMatch(p -> p.ID.equals(ID))).collect(Collectors.toList()).get(0) : null;
+        return Battle.isInBattle(ID) ? BATTLES.stream().filter(b -> b.getPlayers().stream().anyMatch(p -> p.ID.equals(ID))).findFirst().orElseThrow() : null;
     }
 
     public static void delete(String ID)
     {
-        int index = -1;
-        for(int i = 0; i < BATTLES.size(); i++) if(BATTLES.get(i).getPlayers().stream().anyMatch(p -> p.ID.equals(ID))) index = i;
-        if(index != -1) BATTLES.remove(index);
+        BATTLES.removeIf(b -> b.getPlayers().stream().anyMatch(p -> p.ID.equals(ID)));
     }
 
     //Battle
@@ -143,17 +125,17 @@ public class Battle
         this.turnResults.add(spellResult);
 
         //On defeat
-        if(this.battlers[target].isDefeated())
-        {
-            if(this.isDungeonBattle && !this.battlers[this.turn].isAI())
-                Dungeon
-                        .instance(this.battlers[this.turn].getOwnerID())
-                        .contributions()
-                        .increase(this.battlers[this.turn].getCharacterID(), 1);
-
-        }
+        if(this.battlers[target].isDefeated()) this.onCharacterDefeated();
 
         this.advanceTurn();
+    }
+
+    private void onCharacterDefeated()
+    {
+        if(this.isDungeonBattle && !this.battlers[this.turn].isAI())
+            Dungeon.instance(this.battlers[this.turn].getOwnerID())
+                    .contributions()
+                    .increase(this.battlers[this.turn].getCharacterID(), 1);
     }
 
     //Embeds
