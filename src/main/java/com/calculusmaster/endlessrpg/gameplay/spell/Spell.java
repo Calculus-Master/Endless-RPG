@@ -52,6 +52,9 @@ public abstract class Spell
             int equipmentATK = userEquipmentED.get(element);
             int equipmentDEF = targetEquipmentED.get(element);
 
+            //If neither Character has Elemental ATK nor DEF, just skip this element
+            if(equipmentATK == 0 && equipmentDEF == 0) continue;
+
             //Core - Percent of Attack/Defense
             double coreATK = user.getCoreElementalDamage().percent(element);
             double coreDEF = target.getCoreElementalDefense().percent(element);
