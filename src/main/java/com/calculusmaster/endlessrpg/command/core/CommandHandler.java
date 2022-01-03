@@ -116,6 +116,9 @@ public class CommandHandler
         register("components")
                 .setCommand(CommandComponents::new);
 
+        register("craft")
+                .setCommand(CommandCraft::new);
+
         register("dev")
                 .setCommand(CommandDeveloper::new);
     }

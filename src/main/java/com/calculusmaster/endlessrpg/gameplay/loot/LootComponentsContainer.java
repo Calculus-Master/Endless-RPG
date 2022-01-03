@@ -44,6 +44,6 @@ public class LootComponentsContainer
 
     public String getOverview()
     {
-        return this.components.keySet().stream().map(l -> l.getName() + " (Material Amount: " + l.getMaterialAmount() + ") – " + this.components.get(l)).collect(Collectors.joining("\n"));
+        return this.components.keySet().stream().map(l -> l.getName() + " (Material Amount: " + l.getMaterialAmount() + ", Cost: " + l.getGoldCost() + " Gold) – " + this.components.get(l)).collect(Collectors.joining("\n"));
     }
 }

@@ -196,7 +196,7 @@ public class RPGCharacter
 
     public void updateResources()
     {
-        this.update(Updates.set("resources", this.resources.serialized()));
+        this.update(Updates.set("resources", "INTERNAL_TEMP"), Updates.set("resources", this.resources.serialized()));
     }
 
     public void updateGold()

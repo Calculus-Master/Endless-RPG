@@ -141,7 +141,7 @@ public class CommandBankTransfer extends Command
 
             if(deposit)
             {
-                transfer = active.getResources();
+                transfer = RPGResourceContainer.copyOf(active.getResources());
 
                 if(transfer.isEmpty()) this.response = active.getName() + " does not have any resources!";
                 else if(all)
@@ -175,7 +175,7 @@ public class CommandBankTransfer extends Command
             }
             else if(withdraw)
             {
-                transfer = this.playerData.getResources();
+                transfer = RPGResourceContainer.copyOf(this.playerData.getResources());
 
                 if(transfer.isEmpty()) this.response = "You do not have any resources!";
                 else if(all)

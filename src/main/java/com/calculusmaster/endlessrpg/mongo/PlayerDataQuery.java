@@ -195,7 +195,7 @@ public class PlayerDataQuery extends AbstractMongoQuery
         RPGResourceContainer updated = this.getResources();
         updated.increase(r, amount);
 
-        this.update(Updates.set("resources", updated.serialized()));
+        this.update(Updates.set("resources", "INTERNAL_TEMP"), Updates.set("resources", updated.serialized()));
     }
 
     public void removeResource(Resource r, int amount)
@@ -238,7 +238,7 @@ public class PlayerDataQuery extends AbstractMongoQuery
         if(this.getAchievements().stream().noneMatch(s -> achievement.toString().equals(s)))
         {
             achievement.grant(this);
-            this.update(Updates.push("achievements", achievement));
+            this.update(Updates.push("achievements", achievement.toString()));
         }
     }
 

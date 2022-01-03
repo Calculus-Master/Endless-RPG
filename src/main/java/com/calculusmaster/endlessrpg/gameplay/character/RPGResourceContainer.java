@@ -70,4 +70,11 @@ public class RPGResourceContainer
     {
         return this.raw.isEmpty() && this.refined.isEmpty();
     }
+
+    //Copy
+
+    public static RPGResourceContainer copyOf(RPGResourceContainer other)
+    {
+        return new RPGResourceContainer(other.serialized());
+    }
 }

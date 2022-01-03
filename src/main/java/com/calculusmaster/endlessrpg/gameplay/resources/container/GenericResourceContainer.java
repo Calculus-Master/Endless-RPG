@@ -1,5 +1,6 @@
 package com.calculusmaster.endlessrpg.gameplay.resources.container;
 
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.gameplay.resources.enums.Resource;
 import org.bson.Document;
 
@@ -27,7 +28,7 @@ public class GenericResourceContainer
 
     public Document serialized()
     {
-        Document data = new Document();
+        Document data = new Document("type", this.values[0] instanceof RawResource ? "raw" : "refined");
         Arrays.stream(this.values).filter(this::has).forEach(resource -> data.append(resource.toString(), this.get(resource)));
         return data;
     }
@@ -50,7 +51,7 @@ public class GenericResourceContainer
 
     public boolean has(Resource r)
     {
-        return this.get(r) != 0;
+        return this.resourceValues.containsKey(r) && this.get(r) != 0;
     }
 
     public String getFullOverview()
@@ -68,5 +69,14 @@ public class GenericResourceContainer
     public int get(Resource r)
     {
         return this.resourceValues.get(r);
+    }
+
+    public static GenericResourceContainer copyOf(GenericResourceContainer other)
+    {
+        GenericResourceContainer out = new GenericResourceContainer(other.values);
+
+        Arrays.stream(other.values).forEach(resource -> out.increase(resource, other.get(resource)));
+
+        return out;
     }
 }
