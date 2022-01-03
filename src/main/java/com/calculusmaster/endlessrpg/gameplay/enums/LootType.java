@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-import static com.calculusmaster.endlessrpg.gameplay.enums.LootComponent.*;
+import static com.calculusmaster.endlessrpg.gameplay.enums.LootComponentType.*;
 
 public enum LootType
 {

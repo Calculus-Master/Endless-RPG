@@ -25,4 +25,5 @@ public class Mongo
     public static final MongoCollection<Document> LocationData = EndlessRPGDB.getCollection("LocationData");
     public static final MongoCollection<Document> RealmData = EndlessRPGDB.getCollection("RealmData");
     public static final MongoCollection<Document> QuestData = EndlessRPGDB.getCollection("QuestData");
+    public static final MongoCollection<Document> ComponentData = EndlessRPGDB.getCollection("ComponentData");
 }

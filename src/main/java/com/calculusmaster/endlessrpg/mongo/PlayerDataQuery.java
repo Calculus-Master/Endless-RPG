@@ -37,7 +37,8 @@ public class PlayerDataQuery extends AbstractMongoQuery
                 .append("resources", new RPGResourceContainer().serialized())
                 .append("party", new JSONArray())
                 .append("achievements", new JSONArray())
-                .append("quests", new JSONArray());
+                .append("quests", new JSONArray())
+                .append("components", new JSONArray());
 
         Mongo.PlayerData.insertOne(data);
     }
@@ -265,5 +266,21 @@ public class PlayerDataQuery extends AbstractMongoQuery
     public void removeQuest(String questID)
     {
         this.update(Updates.pull("quests", questID));
+    }
+
+    //key: "components"
+    public List<String> getComponents()
+    {
+        return this.document.getList("components", String.class);
+    }
+
+    public void addComponent(String componentID)
+    {
+        this.update(Updates.push("components", componentID));
+    }
+
+    public void removeComponent(String componentID)
+    {
+        this.update(Updates.pull("components", componentID));
     }
 }

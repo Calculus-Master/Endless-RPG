@@ -3,9 +3,7 @@ package com.calculusmaster.endlessrpg.command.core;
 import com.calculusmaster.endlessrpg.command.activity.*;
 import com.calculusmaster.endlessrpg.command.character.*;
 import com.calculusmaster.endlessrpg.command.economy.*;
-import com.calculusmaster.endlessrpg.command.loot.CommandDelete;
-import com.calculusmaster.endlessrpg.command.loot.CommandInventory;
-import com.calculusmaster.endlessrpg.command.loot.CommandLootInfo;
+import com.calculusmaster.endlessrpg.command.loot.*;
 import com.calculusmaster.endlessrpg.command.misc.CommandDeveloper;
 import com.calculusmaster.endlessrpg.command.spell.CommandSpellInfo;
 import com.calculusmaster.endlessrpg.command.spell.CommandSpells;
@@ -111,6 +109,12 @@ public class CommandHandler
 
         register("quests", "quest")
                 .setCommand(CommandQuests::new);
+
+        register("craftinfo", "ci", "recipe")
+                .setCommand(CommandCraftInfo::new);
+
+        register("components")
+                .setCommand(CommandComponents::new);
 
         register("dev")
                 .setCommand(CommandDeveloper::new);
