@@ -30,7 +30,8 @@ public class CommandBank extends Command
         this.embed
                 .setTitle(this.player.getName() + "'s Bank")
                 .addField("Gold", "**" + this.playerData.getGold() + "**", false)
-                .addField("Resources", this.playerData.getResources().getFullOverview(), false)
+                .addField("Raw Resources", this.playerData.getResources().raw().getFullOverview(), false)
+                .addField("Refined Resources", this.playerData.getResources().refined().getFullOverview(), false)
                 .addField("Loot", loot + "\n*Showing %s to %s (Total: %s)*".formatted(start + 1, end, this.playerData.getLoot().size()), false)
                 .setFooter("Deposit and Withdraw Gold, Resources, and Loot from your Bank using the r!deposit and r!withdraw commands!");
 

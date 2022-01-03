@@ -24,4 +24,10 @@ public enum RefinedResource implements Resource
     {
         return this.tier;
     }
+
+    public static RefinedResource cast(String input)
+    {
+        for(RefinedResource r : RefinedResource.values()) if(r.toString().equalsIgnoreCase(input) || (!r.getName().isEmpty() && r.getName().equalsIgnoreCase(input))) return r;
+        return null;
+    }
 }

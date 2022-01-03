@@ -2,8 +2,8 @@ package com.calculusmaster.endlessrpg.command.economy;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
-import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
-import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
+import com.calculusmaster.endlessrpg.gameplay.character.RPGResourceContainer;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.Resource;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -32,7 +32,7 @@ public class CommandBankTransfer extends Command
 
         boolean gold = this.msg.length == 3 && List.of("gold", "g").contains(this.msg[1]) && (this.isNumericAll(2) || this.msg[2].equals("all"));
         boolean loot = this.msg.length >= 3 && List.of("loot", "l").contains(this.msg[1]) && (this.isNumericAll(2) || this.msg[2].equals("all"));
-        boolean resources = this.msg.length >= 3 && List.of("resources", "res", "r").contains(this.msg[1]) && (this.msg[2].equals("all") || (this.msg.length == 4 && RawResource.cast(this.msg[2]) != null) && this.isNumeric(3));
+        boolean resources = this.msg.length >= 3 && List.of("resources", "res", "r").contains(this.msg[1]) && (this.msg[2].equals("all") || (this.msg.length >= 4 && Resource.cast(this.msgMultiWordContent(3)) != null) && this.isNumeric(2));
 
         RPGCharacter active = this.playerData.getActiveCharacter();
 
@@ -137,41 +137,37 @@ public class CommandBankTransfer extends Command
         else if(resources)
         {
             boolean all = this.msg[2].equals("all");
-            RawResourceContainer transfer;
+            RPGResourceContainer transfer;
 
             if(deposit)
             {
-                transfer = active.getRawResources();
+                transfer = active.getResources();
 
-                if(transfer.isEmpty()) this.response = active.getName() + " does not have any Raw Resources!";
+                if(transfer.isEmpty()) this.response = active.getName() + " does not have any resources!";
                 else if(all)
                 {
-                    for(RawResource r : RawResource.values())
-                    {
-                        if(transfer.has(r))
-                        {
-                            active.getRawResources().decrease(r, transfer.get(r));
-                            this.playerData.addResource(r, transfer.get(r));
-                        }
-                    }
+                    Resource.all().stream().filter(transfer::has).forEach(resource -> {
+                        active.getResources().decrease(resource, transfer.get(resource));
+                        this.playerData.addResource(resource, transfer.get(resource));
+                    });
 
-                    active.updateRawResources();
+                    active.updateResources();
 
-                    this.response = "Successfully deposited all of " + active.getName() + "'s Raw Resources into your Bank!";
+                    this.response = "Successfully deposited all of " + active.getName() + "'s resources into your Bank!";
                 }
                 else
                 {
-                    RawResource r = Objects.requireNonNull(RawResource.cast(this.msg[2]));
-                    int amount = this.getInt(3);
+                    int amount = this.getInt(2);
+                    Resource r = Objects.requireNonNull(Resource.cast(this.msgMultiWordContent(3)));
 
                     if(!transfer.has(r)) this.response = active.getName() + " does not have any `" + r.getName() + "`!";
                     else if(transfer.get(r) < amount) this.response = active.getName() + " only has " + transfer.get(r) + " `" + r.getName() + "`!";
                     else
                     {
-                        active.getRawResources().decrease(r, amount);
+                        active.getResources().decrease(r, amount);
                         this.playerData.addResource(r, amount);
 
-                        active.updateRawResources();
+                        active.updateResources();
 
                         this.response = "Successfully deposited " + amount + " `" + r.getName() + "` into your Bank!";
                     }
@@ -181,35 +177,31 @@ public class CommandBankTransfer extends Command
             {
                 transfer = this.playerData.getResources();
 
-                if(transfer.isEmpty()) this.response = "You do not have any Raw Resources!";
+                if(transfer.isEmpty()) this.response = "You do not have any resources!";
                 else if(all)
                 {
-                    for(RawResource r : RawResource.values())
-                    {
-                        if(transfer.has(r))
-                        {
-                            active.getRawResources().increase(r, transfer.get(r));
-                            this.playerData.removeResource(r, transfer.get(r));
-                        }
-                    }
+                    Resource.all().stream().filter(transfer::has).forEach(resource -> {
+                        active.getResources().increase(resource, transfer.get(resource));
+                        this.playerData.removeResource(resource, transfer.get(resource));
+                    });
 
-                    active.updateRawResources();
+                    active.updateResources();
 
-                    this.response = "Successfully withdrew all Raw Resources from your Bank!";
+                    this.response = "Successfully withdrew all resources from your Bank!";
                 }
                 else
                 {
-                    RawResource r = Objects.requireNonNull(RawResource.cast(this.msg[2]));
-                    int amount = this.getInt(3);
+                    int amount = this.getInt(2);
+                    Resource r = Objects.requireNonNull(Resource.cast(this.msgMultiWordContent(3)));
 
                     if(!transfer.has(r)) this.response = "You do not have any `" + r.getName() + "`!";
                     else if(transfer.get(r) < amount) this.response = "You only have " + transfer.get(r) + " `" + r.getName() + "`!";
                     else
                     {
-                        active.getRawResources().increase(r, amount);
+                        active.getResources().increase(r, amount);
                         this.playerData.removeResource(r, amount);
 
-                        active.updateRawResources();
+                        active.updateResources();
 
                         this.response = "Successfully withdrew " + amount + " `" + r.getName() + "` from your Bank!";
                     }

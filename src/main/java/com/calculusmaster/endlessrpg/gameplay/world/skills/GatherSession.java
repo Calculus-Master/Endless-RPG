@@ -48,6 +48,7 @@ public class GatherSession
 
     private void complete()
     {
+        final SplittableRandom random = new SplittableRandom();
         RawResourceContainer output = this.location.getResources();
 
         RawResourceContainer resourceYield = new RawResourceContainer();
@@ -77,7 +78,7 @@ public class GatherSession
                 int maxYield = output.get(r);
                 int actualYield = 0;
 
-                for(int i = 0; i < maxYield; i++) if(new SplittableRandom().nextInt(100) < accuracy) actualYield++;
+                for(int i = 0; i < maxYield; i++) if(random.nextInt(100) < accuracy) actualYield++;
 
                 if(
                         this.skill.equals(GatheringSkill.MINING) && this.character.getRPGClass().equals(RPGClass.ADEPT_MINER)
@@ -89,11 +90,11 @@ public class GatherSession
                     actualYield *= 1.3;
 
                 resourceYield.increase(r, actualYield);
-                skillExp += new SplittableRandom().nextInt((int)(0.9 * r.getExp()), (int)(1.1 * r.getExp())) * this.character.getSkillLevel(this.skill);
+                skillExp += random.nextInt((int)(0.9 * r.getExp()), (int)(1.1 * r.getExp())) * this.character.getSkillLevel(this.skill);
             }
         }
 
-        for(RawResource r : RawResource.values()) if(resourceYield.has(r)) this.character.getRawResources().increase(r, resourceYield.get(r));
+        for(RawResource r : RawResource.values()) if(resourceYield.has(r)) this.character.getResources().increase(r, resourceYield.get(r));
         if(skillExp != 0) this.character.addSkillExp(this.skill, skillExp);
 
         this.character.completeUpdate();

@@ -2,9 +2,9 @@ package com.calculusmaster.endlessrpg.mongo;
 
 import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+import com.calculusmaster.endlessrpg.gameplay.character.RPGResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
-import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
-import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.Resource;
 import com.calculusmaster.endlessrpg.gameplay.tasks.Achievement;
 import com.calculusmaster.endlessrpg.gameplay.tasks.Quest;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
@@ -34,7 +34,7 @@ public class PlayerDataQuery extends AbstractMongoQuery
                 .append("location", Realm.CURRENT.getLocations().get(0).getID())
                 .append("visited", List.of(Realm.CURRENT.getLocations().get(0).getID()))
                 .append("loot", new JSONArray())
-                .append("resources", new RawResourceContainer().serialized())
+                .append("resources", new RPGResourceContainer().serialized())
                 .append("party", new JSONArray())
                 .append("achievements", new JSONArray())
                 .append("quests", new JSONArray());
@@ -184,22 +184,22 @@ public class PlayerDataQuery extends AbstractMongoQuery
     }
 
     //key: "resources"
-    public RawResourceContainer getResources()
+    public RPGResourceContainer getResources()
     {
-        return new RawResourceContainer(this.document.get("resources", Document.class));
+        return new RPGResourceContainer(this.document.get("resources", Document.class));
     }
 
-    public void addResource(RawResource r, int amount)
+    public void addResource(Resource r, int amount)
     {
-        RawResourceContainer updated = this.getResources();
+        RPGResourceContainer updated = this.getResources();
         updated.increase(r, amount);
 
         this.update(Updates.set("resources", updated.serialized()));
     }
 
-    public void removeResource(RawResource r, int amount)
+    public void removeResource(Resource r, int amount)
     {
-        RawResourceContainer updated = this.getResources();
+        RPGResourceContainer updated = this.getResources();
         updated.decrease(r, amount);
 
         this.update(Updates.set("resources", updated.serialized()));

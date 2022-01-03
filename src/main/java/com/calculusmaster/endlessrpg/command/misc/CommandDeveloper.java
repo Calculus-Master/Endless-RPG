@@ -108,8 +108,8 @@ public class CommandDeveloper extends Command
                     int amount = this.msg.length == 5 ? this.getInt(4) : 1;
 
                     RPGCharacter active = target.getActiveCharacter();
-                    active.getRawResources().increase(RawResource.getResource(s, tier), amount);
-                    active.updateRawResources();
+                    active.getResources().increase(RawResource.getResource(s, tier), amount);
+                    active.updateResources();
                 }
                 case "cycleweather" -> Realm.cycleWeather();
                 case "resetshops" -> LocationShop.createShops();

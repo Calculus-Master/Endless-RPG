@@ -7,7 +7,6 @@ import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
-import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.gameplay.spell.Spell;
 import com.calculusmaster.endlessrpg.gameplay.spell.SpellData;
@@ -43,7 +42,7 @@ public class RPGCharacter
     private List<String> spells;
     private RPGElementalContainer coreElementalDamage;
     private RPGElementalContainer coreElementalDefense;
-    private RawResourceContainer rawResources;
+    private RPGResourceContainer resources;
     private int gold;
     private List<String> loot;
 
@@ -73,7 +72,7 @@ public class RPGCharacter
         c.setSpells();
         c.setCoreElementalDamage();
         c.setCoreElementalDefense();
-        c.setRawResources();
+        c.setResources();
         c.setGold();
         c.setLoot();
 
@@ -98,7 +97,7 @@ public class RPGCharacter
         c.setSpells(data.getList("spells", String.class));
         c.setCoreElementalDamage(data.get("coreElementalDamage", Document.class));
         c.setCoreElementalDefense(data.get("coreElementalDefense", Document.class));
-        c.setRawResources(data.get("rawResources", Document.class));
+        c.setResources(data.get("resources", Document.class));
         c.setGold(data.getInteger("gold"));
         c.setLoot(data.getList("loot", String.class));
 
@@ -137,7 +136,7 @@ public class RPGCharacter
                 .append("spells", this.spells)
                 .append("coreElementalDamage", this.coreElementalDamage.serialized())
                 .append("coreElementalDefense", this.coreElementalDefense.serialized())
-                .append("rawResources", this.rawResources.serialized())
+                .append("resources", this.resources.serialized())
                 .append("gold", this.gold)
                 .append("loot", this.loot);
 
@@ -195,9 +194,9 @@ public class RPGCharacter
         this.update(Updates.set("coreElementalDefense", this.coreElementalDefense.serialized()));
     }
 
-    public void updateRawResources()
+    public void updateResources()
     {
-        this.update(Updates.set("rawResources", this.rawResources.serialized()));
+        this.update(Updates.set("resources", this.resources.serialized()));
     }
 
     public void updateGold()
@@ -324,15 +323,15 @@ public class RPGCharacter
 
                 for(RawResource r : RawResource.values())
                 {
-                    if(this.rawResources.has(r))
+                    if(this.resources.has(r))
                     {
-                        int lostAmount = new SplittableRandom().nextInt((int)(this.rawResources.get(r) * 0.1), (int)(this.rawResources.get(r) * 0.5));
+                        int lostAmount = new SplittableRandom().nextInt((int)(this.resources.get(r) * 0.1), (int)(this.resources.get(r) * 0.5));
                         lostResourceCount += lostAmount;
-                        this.rawResources.decrease(r, lostAmount);
+                        this.resources.decrease(r, lostAmount);
                     }
                 }
 
-                if(lostResourceCount > 0) this.updateRawResources();
+                if(lostResourceCount > 0) this.updateResources();
 
                 final String lostSummary = this.getName() + " was defeated and lost %s Gold, %s Loot Items, and %s Resources!".formatted(lostGold, lostLoot.size(), lostResourceCount);
                 Mongo.PlayerData.find().forEach(d -> {
@@ -422,19 +421,19 @@ public class RPGCharacter
     }
 
     //Raw Resources
-    public RawResourceContainer getRawResources()
+    public RPGResourceContainer getResources()
     {
-        return this.rawResources;
+        return this.resources;
     }
 
-    public void setRawResources()
+    public void setResources()
     {
-        this.rawResources = new RawResourceContainer();
+        this.resources = new RPGResourceContainer();
     }
 
-    public void setRawResources(Document resources)
+    public void setResources(Document resources)
     {
-        this.rawResources = new RawResourceContainer(resources);
+        this.resources = new RPGResourceContainer(resources);
     }
 
     //Core Elemental Defense
