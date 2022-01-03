@@ -119,6 +119,9 @@ public class CommandHandler
         register("craft")
                 .setCommand(CommandCraft::new);
 
+        register("componentinfo", "compinfo", "componenti")
+                .setCommand(CommandComponentInfo::new);
+
         register("dev")
                 .setCommand(CommandDeveloper::new);
     }
