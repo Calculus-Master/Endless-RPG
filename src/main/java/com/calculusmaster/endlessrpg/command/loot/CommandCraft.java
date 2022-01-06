@@ -6,9 +6,8 @@ import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootComponentType;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootComponent;
 import com.calculusmaster.endlessrpg.gameplay.resources.enums.Resource;
+import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-
-import java.util.concurrent.Executors;
 
 public class CommandCraft extends Command
 {
@@ -42,7 +41,7 @@ public class CommandCraft extends Command
             LootComponent crafted = LootComponent.create(component, resource);
             this.playerData.addComponent(crafted.getComponentID());
 
-            Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            Global.CACHED_POOL.execute(() -> {
                 active.updateGold();
                 active.updateResources();
                 crafted.upload();
