@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.loot;
 
 import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
+import com.calculusmaster.endlessrpg.gameplay.enums.LootTag;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 
@@ -40,6 +41,7 @@ public class LootBuilder
         if(name != null) loot.setName(name);
 
         loot.getRequirements().addLevel(level);
+        loot.addTag(LootTag.CRAFTED, true);
         return loot;
     }
 

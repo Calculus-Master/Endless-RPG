@@ -262,9 +262,16 @@ public class LootItem
         this.tags = tags.stream().map(LootTag::cast).toList();
     }
 
+    public void addTag(LootTag tag, boolean clear)
+    {
+        if(clear) this.tags.clear();
+
+        this.tags.add(tag);
+    }
+
     public void addTag(LootTag tag)
     {
-        this.tags.add(tag);
+        this.addTag(tag, false);
     }
 
     //Type
