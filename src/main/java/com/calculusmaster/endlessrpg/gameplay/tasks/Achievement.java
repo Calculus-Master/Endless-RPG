@@ -1,5 +1,6 @@
 package com.calculusmaster.endlessrpg.gameplay.tasks;
 
+import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
@@ -32,17 +33,19 @@ public enum Achievement
     {
         player.DM("You earned an Achievement: `" + this.name + "` (" + this.description + ")\nYou earned the following rewards:\n" + this.reward.summary());
 
+        RPGCharacter active = player.getActiveCharacter();
+
         final ExecutorService threads = Executors.newCachedThreadPool();
 
-        if(this.reward.gold > 0) threads.execute(() -> player.addGold(this.reward.gold));
+        if(this.reward.gold > 0) threads.execute(() -> active.addGold(this.reward.gold));
 
         if(!this.reward.loot.isEmpty()) threads.execute(() -> this.reward.loot.forEach(l -> {
             l.upload();
-            player.addLootItem(l.getLootID());
+            active.addLoot(l.getLootID());
         }));
 
         if(!this.reward.resources.isEmpty()) threads.execute(() -> Arrays.stream(RawResource.values()).forEach(r -> {
-            if(this.reward.resources.has(r)) player.addResource(r, this.reward.resources.get(r));
+            if(this.reward.resources.has(r)) active.getResources().increase(r, this.reward.resources.get(r));
         }));
     }
 
