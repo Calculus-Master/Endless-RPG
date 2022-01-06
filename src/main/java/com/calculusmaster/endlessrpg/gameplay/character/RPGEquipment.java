@@ -6,14 +6,13 @@ import com.mongodb.BasicDBObject;
 import org.bson.Document;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RPGEquipment
 {
-    private Map<EquipmentType, String> equipment;
+    private LinkedHashMap<EquipmentType, String> equipment;
 
     public RPGEquipment(Document equipment)
     {
@@ -23,7 +22,7 @@ public class RPGEquipment
 
     public RPGEquipment()
     {
-        this.equipment = new HashMap<>();
+        this.equipment = new LinkedHashMap<>();
         for(EquipmentType type : EquipmentType.values()) this.setEquipmentID(type, LootItem.EMPTY.getLootID());
     }
 
