@@ -12,16 +12,16 @@ import static com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill
 public enum RawResource implements Resource
 {
     //Mining
-    MINING_T1(MINING, 1, "Copper"),
-    MINING_T2(MINING, 2, "Iron"),
-    MINING_T3(MINING, 3, "Silver"),
-    MINING_T4(MINING, 4, "Gold"),
-    MINING_T5(MINING, 5, "Cobalt"),
-    MINING_T6(MINING, 6, "Platinum"),
-    MINING_T7(MINING, 7, "Titanium"),
-    MINING_T8(MINING, 8, "Mithril"),
-    MINING_T9(MINING, 9, "Adamantium"),
-    MINING_T10(MINING, 10, "Voidsteel"),
+    MINING_T1(MINING, 1, "Copper Ore"),
+    MINING_T2(MINING, 2, "Iron Ore"),
+    MINING_T3(MINING, 3, "Silver Ore"),
+    MINING_T4(MINING, 4, "Gold Ore"),
+    MINING_T5(MINING, 5, "Cobalt Ore"),
+    MINING_T6(MINING, 6, "Platinum Ore"),
+    MINING_T7(MINING, 7, "Titanium Ore"),
+    MINING_T8(MINING, 8, "Mithril Ore"),
+    MINING_T9(MINING, 9, "Adamantium Ore"),
+    MINING_T10(MINING, 10, "Voidsteel Ore"),
 
     //Foraging
     FORAGING_T1(FORAGING, 1, ""),
