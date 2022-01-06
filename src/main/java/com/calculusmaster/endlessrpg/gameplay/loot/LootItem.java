@@ -21,6 +21,7 @@ public class LootItem
     private String name;
     private List<LootTag> tags;
     private LinkedHashMap<Stat, Integer> boosts;
+    private EnumSet<LootTrait> traits;
     private RPGElementalContainer elementalDamage;
     private RPGElementalContainer elementalDefense;
     private RPGCharacterRequirements requirements;
@@ -36,6 +37,7 @@ public class LootItem
         EMPTY.setName("NONE");
         EMPTY.setTags();
         EMPTY.setBoosts();
+        EMPTY.setTraits();
         EMPTY.setElementalDamage();
         EMPTY.setElementalDefense();
         EMPTY.setRequirements();
@@ -54,6 +56,7 @@ public class LootItem
         loot.setName(data.getString("name"));
         loot.setTags(data.getList("tags", String.class));
         loot.setBoosts(data.get("boosts", Document.class));
+        loot.setTraits(data.getList("traits", String.class));
         loot.setElementalDamage(data.get("elementalDamage", Document.class));
         loot.setElementalDefense(data.get("elementalDefense", Document.class));
         loot.setRequirements(data.get("requirements", Document.class));
@@ -70,6 +73,7 @@ public class LootItem
         loot.setName(type.getRandomName());
         loot.setTags();
         loot.setBoosts();
+        loot.setTraits();
         loot.setElementalDamage();
         loot.setElementalDefense();
         loot.setRequirements();
@@ -90,14 +94,17 @@ public class LootItem
         //Boosts
         for(Map.Entry<Stat, Integer> e : source.getBoosts().entrySet()) copy.setBoost(e.getKey(), e.getValue());
 
-        //Requirements
-        copy.requirements = source.requirements;
+        //Traits
+        copy.traits = source.traits;
 
         //Elemental Damage
         copy.elementalDamage = source.elementalDamage;
 
         //Elemental Defense
         copy.elementalDefense = source.elementalDefense;
+
+        //Requirements
+        copy.requirements = source.requirements;
 
         return copy;
     }
@@ -110,6 +117,7 @@ public class LootItem
                 .append("name", this.name)
                 .append("tags", this.tags.stream().map(LootTag::toString).toList())
                 .append("boosts", Global.serializedMap(this.boosts, Stat.values()))
+                .append("traits", this.traits.stream().map(LootTrait::toString).toList())
                 .append("elementalDamage", this.elementalDamage.serialized())
                 .append("elementalDefense", this.elementalDefense.serialized())
                 .append("requirements", this.requirements.serialized());
@@ -124,12 +132,17 @@ public class LootItem
 
     public void updateTags()
     {
-        Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("tags", this.tags));
+        Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("tags", this.tags.stream().map(LootTag::toString).toList()));
     }
 
     public void updateBoosts()
     {
         Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("boosts", Global.serializedMap(this.boosts, Stat.values())));
+    }
+
+    public void updateTraits()
+    {
+        Mongo.LootData.updateOne(Filters.eq("lootID", this.lootID), Updates.set("traits", this.traits.stream().map(LootTrait::toString).toList()));
     }
 
     public void updateElementalDamage()
@@ -200,6 +213,27 @@ public class LootItem
     public void setElementalDamage(Document serialized)
     {
         this.elementalDamage = new RPGElementalContainer(serialized);
+    }
+
+    //Traits
+    public void setTraits()
+    {
+        this.traits = EnumSet.noneOf(LootTrait.class);
+    }
+
+    public void setTraits(List<String> traits)
+    {
+        this.traits = EnumSet.copyOf(traits.stream().map(LootTrait::cast).toList());
+    }
+
+    public void addTrait(LootTrait trait)
+    {
+        this.traits.add(trait);
+    }
+
+    public void removeTrait(LootTrait trait)
+    {
+        this.traits.remove(trait);
     }
 
     //Boosts
