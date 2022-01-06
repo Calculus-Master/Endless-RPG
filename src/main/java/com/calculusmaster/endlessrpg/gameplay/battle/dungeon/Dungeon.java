@@ -169,7 +169,13 @@ public class Dungeon
             LootItem loot = lootPool.get(random.nextInt(lootPool.size()));
             DungeonPlayer player = playerContributions.pullWeighted();
 
-            manager.execute(() -> player.data.addLootItem(loot.getLootID()));
+            manager.execute(() -> {
+                RPGCharacter active = player.data.getActiveCharacter();
+
+                active.addLoot(loot.getLootID());
+                active.updateLoot();
+            });
+
             lootContributionResults.get(player).add(loot.getName());
 
             lootPool.remove(loot);
@@ -187,7 +193,13 @@ public class Dungeon
                 int amount = (int)(total * playerContributions.getPercent(p));
                 if(amount > 0)
                 {
-                    manager.execute(() -> p.data.addResource(r, amount));
+                    RPGCharacter active = p.data.getActiveCharacter();
+
+                    manager.execute(() -> {
+                        active.getResources().increase(r, amount);
+                        active.updateResources();
+                    });
+
                     resourceContributionResults.get(p).add(Global.normalize(r.toString()) + "(" + amount + ")");
                 }
             });
@@ -216,7 +228,8 @@ public class Dungeon
                 .setDescription(description)
                 .addField("Character Rewards", characterRewards, false)
                 .addField("Player Rewards - Loot", playerRewardsLoot.toString(), false)
-                .addField("Player Rewards - Resources", playerRewardsResource.toString(), false);
+                .addField("Player Rewards - Resources", playerRewardsResource.toString(), false)
+                .setFooter("Rewards have all been distributed to your selected active characters!");
 
         this.event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
