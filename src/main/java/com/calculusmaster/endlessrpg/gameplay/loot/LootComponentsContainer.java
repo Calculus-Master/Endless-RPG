@@ -4,6 +4,7 @@ import com.calculusmaster.endlessrpg.gameplay.enums.LootComponentType;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class LootComponentsContainer
@@ -25,6 +26,14 @@ public class LootComponentsContainer
     {
         this.components.put(component, amount);
         return this;
+    }
+
+    public boolean matches(List<LootComponent> components)
+    {
+        for(Map.Entry<LootComponentType, Integer> e : this.components.entrySet())
+            if(e.getValue() > components.stream().filter(component -> component.getType().equals(e.getKey())).count())
+                return false;
+        return true;
     }
 
     public boolean has(LootComponentType component)

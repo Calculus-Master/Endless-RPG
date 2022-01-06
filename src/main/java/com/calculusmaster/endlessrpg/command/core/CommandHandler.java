@@ -122,6 +122,9 @@ public class CommandHandler
         register("componentinfo", "compinfo", "componenti")
                 .setCommand(CommandComponentInfo::new);
 
+        register("forge")
+                .setCommand(CommandForge::new);
+
         register("dev")
                 .setCommand(CommandDeveloper::new);
     }

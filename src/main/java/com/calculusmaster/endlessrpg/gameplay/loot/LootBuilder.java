@@ -13,9 +13,9 @@ public class LootBuilder
     public static LootItem create(LootType type, int level)
     {
         LootItem out = switch(type) {
-            case SWORD -> LootBuilder.Sword(level);
-            case WAND -> LootBuilder.Wand(level);
-            case SHIELD -> LootBuilder.Shield(level);
+            case SWORD -> LootBuilder.RandomSword(level);
+            case WAND -> LootBuilder.RandomWand(level);
+            case SHIELD -> LootBuilder.RandomShield(level);
             case HELMET -> LootBuilder.Helmet(level);
             case CHESTPLATE -> LootBuilder.Chestplate(level);
             case GAUNTLETS -> LootBuilder.Gauntlets(level);
@@ -29,6 +29,22 @@ public class LootBuilder
         return out;
     }
 
+    public static LootItem createCrafted(LootType type, List<LootComponent> components, int level, String name)
+    {
+        LootItem loot = switch(type) {
+            case SWORD -> LootBuilder.CraftedSword(level, components);
+            //TODO: Temporarily just creates LootItem
+            default -> LootItem.create(type);
+        };
+
+        if(name != null) loot.setName(name);
+
+        loot.getRequirements().addLevel(level);
+        return loot;
+    }
+
+    //Helper
+
     private static int varyP(int input, int low, int high)
     {
         return (int)((r.nextInt(low, high + 1)) / 100.0 * input);
@@ -39,9 +55,14 @@ public class LootBuilder
         return r.nextInt(input - low, input + high + 1);
     }
 
+    private static int base(int level)
+    {
+        return r.nextInt(1, 5) + level;
+    }
+
     private static int standard(int level)
     {
-        return varyP(r.nextInt(1, 5) + level, 90, 110);
+        return varyP(base(level), 90, 110);
     }
 
     private static int armor(int level)
@@ -49,7 +70,9 @@ public class LootBuilder
         return varyP(level, 110, 120);
     }
 
-    public static LootItem Sword(int level)
+    //Weapons
+
+    public static LootItem RandomSword(int level)
     {
         int s = standard(level);
 
@@ -65,7 +88,12 @@ public class LootBuilder
         return sword;
     }
 
-    public static LootItem Wand(int level)
+    public static LootItem CraftedSword(int level, List<LootComponent> components)
+    {
+        return RandomSword(level);
+    }
+
+    public static LootItem RandomWand(int level)
     {
         int s = standard(level);
 
@@ -79,7 +107,7 @@ public class LootBuilder
         return wand;
     }
 
-    public static LootItem Shield(int level)
+    public static LootItem RandomShield(int level)
     {
         LootItem shield = LootItem.create(LootType.SHIELD)
                 .setBoost(Stat.DEFENSE, standard(level));
