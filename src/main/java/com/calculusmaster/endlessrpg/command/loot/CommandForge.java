@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
 
 public class CommandForge extends Command
 {
@@ -57,7 +56,7 @@ public class CommandForge extends Command
             LootItem crafted = LootBuilder.createCrafted(lootType, components, active.getLevel(), name);
             active.addLoot(crafted.getLootID());
 
-            Executors.newSingleThreadExecutor().execute(() -> {
+            Global.CACHED_POOL.execute(() -> {
                 crafted.upload();
                 active.updateLoot();
             });

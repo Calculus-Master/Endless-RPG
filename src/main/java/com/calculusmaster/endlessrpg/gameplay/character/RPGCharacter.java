@@ -20,7 +20,6 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.*;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class RPGCharacter
@@ -291,7 +290,7 @@ public class RPGCharacter
 
         if(this.isDefeated() && this.gold > 0)
         {
-            Executors.newSingleThreadExecutor().execute(() -> {
+            Global.CACHED_POOL.execute(() -> {
 
                 int lostGold = new SplittableRandom().nextInt((int)(this.gold * 0.05), (int)(this.gold * 0.3));
 
@@ -367,7 +366,7 @@ public class RPGCharacter
     {
         if(this.getLoot().size() >= this.getMaxLootAmount())
         {
-            Executors.newSingleThreadExecutor().execute(() -> {
+            Global.CACHED_POOL.execute(() -> {
                 LootItem.delete(loot);
 
                 Mongo.PlayerData.find().forEach(d -> {
@@ -731,7 +730,7 @@ public class RPGCharacter
                     .append(1 + this.getLevel() / 20).append("!\n");
         }
 
-        Executors.newSingleThreadExecutor().execute(() -> Mongo.PlayerData.find().forEach(d -> {
+        Global.CACHED_POOL.execute(() -> Mongo.PlayerData.find().forEach(d -> {
             if(d.getList("characters", String.class).contains(this.getCharacterID())) new PlayerDataQuery(d.getString("playerID")).DM(message.toString());
         }));
 

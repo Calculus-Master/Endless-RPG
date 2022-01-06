@@ -178,7 +178,7 @@ public class Adventure
                 miniBoss.getEquipment().remove(stolenLoot);
                 this.character.addLoot(stolenLoot);
 
-                Executors.newSingleThreadExecutor().execute(() -> {
+                Global.CACHED_POOL.execute(() -> {
                     LootItem loot = LootItem.build(stolenLoot);
                     loot.addTag(LootTag.MINI_BOSS);
                     loot.updateTags();

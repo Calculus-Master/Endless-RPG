@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Global
 {
+    public static final ExecutorService CACHED_POOL = Executors.newCachedThreadPool();
     public static final Random RANDOM = new Random();
 
     public static <E extends Enum<E>> E castEnum(String input, E[] values)
