@@ -52,10 +52,10 @@ public enum RawResource implements Resource
     WOODCUTTING_T2(WOODCUTTING, 2, "Birch Log"),
     WOODCUTTING_T3(WOODCUTTING, 3, "Acacia Log"),
     WOODCUTTING_T4(WOODCUTTING, 4, "Willow Log"),
-    WOODCUTTING_T5(WOODCUTTING, 5, "Pine Log"),
+    WOODCUTTING_T5(WOODCUTTING, 5, "Shiftwood Log"),
     WOODCUTTING_T6(WOODCUTTING, 6, "Sky Log"),
     WOODCUTTING_T7(WOODCUTTING, 7, "Hardwood Log"),
-    WOODCUTTING_T8(WOODCUTTING, 8, "Magical Log"),
+    WOODCUTTING_T8(WOODCUTTING, 8, "Enchanted Log"),
     WOODCUTTING_T9(WOODCUTTING, 9, "Ironwood Log"),
     WOODCUTTING_T10(WOODCUTTING, 10, "Void Log"),
 
