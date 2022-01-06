@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.gameplay.resources.enums;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+import com.calculusmaster.endlessrpg.gameplay.resources.ResourceTraitRegistry;
 import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
 
 import java.util.ArrayList;
@@ -89,11 +90,20 @@ public enum RawResource implements Resource
     private final int tier;
     private final String name;
 
-    RawResource(GatheringSkill skill, int tier, String name)
+    private final ResourceTraitRegistry traits;
+
+    RawResource(GatheringSkill skill, int tier, String name, TraitRegistryEditor editor)
     {
         this.skill = skill;
         this.tier = tier;
         this.name = name;
+
+        this.traits = editor == null ? ResourceTraitRegistry.of(this) : editor.edit(ResourceTraitRegistry.of(this));
+    }
+
+    RawResource(GatheringSkill skill, int tier, String name)
+    {
+        this(skill, tier, name, null);
     }
 
     public GatheringSkill getSkill()
@@ -111,6 +121,12 @@ public enum RawResource implements Resource
     public String getName()
     {
         return this.name.isEmpty() ? this.toString() : this.name; //TODO: Actual names
+    }
+
+    @Override
+    public ResourceTraitRegistry getTraits()
+    {
+        return this.traits;
     }
 
     public int getExp()

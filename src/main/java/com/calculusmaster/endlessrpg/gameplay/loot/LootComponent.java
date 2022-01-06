@@ -7,6 +7,7 @@ import com.calculusmaster.endlessrpg.util.helpers.IDHelper;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
+import java.util.List;
 import java.util.Objects;
 
 public class LootComponent
@@ -57,6 +58,11 @@ public class LootComponent
     }
 
     //Accessors
+
+    public List<LootTrait> getTraits()
+    {
+        return Resource.RESOURCE_TRAITS.get(this.resource).get(this.type);
+    }
 
     public String getName()
     {

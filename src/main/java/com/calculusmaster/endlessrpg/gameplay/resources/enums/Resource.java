@@ -1,6 +1,9 @@
 package com.calculusmaster.endlessrpg.gameplay.resources.enums;
 
+import com.calculusmaster.endlessrpg.gameplay.resources.ResourceTraitRegistry;
+
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public interface Resource
@@ -8,6 +11,8 @@ public interface Resource
     String getName();
 
     int getTier();
+
+    ResourceTraitRegistry getTraits();
 
     static List<Resource> all()
     {
@@ -27,5 +32,12 @@ public interface Resource
         if(raw != null) return raw;
         else if(refined != null) return refined;
         else return null;
+    }
+
+    public static final LinkedHashMap<Resource, ResourceTraitRegistry> RESOURCE_TRAITS = new LinkedHashMap<>();
+
+    interface TraitRegistryEditor
+    {
+        ResourceTraitRegistry edit(ResourceTraitRegistry input);
     }
 }
