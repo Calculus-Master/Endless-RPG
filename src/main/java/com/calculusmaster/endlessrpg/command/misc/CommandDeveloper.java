@@ -4,12 +4,15 @@ import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.command.world.CommandTravel;
 import com.calculusmaster.endlessrpg.gameplay.battle.Battle;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
+import com.calculusmaster.endlessrpg.gameplay.enums.LootComponentType;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
+import com.calculusmaster.endlessrpg.gameplay.loot.LootComponent;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.Resource;
 import com.calculusmaster.endlessrpg.gameplay.world.LocationShop;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
@@ -113,6 +116,15 @@ public class CommandDeveloper extends Command
                 }
                 case "cycleweather" -> Realm.cycleWeather();
                 case "resetshops" -> LocationShop.createShops();
+                case "addcomponent" -> {
+                    PlayerDataQuery target = this.getMentions().size() > 0 ? new PlayerDataQuery(this.getMentions().get(0).getId()) : this.playerData;
+                    Resource r = Resource.cast(this.msg[2]);
+                    LootComponentType type = LootComponentType.cast(this.msg[3]);
+
+                    LootComponent component = LootComponent.create(type, r);
+                    component.upload();
+                    target.addComponent(component.getComponentID());
+                }
                 default -> throw new IllegalStateException("Invalid Developer Command. Input: " + this.msg[0]);
             }
 
