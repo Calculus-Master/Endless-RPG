@@ -6,7 +6,7 @@ import com.calculusmaster.endlessrpg.gameplay.resources.ResourceTraitRegistry;
 
 public enum RefinedResource implements Resource
 {
-    REFINED_MINING_T1_INGOT(1, "Copper Ingot", r -> r.withTrait(LootComponentType.CoreComponentType.GENERAL, LootTrait.WISE));
+    REFINED_MINING_T1_INGOT(1, "Copper Ingot", r -> r.withTrait(LootComponentType::isGeneral, LootTrait.WISE));
 
     private final int tier;
     private final String name;

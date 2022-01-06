@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.function.Function;
 
 public class ResourceTraitRegistry
 {
@@ -36,22 +37,21 @@ public class ResourceTraitRegistry
     //Traits for a specific Component Type
     public ResourceTraitRegistry withTrait(LootComponentType component, LootTrait... traits)
     {
-        this.traits.put(component, List.of(traits));
-        return this;
+        return this.withTrait(lct -> lct.equals(component), traits);
     }
 
     //Traits for all Component Types
     public ResourceTraitRegistry withTrait(LootTrait... traits)
     {
-        this.traits.forEach((lct, list) -> list.addAll(List.of(traits)));
-        return this;
+        return this.withTrait(lct -> true, traits);
     }
 
-    //Traits for all Component Types of a specific Core Component Type
-    public ResourceTraitRegistry withTrait(LootComponentType.CoreComponentType core, LootTrait... traits)
+    //Traits for all Component Types that match the validator
+    //Traits for all Component Types of a specific Core Component Type (through the validator)
+    public ResourceTraitRegistry withTrait(Function<LootComponentType, Boolean> validator, LootTrait... traits)
     {
         this.traits.forEach((lct, list) -> {
-            if(lct.isGeneral()) list.addAll(List.of(traits));
+            if(validator.apply(lct)) list.addAll(List.of(traits));
         });
         return this;
     }
