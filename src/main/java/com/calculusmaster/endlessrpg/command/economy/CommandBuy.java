@@ -1,11 +1,14 @@
 package com.calculusmaster.endlessrpg.command.economy;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
+import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.world.LocationShop;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+
+import java.util.concurrent.Executors;
 
 public class CommandBuy extends Command
 {
@@ -34,16 +37,19 @@ public class CommandBuy extends Command
             if(index < 0 || index >= shop.getLoot().size()) this.response = "Invalid Shop Entry index!";
             else
             {
+                RPGCharacter active = this.playerData.getActiveCharacter();
                 int cost = shop.getLoot().get(index).cost;
 
-                if(this.playerData.getGold() < cost) this.response = "You need " + cost + " Gold to buy this Loot!";
+                if(active.getGold() < cost) this.response = "You need " + cost + " Gold to buy this Loot!";
                 else
                 {
                     LootItem copy = LootItem.copy(shop.getLoot().get(index).item);
-                    copy.upload();
 
-                    this.playerData.addLootItem(copy.getLootID());
-                    this.playerData.removeGold(cost);
+                    Executors.newSingleThreadScheduledExecutor().execute(() -> {
+                        copy.upload();
+                        active.addLoot(copy.getLootID());
+                        active.removeGold(cost);
+                    });
 
                     this.response = "Bought \"" + copy.getName() + "\" for " + cost + " Gold!";
                 }
