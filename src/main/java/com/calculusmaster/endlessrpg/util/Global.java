@@ -1,12 +1,11 @@
 package com.calculusmaster.endlessrpg.util;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.client.model.Filters;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -14,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 public class Global
 {
     public static final ExecutorService CACHED_POOL = Executors.newCachedThreadPool();
-    public static final Random RANDOM = new Random();
 
     public static <E extends Enum<E>> E castEnum(String input, E[] values)
     {
@@ -22,9 +20,9 @@ public class Global
         return null;
     }
 
-    public static <K extends Enum<K>> BasicDBObject serializedMap(LinkedHashMap<K, Integer> map, K[] values)
+    public static <K extends Enum<K>> Document serializedMap(LinkedHashMap<K, Integer> map, K[] values)
     {
-        BasicDBObject data = new BasicDBObject();
+        Document data = new Document();
         for(K k : values) data.put(k.toString(), map.getOrDefault(k, 0));
         return data;
     }
@@ -32,11 +30,6 @@ public class Global
     public static void delay(Runnable r, int time, TimeUnit units)
     {
         Executors.newSingleThreadScheduledExecutor().schedule(r, time, units);
-    }
-
-    public static int randomValue(int min, int max)
-    {
-        return RANDOM.nextInt(max - min + 1) + min;
     }
 
     public static String formatNumber(int number)
