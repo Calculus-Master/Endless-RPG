@@ -15,15 +15,31 @@ import static com.calculusmaster.endlessrpg.gameplay.enums.LootComponentType.*;
 
 public enum LootType
 {
+    //Empty
     NONE(null, "", new LootComponentsContainer()),
+
+    //Weapons
     SWORD(CoreLootType.WEAPON, "sword_names", new LootComponentsContainer(BASIC_HANDLE, BASIC_BINDING, SWORD_BLADE)),
     WAND(CoreLootType.WEAPON, "wand_names", new LootComponentsContainer(BASIC_HANDLE, WAND_CORE)),
+
+    //Defensive Weapons
     SHIELD(CoreLootType.WEAPON, "shield_names", new LootComponentsContainer()),
+
+    //Tools TODO: Add Tool Names, Figure out name for Foraging Tool
+    PICKAXE(CoreLootType.TOOL, "UNKNOWN", new LootComponentsContainer()),
+    FORAGING(CoreLootType.TOOL, "UNKNOWN", new LootComponentsContainer()),
+    ROD(CoreLootType.TOOL, "UNKNOWN", new LootComponentsContainer()),
+    AXE(CoreLootType.TOOL, "UNKNOWN", new LootComponentsContainer()),
+    HOE(CoreLootType.TOOL, "UNKNOWN", new LootComponentsContainer()),
+
+    //Armor
     HELMET(CoreLootType.HELMET, "helmet_names", new LootComponentsContainer()),
     CHESTPLATE(CoreLootType.CHESTPLATE, "chestplate_names", new LootComponentsContainer()),
     GAUNTLETS(CoreLootType.GAUNTLETS, "gauntlets_names", new LootComponentsContainer()),
     LEGGINGS(CoreLootType.LEGGINGS, "leggings_names", new LootComponentsContainer()),
-    BOOTS(CoreLootType.BOOTS, "boots_names", new LootComponentsContainer());
+    BOOTS(CoreLootType.BOOTS, "boots_names", new LootComponentsContainer())
+
+    ;
 
     private static final Random r = new Random();
 
