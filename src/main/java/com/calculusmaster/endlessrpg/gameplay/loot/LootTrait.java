@@ -1,25 +1,22 @@
 package com.calculusmaster.endlessrpg.gameplay.loot;
 
-import com.calculusmaster.endlessrpg.gameplay.loot.traits.AbstractLootTrait;
-import com.calculusmaster.endlessrpg.gameplay.loot.traits.WiseLootTrait;
-import com.calculusmaster.endlessrpg.util.Global;
 
-import java.util.function.Supplier;
+import com.calculusmaster.endlessrpg.util.Global;
 
 public enum LootTrait
 {
-    WISE(WiseLootTrait::new);
+    WISE("All experience gains are increased by 5%.");
 
-    private final Supplier<? extends AbstractLootTrait> supplier;
+    private final String description;
 
-    LootTrait(Supplier<? extends AbstractLootTrait> supplier)
+    LootTrait(String description)
     {
-        this.supplier = supplier;
+        this.description = description;
     }
 
-    public AbstractLootTrait get()
+    public String getDescription()
     {
-        return this.supplier.get();
+        return this.description;
     }
 
     public static LootTrait cast(String input)
