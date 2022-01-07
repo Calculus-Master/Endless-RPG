@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class Realm
 {
     public static Realm CURRENT;
+    public static boolean LOCKDOWN;
 
     private String realmID;
     private String name;
@@ -32,6 +33,7 @@ public class Realm
     public static void init()
     {
         CURRENT = Realm.build(Objects.requireNonNull(Mongo.RealmData.find().first()).getString("realmID"));
+        LOCKDOWN = false;
 
         Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(Realm::realmUpdater, 1, 1, TimeUnit.HOURS);
         Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(Realm::cycleWeather, 2, 2, TimeUnit.HOURS);
@@ -46,11 +48,15 @@ public class Realm
 
     public static void createNewRealm()
     {
+        LOCKDOWN = true;
+
         CURRENT.delete();
 
         CURRENT = Realm.create();
 
         CURRENT.upload();
+
+        LOCKDOWN = false;
     }
 
     public static void cycleWeather()

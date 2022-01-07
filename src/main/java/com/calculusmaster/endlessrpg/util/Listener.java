@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg.util;
 
 import com.calculusmaster.endlessrpg.command.core.CommandHandler;
+import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.mongo.ServerDataQuery;
 import net.dv8tion.jda.api.entities.Guild;
@@ -26,6 +27,13 @@ public class Listener extends ListenerAdapter
 
         //Ignore DMs (temporary?)
         if(!event.isFromGuild()) return;
+
+        //If the Realm is currently changing
+        if(Realm.LOCKDOWN)
+        {
+            event.getMessage().reply("The world is fading...The tides are shifting...You are being whisked away to a new land...\n||The Realm is currently updating! You are unable to use any commands. Check back in a few minutes to continue your adventure!||").queue();
+            return;
+        }
 
         Guild server = event.getGuild();
         String msg = event.getMessage().getContentRaw().trim();
