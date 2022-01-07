@@ -8,6 +8,8 @@ import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootBuilder;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.Resource;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
@@ -41,6 +43,7 @@ public class Adventure
     private int rewardXP;
     private List<LootItem> rewardLoot;
     private Map<Stat, Integer> rewardCoreStat;
+    private Map<Resource, Integer> rewardResources;
 
     private Adventure() {}
 
@@ -121,6 +124,14 @@ public class Adventure
                     this.rewardCoreStat.put(s, this.rewardCoreStat.getOrDefault(s, 0) + amount);
                 }
             }
+            case EARN_RESOURCE -> {
+                final SplittableRandom r = new SplittableRandom();
+
+                Arrays.stream(RawResource.values()).filter(res -> this.location.getResources().has(res)).forEach(resource -> {
+                    double percentYield = r.nextInt(80) / 100.0;
+                    this.rewardResources.put(resource, this.rewardResources.getOrDefault(resource, 0) + (int)(percentYield * this.location.getResources().get(resource)));
+                });
+            }
             case BATTLE_ENEMY -> {
                 final SplittableRandom r = new SplittableRandom();
                 RPGCharacter enemy = this.location.getEnemyArchetype().create(this.level);
@@ -168,8 +179,9 @@ public class Adventure
         {
             this.rewardGold *= 1.5;
             this.rewardXP *= 1.5;
+            this.rewardResources.replaceAll((r, v) -> (int)(v * 1.5));
 
-            results.add("**Mini Boss:** `Battle Won`! Adventure Gold and XP rewards were boosted!");
+            results.add("**Mini Boss:** `Battle Won`! Adventure Gold, XP, and Resource rewards were boosted!");
 
             if(new SplittableRandom().nextInt(100) < 20)
             {
@@ -194,6 +206,7 @@ public class Adventure
 
             this.rewardLoot = new ArrayList<>();
             this.rewardCoreStat = new HashMap<>();
+            this.rewardResources = new HashMap<>();
 
             //TODO: Add extra negative effects for losing to Mini Boss at higher levels (?)
             results.add("**Mini Boss:** `Battle Lost`! Adventure Gold and XP rewards were reduced! Other earnings were surrendered to the Mini Boss...");
@@ -235,6 +248,12 @@ public class Adventure
             results.add("**Improved Core Stats:** " + this.rewardCoreStat.keySet().stream().map(s -> Global.normalize(s.toString())).collect(Collectors.joining(", ")));
         }
 
+        if(!this.rewardResources.isEmpty())
+        {
+            for(Map.Entry<Resource, Integer> e : this.rewardResources.entrySet()) this.character.getResources().increase(e.getKey(), e.getValue());
+            results.add("**Earned Resources:**" + this.rewardResources.keySet().stream().map(r -> r.getName() + " (" + this.rewardResources.get(r) + ")").collect(Collectors.joining(", ")));
+        }
+
         this.character.completeUpdate();
 
         StringBuilder finalResults = new StringBuilder();
@@ -269,6 +288,7 @@ public class Adventure
         this.rewardXP = 0;
         this.rewardLoot = new ArrayList<>();
         this.rewardCoreStat = new HashMap<>();
+        this.rewardResources = new HashMap<>();
     }
 
     //Player
@@ -336,6 +356,7 @@ public class Adventure
         EARN_XP(75),
         EARN_LOOT(50),
         EARN_CORE_STAT(10),
+        EARN_RESOURCE(75),
         BATTLE_ENEMY(60);
 
         private final int weight;
