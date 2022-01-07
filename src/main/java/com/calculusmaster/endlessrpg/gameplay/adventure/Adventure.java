@@ -251,7 +251,7 @@ public class Adventure
         if(!this.rewardResources.isEmpty())
         {
             for(Map.Entry<Resource, Integer> e : this.rewardResources.entrySet()) this.character.getResources().increase(e.getKey(), e.getValue());
-            results.add("**Earned Resources:**" + this.rewardResources.keySet().stream().map(r -> r.getName() + " (" + this.rewardResources.get(r) + ")").collect(Collectors.joining(", ")));
+            results.add("**Resources:**" + this.rewardResources.keySet().stream().map(r -> r.getName() + " (" + this.rewardResources.get(r) + ")").collect(Collectors.joining(", ")));
         }
 
         this.character.completeUpdate();
