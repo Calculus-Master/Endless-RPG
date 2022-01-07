@@ -46,6 +46,11 @@ public class RPGEquipment
         return this.equipment.get(type);
     }
 
+    public List<LootItem> getHands()
+    {
+        return List.of(this.getLoot(EquipmentType.LEFT_HAND), this.getLoot(EquipmentType.RIGHT_HAND));
+    }
+
     public void setLoot(EquipmentType type, LootItem loot)
     {
         this.equipment.put(type, loot);

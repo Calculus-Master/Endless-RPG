@@ -70,19 +70,7 @@ public enum RawResource implements Resource
     FARMING_T7(FARMING, 7, ""),
     FARMING_T8(FARMING, 8, ""),
     FARMING_T9(FARMING, 9, ""),
-    FARMING_T10(FARMING, 10, ""),
-
-    //Hunting
-    HUNTING_T1(HUNTING, 1, ""),
-    HUNTING_T2(HUNTING, 2, ""),
-    HUNTING_T3(HUNTING, 3, ""),
-    HUNTING_T4(HUNTING, 4, ""),
-    HUNTING_T5(HUNTING, 5, ""),
-    HUNTING_T6(HUNTING, 6, ""),
-    HUNTING_T7(HUNTING, 7, ""),
-    HUNTING_T8(HUNTING, 8, ""),
-    HUNTING_T9(HUNTING, 9, ""),
-    HUNTING_T10(HUNTING, 10, "");
+    FARMING_T10(FARMING, 10, "");
 
     public static final int MAX_TIER = 10;
 

@@ -1,7 +1,10 @@
 package com.calculusmaster.endlessrpg.gameplay.world.skills;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
-import com.calculusmaster.endlessrpg.gameplay.resources.enums.Resource;
+import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
+import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
+import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.gameplay.world.LocationResourceNodeCache;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
@@ -21,15 +24,16 @@ public class GatherSession
 
     private PlayerDataQuery player;
     private RPGCharacter character;
+    private LootItem tool;
     private Location location;
-    private Resource resource;
+    private RawResource resource;
 
     private ScheduledFuture<?> future;
 
     private int resourceHealth;
     private int toolPower;
 
-    public static GatherSession initiate(PlayerDataQuery player, RPGCharacter active, Location location, Resource resource)
+    public static GatherSession initiate(PlayerDataQuery player, RPGCharacter active, Location location, RawResource resource)
     {
         GatherSession session = new GatherSession();
 
@@ -97,12 +101,28 @@ public class GatherSession
 
     private void setup()
     {
-        //TODO: Hit power calculation based on Gathering Skill level, Tool quality/level, Resource tier
         this.resourceHealth = this.resource.toRaw().getNodeHealth();
-        this.toolPower = 100;
+
+        this.toolPower = this.tool.getBoost(Stat.getRelevantToolStat(this.resource.getSkill()));
+
+        //Modify Tool Power based on Gathering Skill
+        int resourceTier = this.resource.getTier();
+        int skill = this.character.getSkillLevel(this.resource.getSkill());
+        int skillTier = skill / 10;
+
+        double modifier;
+
+        //Resource Tier is below the Skill Level
+        if(resourceTier < skillTier) modifier = 1.1 + 0.1 * (skillTier - resourceTier);
+        //Resource Tier is higher than the Skill Level
+        else if(resourceTier > skillTier) modifier = 1.0 - 0.1 * (resourceTier - skillTier);
+        //Resource Tier is the same as the Skill Level
+        else modifier = 1.0 + 0.02 * skill % 10;
+
+        this.toolPower *= modifier;
     }
 
-    private void setResource(Resource resource)
+    private void setResource(RawResource resource)
     {
         this.resource = resource;
     }
@@ -116,6 +136,7 @@ public class GatherSession
     {
         this.player = player;
         this.character = active;
+        this.tool = !this.character.getEquipment().getLoot(EquipmentType.LEFT_HAND).isEmpty() ? this.character.getEquipment().getLoot(EquipmentType.LEFT_HAND) : this.character.getEquipment().getLoot(EquipmentType.RIGHT_HAND);
     }
 
     //Access

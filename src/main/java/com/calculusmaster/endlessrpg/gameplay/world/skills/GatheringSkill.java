@@ -8,8 +8,7 @@ public enum GatheringSkill
     FORAGING,
     FISHING,
     WOODCUTTING,
-    FARMING,
-    HUNTING;
+    FARMING;
 
     public static GatheringSkill cast(String input)
     {
