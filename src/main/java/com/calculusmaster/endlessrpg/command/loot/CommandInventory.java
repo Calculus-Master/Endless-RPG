@@ -47,6 +47,7 @@ public class CommandInventory extends Command
                     .append("*").append(loot.getName()).append("*").append(loot.getTagOverview())
                     .append(" | ").append(Global.normalize(loot.getLootType().toString()))
                     .append(" | Boosts: ").append(loot.getBoostsOverview())
+                    .append(" | Traits: ").append(loot.getTraits().size())
                     //.append(" | ").append(loot.getRequirements().check(active) ? ":white_check_mark:" : ":x:")
                     .append("\n");
         }

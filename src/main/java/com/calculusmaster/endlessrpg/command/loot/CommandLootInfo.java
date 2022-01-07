@@ -11,6 +11,8 @@ import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.util.stream.Collectors;
+
 public class CommandLootInfo extends Command
 {
     public CommandLootInfo(MessageReceivedEvent event, String msg)
@@ -61,7 +63,7 @@ public class CommandLootInfo extends Command
             this.embed
                     .addField("Type", Global.normalize(loot.getLootType().toString()), true)
                     .addField("Equipment Slot", loot.getLootType().isArmor() ? Global.normalize(loot.getLootType().getCore().toString()) : "Left/Right Hand", true)
-                    .addBlankField(true)
+                    .addField("Traits", loot.getTraits().stream().map(trait -> Global.normalize(trait.toString())).collect(Collectors.joining(", ")), true)
                     .addField("Requirements", loot.getRequirements().getOverview(), false)
                     .addField(this.getStatModifierField(loot))
                     .addField(this.getElementalModifierField("Elemental Damage Modifiers", loot.getElementalDamage()))

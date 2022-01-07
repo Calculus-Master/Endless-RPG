@@ -236,6 +236,11 @@ public class LootItem
         this.traits.remove(trait);
     }
 
+    public EnumSet<LootTrait> getTraits()
+    {
+        return this.traits;
+    }
+
     //Boosts
     public LootItem setBoost(Stat stat, int boost)
     {
