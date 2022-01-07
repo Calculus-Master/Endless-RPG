@@ -124,6 +124,11 @@ public class Location
         return h > 6 && h < 18 ? Time.DAY : Time.NIGHT;
     }
 
+    public boolean isUnique()
+    {
+        return this.name.contains(":star2:");
+    }
+
     public String getID()
     {
         return this.locationID;

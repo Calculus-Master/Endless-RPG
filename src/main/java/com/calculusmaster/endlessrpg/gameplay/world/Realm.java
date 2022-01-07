@@ -61,6 +61,7 @@ public class Realm
     {
         Realm.CURRENT.getLocations().stream()
                 .filter(l -> !List.of(LocationType.HUB, LocationType.FINAL_KINGDOM).contains(l.getType()))
+                .filter(l -> !l.isUnique())
                 .forEach(l -> {
                     l.setWeather(Weather.getRandom());
                     l.updateWeather();

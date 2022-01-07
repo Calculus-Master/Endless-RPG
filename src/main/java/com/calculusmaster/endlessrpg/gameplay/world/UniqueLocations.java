@@ -36,6 +36,7 @@ public class UniqueLocations
         LocationBuilder
                 .of(LocationType.MOUNTAIN)
                 .withName("The Voidsteel Peak")
+                .withWeather(Weather.OVERCAST)
                 .withEnemy(EnemyArchetype.ASSASSIN)
                 .withResource(RawResource.MINING_T10, 30)
                 .register();
