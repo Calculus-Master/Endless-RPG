@@ -98,8 +98,7 @@ public class GatherSession
     private void setup()
     {
         //TODO: Hit power calculation based on Gathering Skill level, Tool quality/level, Resource tier
-        //TODO: Resource health calculation (probably fixed in Resource enums)
-        this.resourceHealth = 1000;
+        this.resourceHealth = this.resource.toRaw().getNodeHealth();
         this.toolPower = 100;
     }
 

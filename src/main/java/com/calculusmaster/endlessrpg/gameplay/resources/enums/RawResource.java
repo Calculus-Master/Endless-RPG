@@ -146,6 +146,23 @@ public enum RawResource implements Resource
         };
     }
 
+    public int getNodeHealth()
+    {
+        return switch(this.tier) {
+            case 1 -> 500;
+            case 2 -> 1000;
+            case 3 -> 2000;
+            case 4 -> 4000;
+            case 5 -> 8000;
+            case 6 -> 16000;
+            case 7 -> 24000;
+            case 8 -> 40000;
+            case 9 -> 64000;
+            case 10 -> 100000;
+            default -> throw new IllegalArgumentException("Invalid Tier! Maximum is " + MAX_TIER + ".");
+        };
+    }
+
     public int getRequiredSkillLevel()
     {
         return 10 * (this.getTier() - 1);

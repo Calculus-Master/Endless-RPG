@@ -34,6 +34,16 @@ public interface Resource
         else return null;
     }
 
+    default RawResource toRaw()
+    {
+        return (RawResource)(this);
+    }
+
+    default RefinedResource toRefined()
+    {
+        return (RefinedResource)(this);
+    }
+
     public static final LinkedHashMap<Resource, ResourceTraitRegistry> RESOURCE_TRAITS = new LinkedHashMap<>();
 
     interface TraitRegistryEditor
