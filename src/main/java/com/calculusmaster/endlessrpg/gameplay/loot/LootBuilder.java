@@ -16,7 +16,11 @@ public class LootBuilder
         LootItem out = switch(type) {
             case SWORD -> LootBuilder.RandomSword(level);
             case WAND -> LootBuilder.RandomWand(level);
+
             case SHIELD -> LootBuilder.RandomShield(level);
+
+            case PICKAXE, FORAGING, ROD, AXE, HOE -> throw new IllegalArgumentException("Tools must use LootBuilder.createTool()!");
+
             case HELMET -> LootBuilder.Helmet(level);
             case CHESTPLATE -> LootBuilder.Chestplate(level);
             case GAUNTLETS -> LootBuilder.Gauntlets(level);
@@ -43,6 +47,42 @@ public class LootBuilder
         loot.getRequirements().addLevel(level);
         loot.addTag(LootTag.CRAFTED, true);
         return loot;
+    }
+
+    public static LootItem createTool(LootType type, int level, int tier)
+    {
+        LootItem tool = LootItem.create(type);
+
+        Stat boost = switch(type) {
+            case PICKAXE -> Stat.MINING_POWER;
+            case FORAGING -> Stat.FORAGING_POWER;
+            case ROD -> Stat.FISHING_POWER;
+            case AXE -> Stat.WOODCUTTING_POWER;
+            case HOE -> Stat.FARMING_POWER;
+            default -> throw new IllegalArgumentException("LootType " + type + " is not a Tool!");
+        };
+
+        //Base Power (based on Tier)
+        int power = switch(tier) {
+            case 1 -> 500;
+            case 2 -> 1000;
+            case 3 -> 2000;
+            case 4 -> 4000;
+            case 5 -> 8000;
+            case 6 -> 16000;
+            case 7 -> 24000;
+            case 8 -> 40000;
+            case 9 -> 64000;
+            case 10 -> 100000;
+            default -> throw new IllegalArgumentException("Invalid Tier! (" + tier + ")");
+        } / 10;
+
+        //Power Modifier (based on Level)
+        power *= 1 + level * 0.03;
+
+        tool.setBoost(boost, power);
+
+        return tool;
     }
 
     //Helper
