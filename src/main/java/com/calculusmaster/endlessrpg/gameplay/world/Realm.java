@@ -51,9 +51,7 @@ public class Realm
         LOCKDOWN = true;
 
         CURRENT.delete();
-
         CURRENT = Realm.create();
-
         CURRENT.upload();
 
         LOCKDOWN = false;
@@ -184,7 +182,7 @@ public class Realm
 
     private void createLocations()
     {
-        int totalCount = new SplittableRandom().nextInt(20, 40);
+        int totalCount = new SplittableRandom().nextInt(25, 75);
 
         int towns = totalCount / 5;
         int dungeons = 3;
@@ -260,7 +258,7 @@ public class Realm
 
         while(!all.isEmpty())
         {
-            int nodes = Math.min(new SplittableRandom().nextInt(1, 6), all.size());
+            int nodes = Math.min(new SplittableRandom().nextInt(1, 8), all.size());
 
             columns.add(List.copyOf(all.subList(0, nodes)));
             all.subList(0, nodes).clear();
