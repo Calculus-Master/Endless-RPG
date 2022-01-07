@@ -1,14 +1,14 @@
 package com.calculusmaster.endlessrpg.gameplay.world.skills;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
-import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
-import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
-import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.Resource;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
+import com.calculusmaster.endlessrpg.gameplay.world.LocationResourceNodeCache;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
-import com.calculusmaster.endlessrpg.util.Global;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SplittableRandom;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -16,95 +16,96 @@ import java.util.concurrent.TimeUnit;
 
 public class GatherSession
 {
-    public static final List<GatherSession> GATHER_SESSIONS = new ArrayList<>();
-    public static final Map<String, ScheduledFuture<?>> END_TIMES = new HashMap<>();
-    private static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(5);
+    public static final List<GatherSession> ACTIVE_SESSIONS = new ArrayList<>();
+    private static final ScheduledExecutorService COMMON_EXECUTOR = Executors.newScheduledThreadPool(2);
 
-    //Core
-    private RPGCharacter character;
     private PlayerDataQuery player;
+    private RPGCharacter character;
     private Location location;
-    private GatheringSkill skill;
+    private Resource resource;
 
-    public static GatherSession create(PlayerDataQuery player, Location location, GatheringSkill skill)
+    private ScheduledFuture<?> future;
+
+    private int resourceHealth;
+    private int toolPower;
+
+    public static GatherSession initiate(PlayerDataQuery player, RPGCharacter active, Location location, Resource resource)
     {
-        GatherSession g = new GatherSession();
+        GatherSession session = new GatherSession();
 
-        g.setCharacter(player.getActiveCharacter());
-        g.setPlayer(player);
-        g.setLocation(location);
-        g.setSkill(skill);
+        session.setPlayer(player, active);
+        session.setLocation(location);
+        session.setResource(resource);
+        session.setup();
 
-        GATHER_SESSIONS.add(g);
-        return g;
+        ACTIVE_SESSIONS.add(session);
+        return session;
     }
+
+    //Main
 
     public void start()
     {
-        ScheduledFuture<?> end = SCHEDULER.schedule(this::complete, 5, TimeUnit.SECONDS);
+        this.future = COMMON_EXECUTOR.scheduleAtFixedRate(this::gather, 1, 1, TimeUnit.MINUTES);
 
-        END_TIMES.put(this.character.getCharacterID(), end);
+        this.player.DM(this.character.getName() + " has started gathering " + this.resource.getName() + " in " + this.location.getName() + "!");
+    }
+
+    private void gather()
+    {
+        int effectiveToolPower = new SplittableRandom().nextInt((int)(this.toolPower * 0.8), (int)(this.toolPower * 1.2));
+
+        this.resourceHealth -= effectiveToolPower;
+
+        if(this.resourceHealth <= 0) this.complete();
     }
 
     private void complete()
     {
-        final SplittableRandom random = new SplittableRandom();
-        RawResourceContainer output = this.location.getResources();
+        this.future.cancel(true);
 
-        RawResourceContainer resourceYield = new RawResourceContainer();
-        int skillExp = 0;
+        LocationResourceNodeCache.ResourceNodeCache cache = LocationResourceNodeCache.getNodeCache(this.player.getID(), this.location);
 
-        for(RawResource r : RawResource.values())
-        {
-            if(output.has(r) && r.canGather(this.character) && r.getSkill().equals(this.skill))
-            {
-                int skill = this.character.getSkillLevel(r.getSkill());
-                int required = r.getRequiredSkillLevel();
+        if(cache.getAmount(this.resource) <= 0) throw new IllegalStateException("Location has no resources!");
 
-                int accuracy;
+        int yield;
 
-                if(skill / 10 == required / 10)
-                {
-                    accuracy = switch(skill % 10) {
-                        case 0 -> 72;
-                        case 1, 2, 3 -> 75;
-                        case 4, 5, 6 -> 80;
-                        case 7, 8, 9 -> 90;
-                        default -> 70;
-                    };
-                }
-                else accuracy = Math.min(100, 60 + skill - required);
+        //Randomized yield of 1-3 resources
+        int rand = new SplittableRandom().nextInt(100);
+        if(rand < 5) yield = 3;
+        else if(rand < 25) yield = 2;
+        else yield = 1;
 
-                int maxYield = output.get(r);
-                int actualYield = 0;
+        //Make sure randomized yield doesn't exceed what is available
+        yield = Math.min(yield, cache.getAmount(this.resource));
 
-                for(int i = 0; i < maxYield; i++) if(random.nextInt(100) < accuracy) actualYield++;
+        //Add resource yield to character
+        this.character.getResources().increase(this.resource, yield);
+        this.character.updateResources();
 
-                if(
-                        this.skill.equals(GatheringSkill.MINING) && this.character.getRPGClass().equals(RPGClass.ADEPT_MINER)
-                        || this.skill.equals(GatheringSkill.FORAGING) && this.character.getRPGClass().equals(RPGClass.ADEPT_FORAGER)
-                        || this.skill.equals(GatheringSkill.FISHING) && this.character.getRPGClass().equals(RPGClass.ADEPT_FISHER)
-                        || this.skill.equals(GatheringSkill.WOODCUTTING) && this.character.getRPGClass().equals(RPGClass.ADEPT_WOODCUTTER)
-                        || this.skill.equals(GatheringSkill.FARMING) && this.character.getRPGClass().equals(RPGClass.ADEPT_FARMER)
-                        || this.skill.equals(GatheringSkill.HUNTING) && this.character.getRPGClass().equals(RPGClass.ADEPT_HUNTER))
-                    actualYield *= 1.3;
+        //Update Location Cache
+        cache.decrease(this.resource, yield);
+        cache.regenerate(this.resource, yield);
 
-                resourceYield.increase(r, actualYield);
-                skillExp += random.nextInt((int)(0.9 * r.getExp()), (int)(1.1 * r.getExp())) * this.character.getSkillLevel(this.skill);
-            }
-        }
+        //Notify player if they extract all available resources
+        if(cache.getAmount(this.resource) == 0) this.player.DM(this.location.getName() + " has no more " + this.resource.getName() + "!");
 
-        for(RawResource r : RawResource.values()) if(resourceYield.has(r)) this.character.getResources().increase(r, resourceYield.get(r));
-        if(skillExp != 0) this.character.addSkillExp(this.skill, skillExp);
+        this.player.DM(this.character.getName() + " gathered " + yield + " " + this.resource.getName() + "!");
+    }
 
-        this.character.completeUpdate();
+    //Internal
 
-        this.player.DM(this.character.getName() + " finished gathering resources and earned a total of " + skillExp + " " + Global.normalize(this.skill.toString()) + " Experience! Collected Resources:\n\n" + resourceYield.getFullOverview());
+    private void setup()
+    {
+        //TODO: Hit power calculation based on Gathering Skill level, Tool quality/level, Resource tier
+        //TODO: Resource health calculation (probably fixed in Resource enums)
+        this.resourceHealth = 1000;
+        this.toolPower = 100;
+    }
 
-        GATHER_SESSIONS.remove(this);
-
-        END_TIMES.get(this.character.getCharacterID()).cancel(false);
-        END_TIMES.remove(this.character.getCharacterID());
+    private void setResource(Resource resource)
+    {
+        this.resource = resource;
     }
 
     private void setLocation(Location location)
@@ -112,18 +113,25 @@ public class GatherSession
         this.location = location;
     }
 
-    private void setSkill(GatheringSkill skill)
-    {
-        this.skill = skill;
-    }
-
-    private void setPlayer(PlayerDataQuery player)
+    private void setPlayer(PlayerDataQuery player, RPGCharacter active)
     {
         this.player = player;
+        this.character = active;
     }
 
-    private void setCharacter(RPGCharacter character)
+    //Access
+    public static boolean isInSession(String ID)
     {
-        this.character = character;
+        return GatherSession.instance(ID) != null;
+    }
+
+    public static GatherSession instance(String ID)
+    {
+        return ACTIVE_SESSIONS.stream().filter(gs -> gs.player.getID().equals(ID)).findFirst().orElse(null);
+    }
+
+    public static void delete(String ID)
+    {
+        ACTIVE_SESSIONS.removeIf(gs -> gs.player.getID().equals(ID));
     }
 }

@@ -7,10 +7,7 @@ import com.calculusmaster.endlessrpg.command.loot.*;
 import com.calculusmaster.endlessrpg.command.misc.CommandDeveloper;
 import com.calculusmaster.endlessrpg.command.spell.CommandSpellInfo;
 import com.calculusmaster.endlessrpg.command.spell.CommandSpells;
-import com.calculusmaster.endlessrpg.command.world.CommandGather;
-import com.calculusmaster.endlessrpg.command.world.CommandLocation;
-import com.calculusmaster.endlessrpg.command.world.CommandResources;
-import com.calculusmaster.endlessrpg.command.world.CommandTravel;
+import com.calculusmaster.endlessrpg.command.world.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.ArrayList;
@@ -83,9 +80,6 @@ public class CommandHandler
         register("resources")
                 .setCommand(CommandResources::new);
 
-        register("gather")
-                .setCommand(CommandGather::new);
-
         register("dungeon", "d")
                 .setCommand(CommandDungeon::new);
 
@@ -124,6 +118,12 @@ public class CommandHandler
 
         register("forge")
                 .setCommand(CommandForge::new);
+
+        register("gathersession")
+                .setCommand(CommandGatherSessionLegacy::new);
+
+        register("gather", "mine", "chop", "fish", "hunt", "forage", "farm")
+                .setCommand(CommandGather::new);
 
         register("dev")
                 .setCommand(CommandDeveloper::new);

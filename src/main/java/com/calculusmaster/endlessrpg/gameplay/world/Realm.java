@@ -54,6 +54,8 @@ public class Realm
         CURRENT = Realm.create();
         CURRENT.upload();
 
+        LocationResourceNodeCache.rebuild();
+
         LOCKDOWN = false;
     }
 
@@ -146,8 +148,7 @@ public class Realm
 
     public Location getLocation(String locationID)
     {
-        for(Location l : this.locations) if(l.getID().equals(locationID)) return l;
-        return null;
+        return this.locations.stream().filter(l -> l.getID().equals(locationID)).findFirst().orElse(null);
     }
 
     public Location getHub()

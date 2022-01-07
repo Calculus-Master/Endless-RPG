@@ -1,6 +1,7 @@
 package com.calculusmaster.endlessrpg;
 
 import com.calculusmaster.endlessrpg.command.core.CommandHandler;
+import com.calculusmaster.endlessrpg.gameplay.world.LocationResourceNodeCache;
 import com.calculusmaster.endlessrpg.gameplay.world.LocationShop;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.gameplay.world.UniqueLocations;
@@ -30,6 +31,7 @@ public class EndlessRPG
         LoggerHelper.init("Unique Locations", UniqueLocations::init);
         LoggerHelper.init("Realm", Realm::init, true);
         LoggerHelper.init("Shop", LocationShop::init);
+        LoggerHelper.init("Location Resource Nodes Cache", LocationResourceNodeCache::init);
 
         JDABuilder bot = JDABuilder
                 .createDefault(PrivateInfo.TOKEN)
