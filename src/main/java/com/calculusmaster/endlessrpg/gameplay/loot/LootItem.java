@@ -223,7 +223,7 @@ public class LootItem
 
     public void setTraits(List<String> traits)
     {
-        this.traits = EnumSet.copyOf(traits.stream().map(LootTrait::cast).toList());
+        this.traits = traits.isEmpty() ? EnumSet.noneOf(LootTrait.class) : EnumSet.copyOf(traits.stream().map(LootTrait::cast).toList());
     }
 
     public void addTrait(LootTrait trait)
@@ -252,7 +252,10 @@ public class LootItem
     {
         StringBuilder sb = new StringBuilder();
         for(Map.Entry<Stat, Integer> entry : this.getBoosts().entrySet()) if(entry.getValue() != 0) sb.append(Global.normalize(entry.getKey().toString())).append(" (").append(entry.getValue()).append("), ");
-        sb.delete(sb.length() - 2, sb.length());
+
+        if(sb.isEmpty()) sb.append("None");
+        else sb.delete(sb.length() - 2, sb.length());
+
         return sb.toString();
     }
 

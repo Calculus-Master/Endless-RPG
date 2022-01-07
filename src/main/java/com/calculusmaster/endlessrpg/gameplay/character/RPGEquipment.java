@@ -5,8 +5,12 @@ import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import org.bson.Document;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class RPGEquipment
@@ -16,7 +20,12 @@ public class RPGEquipment
     public RPGEquipment(Document equipment)
     {
         this();
-        for(EquipmentType type : EquipmentType.values()) this.setLoot(type, LootItem.build(equipment.getString(type.toString())));
+
+        ExecutorService pool = Executors.newCachedThreadPool();
+        for(EquipmentType type : EquipmentType.values()) pool.execute(() -> Collections.synchronizedMap(this.equipment).put(type, LootItem.build(equipment.getString(type.toString()))));
+
+        try { pool.shutdown(); pool.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS); }
+        catch(InterruptedException e) { System.out.println("Unable to initialize RPG Equipment! " + equipment); }
     }
 
     public RPGEquipment()

@@ -33,6 +33,9 @@ public enum Achievement
     {
         player.DM("You earned an Achievement: `" + this.name + "` (" + this.description + ")\nYou earned the following rewards:\n" + this.reward.summary());
 
+        //First Achievement, No Rewards
+        if(this.equals(CREATE_A_CHARACTER)) return;
+
         RPGCharacter active = player.getActiveCharacter();
 
         final ExecutorService threads = Executors.newCachedThreadPool();
