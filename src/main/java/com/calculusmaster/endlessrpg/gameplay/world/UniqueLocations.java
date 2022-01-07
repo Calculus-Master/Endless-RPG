@@ -32,6 +32,13 @@ public class UniqueLocations
                 .withResource(RawResource.WOODCUTTING_T8, 10)
                 .withResource(RawResource.WOODCUTTING_T9, 10)
                 .register();
+
+        LocationBuilder
+                .of(LocationType.MOUNTAIN)
+                .withName("The Voidsteel Peak")
+                .withEnemy(EnemyArchetype.ASSASSIN)
+                .withResource(RawResource.MINING_T10, 30)
+                .register();
     }
 
     public static Location getRandom()
