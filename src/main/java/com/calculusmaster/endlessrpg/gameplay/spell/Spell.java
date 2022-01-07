@@ -6,7 +6,6 @@ import com.calculusmaster.endlessrpg.gameplay.character.RPGElementalContainer;
 import com.calculusmaster.endlessrpg.gameplay.enums.*;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.SplittableRandom;
 
@@ -29,7 +28,7 @@ public abstract class Spell
         int defense = target.getStat(Stat.DEFENSE);
 
         //Weapon Affinity Stats
-        List<LootItem> weapons = Arrays.asList(user.getEquipment().getEquipmentLoot(EquipmentType.LEFT_HAND), user.getEquipment().getEquipmentLoot(EquipmentType.RIGHT_HAND));
+        List<LootItem> weapons = List.of(user.getEquipment().getLoot(EquipmentType.LEFT_HAND), user.getEquipment().getLoot(EquipmentType.RIGHT_HAND));
 
         for(LootItem l : weapons)
         {

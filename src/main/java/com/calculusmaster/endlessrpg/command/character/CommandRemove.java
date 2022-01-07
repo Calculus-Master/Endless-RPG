@@ -3,7 +3,6 @@ package com.calculusmaster.endlessrpg.command.character;
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
-import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -24,7 +23,7 @@ public class CommandRemove extends Command
             EquipmentType slot = EquipmentType.parse(this.msg[1]);
             RPGCharacter active = this.playerData.getActiveCharacter();
 
-            if(active.getEquipment().getEquipmentID(slot).equals(LootItem.EMPTY.getLootID())) this.response = "Your active character does not have anything equipped in that slot!";
+            if(active.getEquipment().getLoot(slot).isEmpty()) this.response = "Your active character does not have anything equipped in that slot!";
             else
             {
                 active.getEquipment().remove(slot);

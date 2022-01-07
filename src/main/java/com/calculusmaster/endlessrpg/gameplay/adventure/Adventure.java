@@ -133,7 +133,7 @@ public class Adventure
                     if(r.nextInt(100) < 25) this.rewardXP += (this.level * 200) * ((r.nextInt(100) + 1) / 100.0);
                     if(r.nextInt(100) < 30)
                     {
-                        LootItem stolenLoot = LootItem.build(enemy.getEquipment().asList().get(r.nextInt(enemy.getEquipment().asList().size())));
+                        LootItem stolenLoot = enemy.getEquipment().getList().get(r.nextInt(enemy.getEquipment().getList().size()));
                         LootItem.delete(stolenLoot.getLootID());
                         enemy.getEquipment().remove(stolenLoot.getLootID());
 
@@ -173,7 +173,7 @@ public class Adventure
 
             if(new SplittableRandom().nextInt(100) < 20)
             {
-                String stolenLoot = miniBoss.getEquipment().asList().get(new SplittableRandom().nextInt(miniBoss.getEquipment().asList().size()));
+                String stolenLoot = miniBoss.getEquipment().getIDList().get(new SplittableRandom().nextInt(miniBoss.getEquipment().getIDList().size()));
 
                 miniBoss.getEquipment().remove(stolenLoot);
                 this.character.addLoot(stolenLoot);

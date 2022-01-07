@@ -54,7 +54,7 @@ public class CommandEquip extends Command
                 if(slot == null) this.response = "Invalid slot!";
                 else if(!slot.isValidLoot(loot.getLootType())) this.response = "Loot of type `" + loot.getLootType() + "` cannot be equipped to your Character's " + slot.getStyledName() + " Equipment Slot!";
                 else if(loot.getRequirements().getLevel() > active.getLevel()) this.response = "Your character needs to be Level " + loot.getRequirements().getLevel() + " to equip this item!";
-                else if(this.playerData.getCharacterList().stream().map(RPGCharacter::build).anyMatch(c -> c.getEquipment().asList().contains(loot.getLootID()))) this.response = "Another one of your characters already has that Loot equipped!";
+                else if(this.playerData.getCharacterList().stream().map(RPGCharacter::build).anyMatch(c -> c.getEquipment().getIDList().contains(loot.getLootID()))) this.response = "Another one of your characters already has that Loot equipped!";
                 else if(!loot.getRequirements().check(active)) this.response = active.getName() + " doesn't meet the requirements to equip this Loot item! Requirements: \n" + loot.getRequirements().getOverview();
                 else
                 {
@@ -66,8 +66,8 @@ public class CommandEquip extends Command
 
                         if(singleHandLootTypes.contains(check))
                         {
-                            LootType right = active.getEquipment().getEquipmentLoot(EquipmentType.RIGHT_HAND).getLootType();
-                            LootType left = active.getEquipment().getEquipmentLoot(EquipmentType.LEFT_HAND).getLootType();
+                            LootType right = active.getEquipment().getLoot(EquipmentType.RIGHT_HAND).getLootType();
+                            LootType left = active.getEquipment().getLoot(EquipmentType.LEFT_HAND).getLootType();
 
                             boolean leftInvalid = slot.equals(EquipmentType.LEFT_HAND) && singleHandLootTypes.contains(right);
                             boolean rightInvalid = slot.equals(EquipmentType.RIGHT_HAND) && singleHandLootTypes.contains(left);
@@ -80,7 +80,7 @@ public class CommandEquip extends Command
                         }
                     }
 
-                    active.equipLoot(slot, loot.getLootID());
+                    active.equipLoot(slot, loot);
                     active.updateEquipment();
 
                     this.response = "Equipped `" + loot.getName() + "` to your Character's " + slot.getStyledName() + " Equipment Slot!";

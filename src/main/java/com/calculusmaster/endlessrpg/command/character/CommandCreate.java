@@ -63,7 +63,7 @@ public class CommandCreate extends Command
                 LootItem starterSword = LootBuilder.RandomSword(1).setBoost(Stat.ATTACK, 3);
                 starterSword.upload();
 
-                c.equipLoot(EquipmentType.RIGHT_HAND, starterSword.getLootID());
+                c.equipLoot(EquipmentType.RIGHT_HAND, starterSword);
                 c.addLoot(starterSword.getLootID());
                 c.addGold(100);
 

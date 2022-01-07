@@ -2,7 +2,6 @@ package com.calculusmaster.endlessrpg.gameplay.character;
 
 import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
-import com.mongodb.BasicDBObject;
 import org.bson.Document;
 
 import java.util.Arrays;
@@ -12,79 +11,73 @@ import java.util.stream.Collectors;
 
 public class RPGEquipment
 {
-    private LinkedHashMap<EquipmentType, String> equipment;
+    private LinkedHashMap<EquipmentType, LootItem> equipment;
 
     public RPGEquipment(Document equipment)
     {
         this();
-        for(EquipmentType type : EquipmentType.values()) this.setEquipmentID(type, equipment.getString(type.toString()));
+        for(EquipmentType type : EquipmentType.values()) this.setLoot(type, LootItem.build(equipment.getString(type.toString())));
     }
 
     public RPGEquipment()
     {
         this.equipment = new LinkedHashMap<>();
-        for(EquipmentType type : EquipmentType.values()) this.setEquipmentID(type, LootItem.EMPTY.getLootID());
+        for(EquipmentType type : EquipmentType.values()) this.setLoot(type, LootItem.EMPTY);
     }
 
-    public BasicDBObject serialized()
+    public Document serialized()
     {
-        BasicDBObject equipment = new BasicDBObject();
-        for(EquipmentType type : EquipmentType.values()) equipment.put(type.toString(), this.getEquipmentID(type));
+        Document equipment = new Document();
+        for(EquipmentType type : EquipmentType.values()) equipment.put(type.toString(), this.equipment.get(type).getLootID());
         return equipment;
     }
 
-    public String getEquipmentID(EquipmentType type)
+    public LootItem getLoot(EquipmentType type)
     {
         return this.equipment.get(type);
     }
 
-    public void setEquipmentID(EquipmentType type, String lootID)
+    public void setLoot(EquipmentType type, LootItem loot)
     {
-        this.equipment.put(type, lootID);
+        this.equipment.put(type, loot);
     }
 
     public void remove(EquipmentType type)
     {
-        this.setEquipmentID(type, LootItem.EMPTY.getLootID());
+        this.equipment.put(type, LootItem.EMPTY);
     }
 
     public void remove(String lootID)
     {
-        for(EquipmentType type : EquipmentType.values()) if(this.getEquipmentID(type).equals(lootID)) this.remove(type);
-    }
-
-    public LootItem getEquipmentLoot(EquipmentType type)
-    {
-        return LootItem.build(this.getEquipmentID(type));
+        for(EquipmentType type : EquipmentType.values()) if(this.equipment.get(type).getLootID().equals(lootID)) this.remove(type);
     }
 
     public RPGElementalContainer combinedElementalDamage()
     {
         RPGElementalContainer damage = new RPGElementalContainer();
-        for(EquipmentType equipment : EquipmentType.values())
-        {
-            if(!this.isEmpty(equipment))
-            {
-                damage.combine(this.getEquipmentLoot(equipment).getElementalDamage());
-            }
-        }
+        for(EquipmentType type : EquipmentType.values()) if(!this.isEmpty(type)) damage.combine(this.equipment.get(type).getElementalDamage());
         return damage;
     }
 
     public RPGElementalContainer combinedElementalDefense()
     {
         RPGElementalContainer defense = new RPGElementalContainer();
-        for(EquipmentType equipment : EquipmentType.values()) if(!this.isEmpty(equipment)) defense.combine(this.getEquipmentLoot(equipment).getElementalDefense());
+        for(EquipmentType type : EquipmentType.values()) if(!this.isEmpty(type)) defense.combine(this.equipment.get(type).getElementalDefense());
         return defense;
     }
 
     public boolean isEmpty(EquipmentType slot)
     {
-        return this.getEquipmentID(slot).equals(LootItem.EMPTY.getLootID());
+        return this.equipment.get(slot).isEmpty();
     }
 
-    public List<String> asList()
+    public List<LootItem> getList()
     {
-        return Arrays.stream(EquipmentType.values()).map(this::getEquipmentID).filter(s -> !s.equals(LootItem.EMPTY.getLootID())).collect(Collectors.toList());
+        return Arrays.stream(EquipmentType.values()).map(this::getLoot).filter(l -> !l.isEmpty()).toList();
+    }
+
+    public List<String> getIDList()
+    {
+        return Arrays.stream(EquipmentType.values()).map(this::getLoot).map(LootItem::getLootID).filter(s -> !s.equals(LootItem.EMPTY.getLootID())).collect(Collectors.toList());
     }
 }

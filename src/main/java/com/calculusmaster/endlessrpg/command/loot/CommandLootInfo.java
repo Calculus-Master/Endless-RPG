@@ -43,17 +43,16 @@ public class CommandLootInfo extends Command
             }
             else if(EquipmentType.parse(this.msg[1]) != null)
             {
-                String ID = active.getEquipment().getEquipmentID(EquipmentType.parse(this.msg[1]));
+                loot = active.getEquipment().getLoot(EquipmentType.parse(this.msg[1]));
 
-                if(ID.equals(LootItem.EMPTY.getLootID()))
+                if(loot.isEmpty())
                 {
                     this.response = "Your character has nothing equipped in that slot!";
                     return this;
                 }
-                else loot = LootItem.build(ID);
             }
 
-            if(loot == null)
+            if(loot == null || loot.isEmpty())
             {
                 this.response = "An error has occurred trying to display Loot Information.";
                 return this;

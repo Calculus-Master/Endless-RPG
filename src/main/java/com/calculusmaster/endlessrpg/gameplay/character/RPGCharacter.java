@@ -302,14 +302,14 @@ public class RPGCharacter
 
                 for(String l : this.getLoot())
                 {
-                    if(!this.equipment.asList().contains(l) && new SplittableRandom().nextInt(100) < 20) lostLoot.add(l);
+                    if(!this.equipment.getIDList().contains(l) && new SplittableRandom().nextInt(100) < 20) lostLoot.add(l);
                     else if(new SplittableRandom().nextInt(100) < 5) lostLoot.add(l);
                 }
 
                 for(String l : lostLoot)
                 {
                     this.removeLoot(l);
-                    if(this.equipment.asList().contains(l)) this.equipment.remove(l);
+                    if(this.equipment.getIDList().contains(l)) this.equipment.remove(l);
                 }
 
                 if(lostLoot.isEmpty())
@@ -528,9 +528,9 @@ public class RPGCharacter
         this.equipment = new RPGEquipment(equipment);
     }
 
-    public void equipLoot(EquipmentType type, String lootID)
+    public void equipLoot(EquipmentType type, LootItem loot)
     {
-        this.equipment.setEquipmentID(type, lootID);
+        this.equipment.setLoot(type, loot);
     }
 
     public LinkedHashMap<Stat, Integer> getEquipmentBoosts()
@@ -539,7 +539,7 @@ public class RPGCharacter
 
         for(EquipmentType type : EquipmentType.values())
         {
-            LootItem loot = this.equipment.getEquipmentLoot(type);
+            LootItem loot = this.equipment.getLoot(type);
             if(!loot.isEmpty()) for(Stat s : Stat.values()) boosts.put(s, boosts.getOrDefault(s, 0) + loot.getBoost(s));
         }
 
@@ -832,7 +832,7 @@ public class RPGCharacter
 
             for(EquipmentType e : EquipmentType.values())
             {
-                LootItem loot = this.getEquipment().getEquipmentLoot(e);
+                LootItem loot = this.getEquipment().getLoot(e);
 
                 equipment.append("`").append(e.getStyledName()).append("`: ");
 

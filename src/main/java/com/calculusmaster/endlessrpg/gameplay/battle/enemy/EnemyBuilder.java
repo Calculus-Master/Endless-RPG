@@ -19,10 +19,8 @@ public class EnemyBuilder
     public static void delete(RPGCharacter c)
     {
         for(EquipmentType type : EquipmentType.values())
-        {
-            String lootID = c.getEquipment().getEquipmentID(type);
-            if(!lootID.equals(LootItem.EMPTY.getLootID())) LootItem.delete(lootID);
-        }
+            if(c.getEquipment().getLoot(type).isEmpty())
+                LootItem.delete(c.getEquipment().getLoot(type).getLootID());
     }
     
     //Archetypes
@@ -74,7 +72,7 @@ public class EnemyBuilder
         }
 
         weapon.upload();
-        ruler.equipLoot(EquipmentType.RIGHT_HAND, weapon.getLootID());
+        ruler.equipLoot(EquipmentType.RIGHT_HAND, weapon);
 
         List<LootType> armorTypes = Arrays.asList(LootType.HELMET, LootType.CHESTPLATE, LootType.GAUNTLETS, LootType.LEGGINGS, LootType.BOOTS);
         for(LootType loot : armorTypes)
@@ -87,7 +85,7 @@ public class EnemyBuilder
                     .addElementalDefense(ElementType.getRandom(), 40);
 
             armor.upload();
-            ruler.equipLoot(EquipmentType.values()[armorTypes.indexOf(loot)], armor.getLootID());
+            ruler.equipLoot(EquipmentType.values()[armorTypes.indexOf(loot)], armor);
         }
 
         return ruler;
@@ -141,14 +139,14 @@ public class EnemyBuilder
         switch(weapon.getLootType())
         {
             case SWORD, WAND -> {
-                enemy.equipLoot(EquipmentType.RIGHT_HAND, weapon.getLootID());
+                enemy.equipLoot(EquipmentType.RIGHT_HAND, weapon);
 
                 if(level > 25 && new SplittableRandom().nextInt(100) < 25)
                 {
                     LootItem shield = LootBuilder.create(LootType.SHIELD, weaponLevel + 1);
                     shield.upload();
 
-                    enemy.equipLoot(EquipmentType.LEFT_HAND, shield.getLootID());
+                    enemy.equipLoot(EquipmentType.LEFT_HAND, shield);
                 }
             }
         }
@@ -174,7 +172,7 @@ public class EnemyBuilder
             LootItem armor = LootBuilder.create(armorType, armorLevel);
 
             armor.upload();
-            enemy.equipLoot(EquipmentType.values()[i], armor.getLootID());
+            enemy.equipLoot(EquipmentType.values()[i], armor);
         }
     }
 }

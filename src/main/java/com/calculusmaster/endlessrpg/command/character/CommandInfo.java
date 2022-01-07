@@ -57,7 +57,7 @@ public class CommandInfo extends Command
 
         for(EquipmentType e : EquipmentType.values())
         {
-            LootItem loot = c.getEquipment().getEquipmentLoot(e);
+            LootItem loot = c.getEquipment().getLoot(e);
 
             content.append("`").append(e.getStyledName()).append("`: ");
 
