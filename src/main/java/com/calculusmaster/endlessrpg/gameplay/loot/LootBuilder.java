@@ -4,6 +4,7 @@ import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootTag;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
+import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 
 import java.util.*;
 
@@ -19,7 +20,7 @@ public class LootBuilder
 
             case SHIELD -> LootBuilder.RandomShield(level);
 
-            case PICKAXE, FORAGING, ROD, AXE, HOE -> throw new IllegalArgumentException("Tools must use LootBuilder.createTool()!");
+            case PICKAXE, FORAGING, ROD, AXE, HOE -> LootBuilder.createTool(type, level, r.nextInt(RawResource.MAX_TIER) + 1);
 
             case HELMET -> LootBuilder.Helmet(level);
             case CHESTPLATE -> LootBuilder.Chestplate(level);
