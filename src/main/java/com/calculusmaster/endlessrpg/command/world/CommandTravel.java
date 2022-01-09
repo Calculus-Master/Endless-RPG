@@ -76,7 +76,7 @@ public class CommandTravel extends Command
         if(CommandDeveloper.isDevMode(this.player.getId())) time = 1;
         time = 1;
 
-        ScheduledFuture<?> travelTime = THREAD_POOL.schedule(() -> this.arrive(l, visited, current), time, TimeUnit.MINUTES);
+        ScheduledFuture<?> travelTime = THREAD_POOL.schedule(() -> this.arrive(l, visited, current), 15, TimeUnit.SECONDS);
         TRAVEL_TIME.put(this.player.getId(), travelTime);
     }
 
@@ -113,7 +113,7 @@ public class CommandTravel extends Command
         ScheduledFuture<?> cooldown = THREAD_POOL.schedule(() -> {
             Collections.synchronizedMap(TRAVEL_COOLDOWNS).get(this.player.getId()).cancel(true);
             Collections.synchronizedMap(TRAVEL_COOLDOWNS).remove(this.player.getId());
-        }, time, TimeUnit.MINUTES);
+        }, 15, TimeUnit.SECONDS);
 
         TRAVEL_COOLDOWNS.put(this.player.getId(), cooldown);
     }
