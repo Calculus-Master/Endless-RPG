@@ -47,7 +47,7 @@ public class LocationResourceNodeCache
 
     private void register()
     {
-        RESOURCE_NODES.put(playerID, this);
+        RESOURCE_NODES.put(this.playerID, this);
     }
 
     public LinkedHashMap<String, ResourceNodeCache> getCache()
