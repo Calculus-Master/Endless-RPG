@@ -50,7 +50,7 @@ public class GatherSession
 
     public void start()
     {
-        this.future = COMMON_EXECUTOR.scheduleAtFixedRate(this::gather, 1, 1, TimeUnit.MINUTES);
+        this.future = COMMON_EXECUTOR.scheduleAtFixedRate(this::gather, 10, 10, TimeUnit.SECONDS);
 
         this.player.DM(this.character.getName() + " has started gathering " + this.resource.getName() + " in " + this.location.getName() + "!");
     }
@@ -95,6 +95,8 @@ public class GatherSession
         if(cache.getAmount(this.resource) == 0) this.player.DM(this.location.getName() + " has no more " + this.resource.getName() + "!");
 
         this.player.DM(this.character.getName() + " gathered " + yield + " " + this.resource.getName() + "!");
+
+        GatherSession.delete(this.player.getID());
     }
 
     //Internal
