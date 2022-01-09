@@ -37,6 +37,8 @@ public class CommandGather extends Command
             else if(active.getEquipment().getHands().stream().noneMatch(l -> l.getBoost(Stat.getRelevantToolStat(resource.getSkill())) != 0)) this.response = "You must equip a proper tool that can gather " + resource.getName() + "!";
             else
             {
+                this.embed = null;
+
                 GatherSession gs = GatherSession.initiate(this.playerData, active, location, resource);
                 gs.start();
             }
