@@ -26,11 +26,11 @@ public enum LootType
     SHIELD(CoreLootType.WEAPON, "shield_names", new LootComponentsContainer()),
 
     //Tools TODO: Add Tool Names, Figure out name for Foraging Tool
-    PICKAXE(CoreLootType.TOOL, "UNKNOWN", new LootComponentsContainer()),
-    FORAGING(CoreLootType.TOOL, "UNKNOWN", new LootComponentsContainer()),
-    ROD(CoreLootType.TOOL, "UNKNOWN", new LootComponentsContainer()),
-    AXE(CoreLootType.TOOL, "UNKNOWN", new LootComponentsContainer()),
-    HOE(CoreLootType.TOOL, "UNKNOWN", new LootComponentsContainer()),
+    PICKAXE(CoreLootType.TOOL, "tool_names", new LootComponentsContainer()),
+    FORAGING(CoreLootType.TOOL, "tool_names", new LootComponentsContainer()),
+    ROD(CoreLootType.TOOL, "tool_names", new LootComponentsContainer()),
+    AXE(CoreLootType.TOOL, "tool_names", new LootComponentsContainer()),
+    HOE(CoreLootType.TOOL, "tool_names", new LootComponentsContainer()),
 
     //Armor
     HELMET(CoreLootType.HELMET, "helmet_names", new LootComponentsContainer()),
@@ -96,7 +96,7 @@ public enum LootType
             List<String> pool = new BufferedReader(new InputStreamReader(Objects.requireNonNull(EndlessRPG.class.getResourceAsStream("/names/" + this.namesFile + ".txt")))).lines().toList();
             return pool.get(r.nextInt(pool.size()));
         }
-        catch (Exception e)
+        catch (NullPointerException e)
         {
             e.printStackTrace();
             return "UNNAMED LOOT ITEM";
