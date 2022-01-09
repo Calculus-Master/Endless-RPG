@@ -5,6 +5,7 @@ import com.calculusmaster.endlessrpg.gameplay.enums.LootTag;
 import com.calculusmaster.endlessrpg.gameplay.enums.LootType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
+import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
 
 import java.util.*;
 
@@ -84,6 +85,17 @@ public class LootBuilder
         tool.setBoost(boost, power);
 
         return tool;
+    }
+
+    public LootItem createTool(GatheringSkill skill, int level, int tier)
+    {
+        return LootBuilder.createTool(switch(skill) {
+            case MINING -> LootType.PICKAXE;
+            case FORAGING -> LootType.FORAGING;
+            case FISHING -> LootType.ROD;
+            case WOODCUTTING -> LootType.AXE;
+            case FARMING -> LootType.HOE;
+        }, level, tier);
     }
 
     //Helper

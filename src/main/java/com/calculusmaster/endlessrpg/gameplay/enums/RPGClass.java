@@ -97,13 +97,7 @@ public enum RPGClass
             List.of(),
             List.of(),
             List.of(),
-            new RPGCharacterRequirements().addLevel(10).addSkill(GatheringSkill.HUNTING, 20)
-    ),
-    ADEPT_HUNTER("Adept Hunter", "A class with respectable affinity towards hunting.",
-            List.of(),
-            List.of(),
-            List.of(),
-            new RPGCharacterRequirements().addLevel(10).addSkill(GatheringSkill.HUNTING, 20)
+            new RPGCharacterRequirements().addLevel(10).addSkill(GatheringSkill.FARMING, 20)
     ),;
 
     private final String name;

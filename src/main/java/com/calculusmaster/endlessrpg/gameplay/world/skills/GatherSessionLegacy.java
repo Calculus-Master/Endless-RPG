@@ -85,8 +85,7 @@ public class GatherSessionLegacy
                         || this.skill.equals(GatheringSkill.FORAGING) && this.character.getRPGClass().equals(RPGClass.ADEPT_FORAGER)
                         || this.skill.equals(GatheringSkill.FISHING) && this.character.getRPGClass().equals(RPGClass.ADEPT_FISHER)
                         || this.skill.equals(GatheringSkill.WOODCUTTING) && this.character.getRPGClass().equals(RPGClass.ADEPT_WOODCUTTER)
-                        || this.skill.equals(GatheringSkill.FARMING) && this.character.getRPGClass().equals(RPGClass.ADEPT_FARMER)
-                        || this.skill.equals(GatheringSkill.HUNTING) && this.character.getRPGClass().equals(RPGClass.ADEPT_HUNTER))
+                        || this.skill.equals(GatheringSkill.FARMING) && this.character.getRPGClass().equals(RPGClass.ADEPT_FARMER))
                     actualYield *= 1.3;
 
                 resourceYield.increase(r, actualYield);

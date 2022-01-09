@@ -32,8 +32,6 @@ public class CommandGather extends Command
         {
             RawResource resource = Objects.requireNonNull(RawResource.cast(this.msgMultiWordContent(1)));
 
-            //TODO: Valid Tool (Pick for Mining, Axe for Chopping, Rod for Fishing, ETC)
-
             if(GatherSession.isInSession(this.player.getId())) this.response = "You already have a character currently gathering resources!";
             else if(!location.getResources().has(resource)) this.response = location.getName() + " does not have any `" + resource.getName() + "`!";
             else if(active.getEquipment().getHands().stream().noneMatch(l -> l.getBoost(Stat.getRelevantToolStat(resource.getSkill())) != 0)) this.response = "You must equip a proper tool that can gather " + resource.getName() + "!";
