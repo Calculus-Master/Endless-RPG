@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 public class Realm
 {
@@ -254,11 +255,14 @@ public class Realm
         //Final Kingdom
         columns.add(List.of(this.locations.get(this.locations.size() - 1)));
 
+        //Resource Fixed Locations
+        final Predicate<Location> fixedResourceLocations = l -> List.of(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON).contains(l.getType()) || l.isUnique();
+
         //Apply T1 resources - the first 3 columns will guarantee a T1 resource in each
         List<RawResource> resourcesT1 = RawResource.getResources(1);
         for(List<Location> column : columns.subList(0, 3))
             for(Location l : column)
-                if(!List.of(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON).contains(l.getType()))
+                if(!fixedResourceLocations.test(l))
                     for(int i = 0; i < random.nextInt(1, 3); i++)
                         l.getResources().set(resourcesT1.get(random.nextInt(resourcesT1.size())), random.nextInt(10, 20));
 
@@ -273,7 +277,7 @@ public class Realm
         {
             for(Location l : list)
             {
-                if(!List.of(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON).contains(l.getType()) && !l.getName().contains(":star2:"))
+                if(!fixedResourceLocations.test(l))
                 {
                     int amount = random.nextInt(1, 6);
                     for(int i = 0; i < amount; i++) l.getResources().set(RawResource.getRandom(), random.nextInt(1, 4));
@@ -289,15 +293,13 @@ public class Realm
         int[] thresholdHighLevels = {2, 4}; //Levels will be between these, inclusive
         int[] thresholdLowLevels = {3, 5}; //Levels will be between these, inclusive (and negated)
 
-        List<LocationType> skippedLocations = List.of(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON, LocationType.TOWN);
-
         for(int i = 0; i < columns.size(); i++)
         {
             if(i >= thresholdHigh)
             {
                 for(Location low : columns.get(i))
                 {
-                    if(!skippedLocations.contains(low.getType()))
+                    if(!fixedResourceLocations.test(low) && !low.getType().equals(LocationType.TOWN))
                         low.setLevel(random.nextInt(thresholdHighLevels[0], thresholdHighLevels[1] + 1));
                 }
             }
@@ -305,7 +307,7 @@ public class Realm
             {
                 for(Location low : columns.get(i))
                 {
-                    if(!skippedLocations.contains(low.getType()))
+                    if(!fixedResourceLocations.test(low) && !low.getType().equals(LocationType.TOWN))
                         low.setLevel(random.nextInt(thresholdLowLevels[0], thresholdLowLevels[1] + 1) * -1);
                 }
             }
