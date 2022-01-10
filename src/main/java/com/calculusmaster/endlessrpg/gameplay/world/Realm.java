@@ -259,7 +259,8 @@ public class Realm
         for(List<Location> column : columns.subList(0, 3))
             for(Location l : column)
                 if(!List.of(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON).contains(l.getType()))
-                    l.getResources().set(resourcesT1.get(random.nextInt(resourcesT1.size())), random.nextInt(10, 20));
+                    for(int i = 0; i < random.nextInt(1, 3); i++)
+                        l.getResources().set(resourcesT1.get(random.nextInt(resourcesT1.size())), random.nextInt(10, 20));
 
         //Apply resources – Dungeons have some High Tier resources
         int dungeonHighTier = random.nextInt(1, 4);
