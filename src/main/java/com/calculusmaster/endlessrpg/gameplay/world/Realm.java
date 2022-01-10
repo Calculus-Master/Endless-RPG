@@ -229,23 +229,8 @@ public class Realm
 
     private void createRealmMap()
     {
+        final SplittableRandom random = new SplittableRandom();
         List<Location> all = new ArrayList<>(List.copyOf(this.locations));
-
-        //Make sure the Realm has one each of T1 resources
-        List<RawResource> guaranteed = new ArrayList<>(RawResource.getResources(1));
-        while(!guaranteed.isEmpty())
-        {
-            Location pick = all.get(new SplittableRandom().nextInt(all.size()));
-            if(!Arrays.asList(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON).contains(pick.getType()))
-            {
-                pick.getResources().set(guaranteed.get(0), 1);
-                guaranteed.remove(0);
-            }
-        }
-
-        //Dungeons have some High Tier Resources
-        int dungeonHighTier = new SplittableRandom().nextInt(1, 4);
-        for(Location l : all) if(l.getType().equals(LocationType.DUNGEON)) for(int i = 0; i < dungeonHighTier; i++) l.getResources().set(RawResource.getRandom(new SplittableRandom().nextInt(RawResource.MAX_TIER - 5, RawResource.MAX_TIER)), 1);
 
         //Create columns
 
@@ -269,8 +254,19 @@ public class Realm
         //Final Kingdom
         columns.add(List.of(this.locations.get(this.locations.size() - 1)));
 
-        //Apply resources - Last set of locations guarantee some T10, Realm will have at least one of each T1
-        columns.get(columns.size() - 2).forEach(l -> l.getResources().set(RawResource.getRandom(RawResource.MAX_TIER), new SplittableRandom().nextInt(1, 4)));
+        //Apply T1 resources - the first 3 columns will guarantee a T1 resource in each
+        List<RawResource> resourcesT1 = RawResource.getResources(1);
+        for(List<Location> column : columns.subList(0, 3))
+            for(Location l : column)
+                if(!List.of(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON).contains(l.getType()))
+                    l.getResources().set(resourcesT1.get(random.nextInt(resourcesT1.size())), random.nextInt(10, 20));
+
+        //Apply resources – Dungeons have some High Tier resources
+        int dungeonHighTier = random.nextInt(1, 4);
+        for(Location l : all) if(l.getType().equals(LocationType.DUNGEON)) for(int i = 0; i < dungeonHighTier; i++) l.getResources().set(RawResource.getRandom(random.nextInt(RawResource.MAX_TIER - 5, RawResource.MAX_TIER)), 1);
+
+        //Apply resources - Last set of locations guarantee some T10
+        columns.get(columns.size() - 2).forEach(l -> l.getResources().set(RawResource.getRandom(RawResource.MAX_TIER), random.nextInt(1, 4)));
 
         for(List<Location> list : columns)
         {
@@ -278,8 +274,8 @@ public class Realm
             {
                 if(!List.of(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON).contains(l.getType()) && !l.getName().contains(":star2:"))
                 {
-                    int amount = new SplittableRandom().nextInt(1, 6);
-                    for(int i = 0; i < amount; i++) l.getResources().set(RawResource.getRandom(), new SplittableRandom().nextInt(1, 4));
+                    int amount = random.nextInt(1, 6);
+                    for(int i = 0; i < amount; i++) l.getResources().set(RawResource.getRandom(), random.nextInt(1, 4));
                 }
             }
         }
@@ -291,8 +287,6 @@ public class Realm
 
         int[] thresholdHighLevels = {2, 4}; //Levels will be between these, inclusive
         int[] thresholdLowLevels = {3, 5}; //Levels will be between these, inclusive (and negated)
-
-        final SplittableRandom random = new SplittableRandom();
 
         List<LocationType> skippedLocations = List.of(LocationType.HUB, LocationType.FINAL_KINGDOM, LocationType.DUNGEON, LocationType.TOWN);
 
