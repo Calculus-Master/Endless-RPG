@@ -66,7 +66,7 @@ public class GatherSession
 
     private void complete()
     {
-        this.future.cancel(true);
+        this.future.cancel(false);
 
         LocationResourceNodeCache.ResourceNodeCache cache = LocationResourceNodeCache.getNodeCache(this.player.getID(), this.location);
 
