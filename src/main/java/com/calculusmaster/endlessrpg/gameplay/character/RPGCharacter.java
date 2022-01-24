@@ -128,16 +128,16 @@ public class RPGCharacter
                 .append("class", this.classRPG.toString())
                 .append("level", this.level)
                 .append("exp", this.experience)
+                .append("gold", this.gold)
+                .append("loot", this.loot)
+                .append("resources", this.resources.serialized())
                 .append("stats", Global.serializedMap(this.stats, Stat.values()))
                 .append("skillLevel", Global.serializedMap(this.skillLevels, GatheringSkill.values()))
                 .append("skillExp", Global.serializedMap(this.skillExperience, GatheringSkill.values()))
                 .append("equipment", this.equipment.serialized())
                 .append("spells", this.spells)
                 .append("coreElementalDamage", this.coreElementalDamage.serialized())
-                .append("coreElementalDefense", this.coreElementalDefense.serialized())
-                .append("resources", this.resources.serialized())
-                .append("gold", this.gold)
-                .append("loot", this.loot);
+                .append("coreElementalDefense", this.coreElementalDefense.serialized());
 
         Mongo.CharacterData.insertOne(d);
     }
