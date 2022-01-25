@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg.command.world;
 
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.command.misc.CommandDeveloper;
+import com.calculusmaster.endlessrpg.gameplay.adventure.Adventure;
 import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
@@ -54,7 +55,8 @@ public class CommandTravel extends Command
             if(l.getID().equals(current)) this.response = "You are already at that Location!";
             else if(!l.getID().startsWith("HUB") && TRAVEL_COOLDOWNS.containsKey(this.player.getId())) this.response = "Your character is exhausted! You cannot travel for another " + this.formatTime(TRAVEL_COOLDOWNS.get(this.player.getId()).getDelay(TimeUnit.SECONDS)) + "!";
             else if(TRAVEL_TIME.containsKey(this.player.getId())) this.response = "Your character is currently traveling to a location! They will arrive in " + this.formatTime(TRAVEL_TIME.get(this.player.getId()).getDelay(TimeUnit.SECONDS)) + "!";
-            else if(GatherSession.isInSession(this.player.getId())) this.response = "Your character is currently gathering resources! You cannot travel until your character is finished!";
+            else if(GatherSession.isInSession(this.player.getId())) this.response = "Your character is currently gathering resources! You cannot travel until your character is finished gathering resources!";
+            else if(Adventure.isInAdventure(this.player.getId())) this.response = "Your character is currently on an Adventure! You cannot travel until your character completes the Adventure!";
             else if(possible.contains(l.getID()) || visited.contains(l.getID()))
             {
                 this.addTravelTime(l, visited, current);
