@@ -3,6 +3,7 @@ package com.calculusmaster.endlessrpg.command.world;
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
+import com.calculusmaster.endlessrpg.gameplay.world.LocationResourceNodeCache;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -62,10 +63,12 @@ public class CommandLocation extends Command
     {
         StringBuilder content = new StringBuilder();
 
-        if(location.getResources().isEmpty()) content.append("This location has no available resources!");
+        LocationResourceNodeCache.ResourceNodeCache cache = LocationResourceNodeCache.getNodeCache(this.player.getId(), location);
+
+        if(cache.isEmpty()) content.append("This location has no available resources!");
         else
         {
-            for(RawResource r : RawResource.values()) if(location.getResources().has(r)) content.append(location.getResources().get(r)).append("x `").append(r.getName()).append("`: ").append(Global.normalize(r.getSkill().toString())).append(" - Tier ").append(r.getTier()).append(" (Requires Skill Level ").append((r.getTier() - 1) * 10).append(")\n");
+            for(RawResource r : RawResource.values()) if(cache.hasResource(r)) content.append(cache.getAmount(r)).append("x `").append(r.getName()).append("`: ").append(Global.normalize(r.getSkill().toString())).append(" - Tier ").append(r.getTier()).append(" (Requires Skill Level ").append((r.getTier() - 1) * 10).append(")\n");
             content.deleteCharAt(content.length() - 1);
         }
 

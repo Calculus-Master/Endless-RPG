@@ -74,6 +74,16 @@ public class LocationResourceNodeCache
             return Collections.synchronizedMap(this.nodes);
         }
 
+        public boolean isEmpty()
+        {
+            return this.nodes.isEmpty() || this.safe().keySet().stream().allMatch(r -> this.getAmount(r) <= 0);
+        }
+
+        public boolean hasResource(Resource r)
+        {
+            return this.safe().containsKey(r);
+        }
+
         public int getAmount(Resource r)
         {
             return this.safe().get(r);
