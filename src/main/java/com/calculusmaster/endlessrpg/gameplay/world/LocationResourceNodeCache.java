@@ -45,7 +45,7 @@ public class LocationResourceNodeCache
         Realm.CURRENT.getLocations().forEach(location -> this.cache.put(location.getID(), new ResourceNodeCache(location)));
     }
 
-    private void register()
+    public void register()
     {
         RESOURCE_NODES.put(this.playerID, this);
     }

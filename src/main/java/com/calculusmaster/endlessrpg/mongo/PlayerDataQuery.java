@@ -7,6 +7,7 @@ import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.resources.enums.Resource;
 import com.calculusmaster.endlessrpg.gameplay.tasks.Achievement;
 import com.calculusmaster.endlessrpg.gameplay.tasks.Quest;
+import com.calculusmaster.endlessrpg.gameplay.world.LocationResourceNodeCache;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.mongodb.client.model.Filters;
@@ -41,6 +42,9 @@ public class PlayerDataQuery extends AbstractMongoQuery
                 .append("components", new JSONArray());
 
         Mongo.PlayerData.insertOne(data);
+
+        //Register the Location Resource Node Cache
+        new LocationResourceNodeCache(ID).register();
     }
 
     public static boolean isRegistered(String ID)
