@@ -80,6 +80,8 @@ public class GatherSession
     {
         int effectiveToolPower = new SplittableRandom().nextInt((int)(this.toolPower * 0.8), (int)(this.toolPower * 1.2));
 
+        if(new SplittableRandom().nextInt(100) < 2) effectiveToolPower *= 2; //Critical Hit
+
         this.resourceHealth -= effectiveToolPower;
 
         if(this.resourceHealth <= 0) this.complete();
