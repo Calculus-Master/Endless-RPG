@@ -9,6 +9,7 @@ import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -61,18 +62,25 @@ public class CommandLocation extends Command
 
     private MessageEmbed.Field getResourcesOverview(Location location)
     {
-        StringBuilder content = new StringBuilder();
+        List<String> contents = new ArrayList<>();
 
         LocationResourceNodeCache.ResourceNodeCache cache = LocationResourceNodeCache.getNodeCache(this.player.getId(), location);
 
-        if(cache.isEmpty()) content.append("This location has no available resources!");
+        if(cache.isEmpty()) contents.add("This location has no available resources!");
         else
         {
-            for(RawResource r : RawResource.values()) if(cache.hasResource(r)) content.append(cache.getAmount(r)).append("x `").append(r.getName()).append("`: ").append(Global.normalize(r.getSkill().toString())).append(" - Tier ").append(r.getTier()).append(" (Requires Skill Level ").append((r.getTier() - 1) * 10).append(")\n");
-            content.deleteCharAt(content.length() - 1);
+            for(RawResource r : RawResource.values()) if(cache.hasResource(r))
+            {
+                String amount = "**" + cache.getAmount(r) + "x** `" + r.getName() + "`";
+                String max = cache.getAmount(r) == location.getResources().get(r) ? "" : " (Max: " + location.getResources().get(r) + ")";
+                String tier = Global.normalize(r.getSkill().toString()) + " Tier " + r.getTier();
+
+                String line = amount + max + " – " + tier;
+                contents.add(line);
+            }
         }
 
-        return new MessageEmbed.Field("Resources", content.toString(), false);
+        return new MessageEmbed.Field("Resources", String.join("\n", contents), false);
     }
 
     private MessageEmbed.Field getVisitedOverview()
