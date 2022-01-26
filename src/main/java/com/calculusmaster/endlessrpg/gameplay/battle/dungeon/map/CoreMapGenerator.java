@@ -77,6 +77,8 @@ public class CoreMapGenerator
 
         //Set the Spawn room to the correct code
         this.map[spawn.row][spawn.column] = MapCode.SPAWN.ordinal();
+
+        this.addBossRoom();
     }
 
     public void print()
@@ -88,7 +90,7 @@ public class CoreMapGenerator
     }
 
     //Returns the location of the Boss Room (the furthest away from spawn)
-    private CoreMapGenerator addBossRoom()
+    private void addBossRoom()
     {
         double max = 0;
         Coordinate boss = this.spawn;
@@ -112,7 +114,6 @@ public class CoreMapGenerator
 
         this.boss = boss;
         this.map[boss.row][boss.column] = MapCode.BOSS.ordinal();
-        return this;
     }
 
     //Returns a random room on the map

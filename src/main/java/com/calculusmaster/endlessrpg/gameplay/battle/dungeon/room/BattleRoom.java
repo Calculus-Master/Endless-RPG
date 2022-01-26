@@ -74,7 +74,7 @@ public class BattleRoom extends DungeonRoom
         for(int i = 0; i < totalEnemies; i++)
         {
             int level = this.random.nextInt((int)(this.dungeon.getLevel() * 0.8), (int)(this.dungeon.getLevel() * 1.3));
-            EnemyArchetype enemyType = this.random.nextInt(100) < 80 ? this.dungeon.getLocation().getEnemyArchetype() : EnemyArchetype.RANDOM;
+            EnemyArchetype enemyType = this.dungeon.getLocation().getEnemyArchetype();
 
             this.enemies.add(enemyType.create(level));
         }
