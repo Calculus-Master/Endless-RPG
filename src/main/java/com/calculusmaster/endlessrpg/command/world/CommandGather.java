@@ -24,6 +24,8 @@ public class CommandGather extends Command
     {
         //r!gather <resource>
         boolean gather = this.msg.length >= 2 && RawResource.cast(this.msgMultiWordContent(1)) != null;
+        //r!gather status
+        boolean status = this.msg.length == 2 && this.msg[1].equals("status");
 
         RPGCharacter active = this.playerData.getActiveCharacter();
         Location location = Realm.CURRENT.getLocation(this.playerData.getLocationID());
@@ -41,6 +43,16 @@ public class CommandGather extends Command
 
                 GatherSession gs = GatherSession.initiate(this.playerData, active, location, resource);
                 gs.start();
+            }
+        }
+        else if(status)
+        {
+            if(!GatherSession.isInSession(this.player.getId())) this.response = "Your character is not currently gathering any resources!";
+            else
+            {
+                GatherSession g = GatherSession.instance(this.player.getId());
+
+                this.response = "Your character will attempt to gather a resource in **" + g.getRemainingTime() + "**!";
             }
         }
         else return this.invalid(CommandInvalid.INVALID);

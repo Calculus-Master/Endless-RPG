@@ -46,6 +46,17 @@ public class GatherSession
         return session;
     }
 
+    public String getRemainingTime()
+    {
+        int time = (int)this.future.getDelay(TimeUnit.SECONDS);
+
+        int hours = time / 3600;
+        int minutes = (time % 3600) / 60;
+        int seconds = time % 60;
+
+        return "%sH %sM %sS".formatted(hours, minutes, seconds);
+    }
+
     //Main
 
     public void start()
