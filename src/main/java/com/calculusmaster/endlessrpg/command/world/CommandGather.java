@@ -52,7 +52,20 @@ public class CommandGather extends Command
             {
                 GatherSession g = GatherSession.instance(this.player.getId());
 
-                this.response = "Your character will attempt to gather a resource in **" + g.getRemainingTime() + "**!";
+                this.embed
+                        .setTitle("Gathering Status")
+                        .setDescription("""
+                                *How do Gathering Sessions work?*
+                                - Every set time interval, your character will attempt to gather the Resource Node.
+                                - The Resource Node has a fixed starting health.
+                                - Each interval, when your character attempts to gather the resource, your character's Tool power will be subtracted from the health.
+                                - Tool power is not fixed each interval; there is some variation.
+                                - Once the Resource Node's health reaches zero, your character will have finished gathering the resource!
+                                - Your character will receive a variable amount of resources from the session.
+                                """)
+                        .addField("Attempt Time", "Your character will attempt to gather a resource in **" + g.getRemainingTime() + "**!", false)
+                        .addField("Resource Node Health", "The Resource Node has a remaining health of **" + g.getResourceNodeHealth() + "**.", false)
+                        .addField("Tool Power", "Your Tool has a power of approximately **" + g.getToolPower() + "**.", false);
             }
         }
         else return this.invalid(CommandInvalid.INVALID);

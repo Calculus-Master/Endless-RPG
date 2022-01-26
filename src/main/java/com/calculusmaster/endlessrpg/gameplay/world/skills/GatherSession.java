@@ -57,6 +57,16 @@ public class GatherSession
         return "%sH %sM %sS".formatted(hours, minutes, seconds);
     }
 
+    public int getResourceNodeHealth()
+    {
+        return this.resourceHealth;
+    }
+
+    public int getToolPower()
+    {
+        return this.toolPower;
+    }
+
     //Main
 
     public void start()
