@@ -65,7 +65,8 @@ public class CommandGather extends Command
                                 """)
                         .addField("Attempt Time", "Your character will attempt to gather a resource in **" + g.getRemainingTime() + "**!", false)
                         .addField("Resource Node Health", "The Resource Node has a remaining health of **" + g.getResourceNodeHealth() + "**.", false)
-                        .addField("Tool Power", "Your Tool has a power of approximately **" + g.getToolPower() + "**.", false);
+                        .addField("Tool Power", "Your Tool has an approximate power of **" + g.getToolPower() + "**.", false)
+                        .addField("Estimated Time: ", "Your character will have to complete at least **" + (g.getResourceNodeHealth() / g.getToolPower() + 1) + "** more attempts to finish gathering!", false);
             }
         }
         else return this.invalid(CommandInvalid.INVALID);
