@@ -24,6 +24,6 @@ public class EmptyRoom extends DungeonRoom
     @Override
     public void execute(int choice)
     {
-
+        this.complete();
     }
 }
