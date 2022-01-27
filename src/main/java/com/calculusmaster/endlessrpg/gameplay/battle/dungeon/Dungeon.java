@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg.gameplay.battle.dungeon;
 
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.map.CoreMapGenerator;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.map.DungeonMap;
+import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.room.BossRoom;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.room.DungeonRoom;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.util.Coordinate;
 import com.calculusmaster.endlessrpg.gameplay.battle.dungeon.util.Direction;
@@ -360,7 +361,7 @@ public class Dungeon
     {
         return embed
                 .setTitle(this.getDefaultEmbedTitle())
-                .setDescription(this.current().getType().equals(DungeonRoom.RoomType.SPAWN) ? "*This is the room where you entered the Dungeon.*" : (this.current().isComplete() ? "*This room has been completed.*\n\n" + String.join(" ", this.result) : "*" + this.current().getDescription() + "*"))
+                .setDescription(this.current().getType().equals(DungeonRoom.RoomType.SPAWN) ? "*This is the room where you entered the Dungeon.*" : (this.current().isComplete() ? "*This room has been completed.*\n\n" + String.join(" ", this.result) : (this.current() instanceof BossRoom ? this.current().getDescription() : "*" + this.current().getDescription() + "*")))
                 .addField("Room Type", Global.normalize(this.current().getType().toString()), true);
     }
 
