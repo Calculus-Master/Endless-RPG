@@ -602,6 +602,7 @@ public class Dungeon
 
         DungeonPlayerContributions(Dungeon dungeon, DungeonContributions characterScores)
         {
+            this.scores = new LinkedHashMap<>();
             dungeon.getPlayers().forEach(player -> Collections.synchronizedMap(this.scores).put(player, player.party.stream().mapToInt(c -> Collections.synchronizedMap(characterScores.scores).getOrDefault(c.getCharacterID(), 0)).sum()));
         }
 
