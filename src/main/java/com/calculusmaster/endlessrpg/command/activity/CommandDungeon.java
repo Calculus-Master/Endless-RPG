@@ -8,7 +8,6 @@ import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
-import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -129,7 +128,7 @@ public class CommandDungeon extends Command
                 {
                     Executors.newSingleThreadScheduledExecutor().schedule(() -> dungeon.move(dir), 3, TimeUnit.SECONDS);
 
-                    this.response = "Successfully moved " + Global.normalize(dir.toString()) + "! What awaits you?";
+                    this.response = "Successfully moved " + dir.toString().toLowerCase() + "! What awaits you?";
                 }
             }
         }
