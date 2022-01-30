@@ -312,7 +312,7 @@ public class Dungeon
             {
                 DungeonRoom room = this.map.getRoom(Coordinate.of(r, c));
 
-                if(room == null) codedMap[r][c] = "X";
+                if(room == null) codedMap[r][c] = "░";
                 else if(Coordinate.of(r, c).equals(this.position)) codedMap[r][c] = "☆";
                 else if(!room.isComplete()) codedMap[r][c] = "?";
                 else codedMap[r][c] = room.getType() == null ? "/" : room.getType().code();
