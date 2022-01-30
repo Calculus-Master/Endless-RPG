@@ -55,7 +55,7 @@ public class CommandDungeon extends Command
             if(!location.getType().equals(LocationType.DUNGEON) && !location.getType().equals(LocationType.FINAL_KINGDOM)) return this.invalid("This location does not have a dungeon!");
 
             List<Member> invalidMembers = new ArrayList<>();
-            for(Member m : this.getMentions()) if(Dungeon.isInDungeon(m.getId()) || Dungeon.isOnCooldown(m.getId())) invalidMembers.add(m);
+            for(Member m : this.getMentions()) if(Dungeon.isInDungeon(m.getId()) || Dungeon.isOnCooldown(m.getId()) || !PlayerDataQuery.isRegistered(m.getId())) invalidMembers.add(m);
 
             if(!invalidMembers.isEmpty()) this.playerData.DM(invalidMembers.size() + " of the allies you invited could not join your Dungeon! (This means that they are either already in a Dungeon, or on Dungeon cooldown. Only the remaining " + (this.getMentions().size() - invalidMembers.size()) + " will be invited.");
             List<PlayerDataQuery> others = this.getMentions().stream().filter(m -> !invalidMembers.contains(m)).map(ISnowflake::getId).map(PlayerDataQuery::new).toList();
