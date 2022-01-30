@@ -11,6 +11,7 @@ import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.resources.container.RawResourceContainer;
 import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
+import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.mongo.PlayerDataQuery;
 import com.calculusmaster.endlessrpg.util.Global;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -56,7 +57,20 @@ public class Dungeon
         d.setEvent(event);
         d.setPlayers(leader, others);
 
-        d.setup();
+        d.setup(false);
+        DUNGEONS.add(d);
+        return d;
+    }
+
+    public static Dungeon createFinalKingdom(MessageReceivedEvent event, PlayerDataQuery leader, List<PlayerDataQuery> others)
+    {
+        Dungeon d = new Dungeon();
+
+        d.setLocation(Realm.CURRENT.getFinalKingdom());
+        d.setEvent(event);
+        d.setPlayers(leader, others);
+
+        d.setup(true);
         DUNGEONS.add(d);
         return d;
     }
@@ -395,10 +409,12 @@ public class Dungeon
         }
     }
 
-    private void setup()
+    private void setup(boolean finalKingdom)
     {
+        //TODO: Additional Features for Final Kingdom Dungeon (Specific Dialogue, Rooms, etc)
         //Default Map (Level = 0): [Min 9 | Max 49]
-        this.map = new DungeonMap(new CoreMapGenerator(3, 3 + this.location.getLevel()));
+        //Final Kingdom Map: [Min 81 | Max 144]
+        this.map = new DungeonMap(finalKingdom ? new CoreMapGenerator(10, 2) : new CoreMapGenerator(3, 3 + this.location.getLevel()));
         this.map.completeRoomSetup(this);
 
         this.position = this.map.getSpawn();

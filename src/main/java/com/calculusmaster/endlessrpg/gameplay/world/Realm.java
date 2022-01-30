@@ -157,6 +157,11 @@ public class Realm
         return this.locations.get(0);
     }
 
+    public Location getFinalKingdom()
+    {
+        return this.locations.get(this.locations.size() - 1);
+    }
+
     public List<Location> getLocations()
     {
         return this.locations;
