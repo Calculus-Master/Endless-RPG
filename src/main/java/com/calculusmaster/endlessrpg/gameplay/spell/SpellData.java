@@ -2,6 +2,7 @@ package com.calculusmaster.endlessrpg.gameplay.spell;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacterRequirements;
 import com.calculusmaster.endlessrpg.gameplay.spell.spells.FortifySpell;
+import com.calculusmaster.endlessrpg.gameplay.spell.spells.StrengthenSpell;
 import com.calculusmaster.endlessrpg.gameplay.spell.spells.StrikeSpell;
 
 import java.util.function.Supplier;
@@ -11,12 +12,19 @@ import static com.calculusmaster.endlessrpg.gameplay.enums.RPGClass.*;
 public enum SpellData
 {
     STRIKE("DEFAULT_ATTACK", StrikeSpell::new,
-            new RPGCharacterRequirements()),
+            new RPGCharacterRequirements()
+    ),
     FORTIFY("FORTIFY_DEFENSE", FortifySpell::new,
             new RPGCharacterRequirements()
                     .addClass(TANK)
                     .addClass(KNIGHT)
-                    .addClass(DARK_KNIGHT));
+                    .addClass(DARK_KNIGHT)
+    ),
+    STRENGTHEN("STRENGTHEN_ATTACK", StrengthenSpell::new,
+               new RPGCharacterRequirements()
+                       .addClass(WARRIOR)
+                       .addClass(KNIGHT)
+    );
 
     private final String ID;
     private final Supplier<Spell> supplier;
