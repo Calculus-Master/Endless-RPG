@@ -24,6 +24,7 @@ public class LocationShop
     public static void createShops()
     {
         Realm.CURRENT.getLocations().forEach(l -> {
+            SHOPS.remove(l.getID());
             if(l.getType().equals(LocationType.TOWN)) LocationShop.create(l);
         });
 
