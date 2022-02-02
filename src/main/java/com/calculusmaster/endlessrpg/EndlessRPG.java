@@ -2,9 +2,9 @@ package com.calculusmaster.endlessrpg;
 
 import com.calculusmaster.endlessrpg.command.core.CommandHandler;
 import com.calculusmaster.endlessrpg.gameplay.world.LocationResourceNodeCache;
-import com.calculusmaster.endlessrpg.gameplay.world.LocationShop;
 import com.calculusmaster.endlessrpg.gameplay.world.Realm;
 import com.calculusmaster.endlessrpg.gameplay.world.UniqueLocations;
+import com.calculusmaster.endlessrpg.gameplay.world.shop.LocationShop;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Listener;
 import com.calculusmaster.endlessrpg.util.PrivateInfo;
