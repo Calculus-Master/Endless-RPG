@@ -65,7 +65,7 @@ public class CommandLootInfo extends Command
                     .addField("Equipment Slot", loot.getLootType().isArmor() ? Global.normalize(loot.getLootType().getCore().toString()) : "Left/Right Hand", true)
                     .addBlankField(true)
                     .addField("Traits", loot.getTraits().isEmpty() ? "None" : loot.getTraits().stream().map(trait -> "`" + Global.normalize(trait.toString()) + "` – " + trait.getDescription()).collect(Collectors.joining("\n")), false)
-                    .addField("Requirements", loot.getRequirements().getOverview(), false)
+                    .addField("Requirements", loot.getRequirements().getOverview() + "\n" + (loot.getRequirements().check(active) ? ":white_check_mark:" : ":x:"), false)
                     .addField(this.getStatModifierField(loot))
                     .addField(this.getElementalModifierField("Elemental Damage Modifiers", loot.getElementalDamage()))
                     .addField(this.getElementalModifierField("Elemental Defense Modifiers", loot.getElementalDefense()));
