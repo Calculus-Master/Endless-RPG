@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 public class LocationShopCache
 {
-    private String playerID;
     private LocationShop shop;
 
     private List<String> purchasedLoot;
@@ -17,9 +16,8 @@ public class LocationShopCache
 
     private ScheduledExecutorService thread;
 
-    public LocationShopCache(String playerID, LocationShop shop)
+    public LocationShopCache(LocationShop shop)
     {
-        this.playerID = playerID;
         this.shop = shop;
 
         this.purchasedLoot = new ArrayList<>();

@@ -76,13 +76,13 @@ public class LocationShop
 
     public LocationShopCache getCacheView(String playerID)
     {
-        return this.caches.getOrDefault(playerID, new LocationShopCache(playerID, this));
+        return this.caches.getOrDefault(playerID, new LocationShopCache(this));
     }
 
     public void createCaches(List<String> playerIDs)
     {
         this.caches = new HashMap<>();
-        playerIDs.forEach(p -> this.caches.put(p, new LocationShopCache(p, this)));
+        playerIDs.forEach(p -> this.caches.put(p, new LocationShopCache(this)));
     }
 
     public void setInventory()
@@ -121,9 +121,7 @@ public class LocationShop
         this.resources.keySet().forEach(res -> {
             int tierPrice = 2 * (int)(Math.pow(res.getTier(), 2)) * 100;
 
-            int price = r.nextInt((int)(tierPrice * 0.65), (int)(tierPrice * 1.2));
-            price = r.nextInt((int)(price * 0.85), (int)(price * 1.15));
-            price = r.nextInt((int)(price * 0.5), (int)(price * 1.5));
+            int price = r.nextInt((int)(tierPrice * 0.45), (int)(tierPrice * 1.0));
 
             price -= price % 10;
 
