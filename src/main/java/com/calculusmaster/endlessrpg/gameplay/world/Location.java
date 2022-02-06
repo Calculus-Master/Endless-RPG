@@ -118,6 +118,11 @@ public class Location
         Mongo.LocationData.updateOne(Filters.eq("locationID", this.locationID), Updates.set("weather", this.weather.toString()));
     }
 
+    public void updateResources()
+    {
+        Mongo.LocationData.updateOne(Filters.eq("locationID", this.locationID), Updates.set("resources", this.resources.serialized()));
+    }
+
     public Time getTime()
     {
         int h = LocalDateTime.now().getHour();

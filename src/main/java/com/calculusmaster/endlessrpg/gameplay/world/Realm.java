@@ -79,11 +79,15 @@ public class Realm
 
                     //Drought Effect: Remove farming resources
                     if(target.equals(Weather.DROUGHT) && l.getResources().has(GatheringSkill.FARMING))
+                    {
                         RawResource
                                 .getResources(GatheringSkill.FARMING)
                                 .stream()
                                 .filter(r -> l.getResources().has(r))
                                 .forEach(r -> l.getResources().decrease(r, l.getResources().get(r)));
+
+                        l.updateResources();
+                    }
 
                     //Set and update Weather
                     l.setWeather(target);
