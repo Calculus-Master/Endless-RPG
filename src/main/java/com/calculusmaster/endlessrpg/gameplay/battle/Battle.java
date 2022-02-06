@@ -6,6 +6,7 @@ import com.calculusmaster.endlessrpg.gameplay.battle.player.AbstractPlayer;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.UserPlayer;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
+import com.calculusmaster.endlessrpg.gameplay.enums.StatusCondition;
 import com.calculusmaster.endlessrpg.gameplay.spell.Spell;
 import com.calculusmaster.endlessrpg.gameplay.spell.spells.StrikeSpell;
 import com.calculusmaster.endlessrpg.gameplay.world.Location;
@@ -119,6 +120,14 @@ public class Battle
     public void submitTurn(int target, Spell spell)
     {
         //TODO: Spell system (different types of attacks, different types of effects)
+
+        if(this.battlers[this.turn].hasStatusCondition(StatusCondition.BURN))
+        {
+            int damage = this.battlers[this.turn].getFractionMaxHealth(1 / 8.);
+            this.battlers[this.turn].damage(damage);
+
+            this.turnResults.add(this.battlers[this.turn].getName() + " is burned, and took " + damage + " damage!");
+        }
 
         String spellResult = spell.execute(this.battlers[this.turn], this.battlers[target], this.battlers, this);
 

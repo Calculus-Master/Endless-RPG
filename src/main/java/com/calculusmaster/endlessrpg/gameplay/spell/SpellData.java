@@ -1,6 +1,8 @@
 package com.calculusmaster.endlessrpg.gameplay.spell;
 
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacterRequirements;
+import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
+import com.calculusmaster.endlessrpg.gameplay.spell.spells.BurnSpell;
 import com.calculusmaster.endlessrpg.gameplay.spell.spells.FortifySpell;
 import com.calculusmaster.endlessrpg.gameplay.spell.spells.StrengthenSpell;
 import com.calculusmaster.endlessrpg.gameplay.spell.spells.StrikeSpell;
@@ -24,6 +26,10 @@ public enum SpellData
                new RPGCharacterRequirements()
                        .addClass(WARRIOR)
                        .addClass(KNIGHT)
+    ),
+    BURN("BURN", 1, BurnSpell::new,
+               new RPGCharacterRequirements()
+                       .addElementalDamage(ElementType.FIRE, 10)
     );
 
     private final String ID;

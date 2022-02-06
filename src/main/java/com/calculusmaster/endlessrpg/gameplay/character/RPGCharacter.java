@@ -2,10 +2,7 @@ package com.calculusmaster.endlessrpg.gameplay.character;
 
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AIPlayer;
 import com.calculusmaster.endlessrpg.gameplay.battle.player.AbstractPlayer;
-import com.calculusmaster.endlessrpg.gameplay.enums.ElementType;
-import com.calculusmaster.endlessrpg.gameplay.enums.EquipmentType;
-import com.calculusmaster.endlessrpg.gameplay.enums.RPGClass;
-import com.calculusmaster.endlessrpg.gameplay.enums.Stat;
+import com.calculusmaster.endlessrpg.gameplay.enums.*;
 import com.calculusmaster.endlessrpg.gameplay.loot.LootItem;
 import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
 import com.calculusmaster.endlessrpg.gameplay.spell.Spell;
@@ -50,6 +47,7 @@ public class RPGCharacter
     private Optional<Integer> health = Optional.empty();
     private Optional<AbstractPlayer> owner = Optional.empty();
     private Optional<LinkedHashMap<Stat, Integer>> changes = Optional.empty();
+    private Optional<EnumSet<StatusCondition>> statusConditions = Optional.empty();
 
     //Use Factory methods!
     private RPGCharacter() {}
@@ -224,6 +222,32 @@ public class RPGCharacter
         return name + " | " + level + " | " + clazz + " | " + statTotal;
     }
 
+    //Status Conditions
+    public boolean hasStatusCondition(StatusCondition status)
+    {
+        return this.getStatusConditions().contains(status);
+    }
+
+    public void addStatusCondition(StatusCondition status)
+    {
+        this.getStatusConditions().add(status);
+    }
+
+    public void removeStatusCondition(StatusCondition status)
+    {
+        this.getStatusConditions().remove(status);
+    }
+
+    public void setStatus()
+    {
+        this.statusConditions = Optional.of(EnumSet.noneOf(StatusCondition.class));
+    }
+
+    public EnumSet<StatusCondition> getStatusConditions()
+    {
+        return this.statusConditions.orElse(EnumSet.noneOf(StatusCondition.class));
+    }
+
     //Stat Changes
     public LinkedHashMap<Stat, Integer> getChanges()
     {
@@ -272,6 +296,11 @@ public class RPGCharacter
     public int getHealth()
     {
         return this.health.orElse(-1);
+    }
+
+    public int getFractionMaxHealth(double fraction)
+    {
+        return (int)(this.getStat(Stat.HEALTH) * fraction);
     }
 
     public void setMaxHealth()
