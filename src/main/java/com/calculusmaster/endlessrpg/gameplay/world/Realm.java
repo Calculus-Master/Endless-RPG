@@ -74,6 +74,9 @@ public class Realm
                     //Affinities - Desert & Drought
                     if(l.getType().equals(LocationType.DESERT) && !target.equals(Weather.DROUGHT) && random.nextInt(100) < 10) target = Weather.DROUGHT;
 
+                    //Affinities – Mountain & Windy
+                    if(l.getType().equals(LocationType.MOUNTAIN) && !target.equals(Weather.WINDY) && random.nextInt(100) < 15) target = Weather.WINDY;
+
                     //Drought can only hit locations that have farming resources
                     if(!l.getResources().has(GatheringSkill.FARMING) && target.equals(Weather.DROUGHT)) target = Weather.HARSH_SUN;
 
