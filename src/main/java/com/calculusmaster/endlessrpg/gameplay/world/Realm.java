@@ -63,11 +63,16 @@ public class Realm
 
     public static void cycleWeather()
     {
+        final SplittableRandom random = new SplittableRandom();
+
         Realm.CURRENT.getLocations().stream()
                 .filter(l -> !List.of(LocationType.HUB, LocationType.FINAL_KINGDOM).contains(l.getType()))
                 .filter(l -> !l.isUnique())
                 .forEach(l -> {
                     Weather target = Weather.getRandom();
+
+                    //Affinities - Desert & Drought
+                    if(l.getType().equals(LocationType.DESERT) && !target.equals(Weather.DROUGHT) && random.nextInt(100) < 10) target = Weather.DROUGHT;
 
                     //Drought can only hit locations that have farming resources
                     if(!l.getResources().has(GatheringSkill.FARMING) && target.equals(Weather.DROUGHT)) target = Weather.HARSH_SUN;
