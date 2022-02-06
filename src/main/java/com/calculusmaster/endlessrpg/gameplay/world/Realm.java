@@ -87,6 +87,7 @@ public class Realm
                                 .forEach(r -> l.getResources().decrease(r, l.getResources().get(r)));
 
                         l.updateResources();
+                        LocationResourceNodeCache.updateLocationCache(l);
                     }
 
                     //Set and update Weather

@@ -28,6 +28,11 @@ public class LocationResourceNodeCache
         LocationResourceNodeCache.init();
     }
 
+    public static void updateLocationCache(Location location)
+    {
+        RESOURCE_NODES.forEach((s, c) -> c.update(location));
+    }
+
     public static ResourceNodeCache getNodeCache(String playerID, Location location)
     {
         return RESOURCE_NODES.get(playerID).getCache().get(location.getID());
@@ -53,6 +58,11 @@ public class LocationResourceNodeCache
     public LinkedHashMap<String, ResourceNodeCache> getCache()
     {
         return this.cache;
+    }
+
+    public void update(Location location)
+    {
+        this.cache.put(location.getID(), new ResourceNodeCache(location));
     }
 
     //Inner NodeCache Class
