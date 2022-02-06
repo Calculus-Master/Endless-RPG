@@ -111,6 +111,12 @@ public abstract class Spell
                         elementalATK *= 0.9;
                         elementalDEF *= 0.7;
                     }
+
+                    if(weather.equals(Weather.DROUGHT))
+                    {
+                        elementalATK *= 0.75;
+                        elementalDEF *= 0.0;
+                    }
                 }
                 case FIRE -> {
                     if(List.of(Weather.HARSH_SUN).contains(weather))

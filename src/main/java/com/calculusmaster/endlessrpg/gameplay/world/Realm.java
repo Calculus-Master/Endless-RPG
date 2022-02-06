@@ -4,6 +4,7 @@ import com.calculusmaster.endlessrpg.EndlessRPG;
 import com.calculusmaster.endlessrpg.gameplay.enums.LocationType;
 import com.calculusmaster.endlessrpg.gameplay.enums.Weather;
 import com.calculusmaster.endlessrpg.gameplay.resources.enums.RawResource;
+import com.calculusmaster.endlessrpg.gameplay.world.skills.GatheringSkill;
 import com.calculusmaster.endlessrpg.util.Global;
 import com.calculusmaster.endlessrpg.util.Mongo;
 import com.calculusmaster.endlessrpg.util.helpers.IDHelper;
@@ -66,7 +67,21 @@ public class Realm
                 .filter(l -> !List.of(LocationType.HUB, LocationType.FINAL_KINGDOM).contains(l.getType()))
                 .filter(l -> !l.isUnique())
                 .forEach(l -> {
-                    l.setWeather(Weather.getRandom());
+                    Weather target = Weather.getRandom();
+
+                    //Drought can only hit locations that have farming resources
+                    if(!l.getResources().has(GatheringSkill.FARMING) && target.equals(Weather.DROUGHT)) target = Weather.HARSH_SUN;
+
+                    //Drought Effect: Remove farming resources
+                    if(target.equals(Weather.DROUGHT) && l.getResources().has(GatheringSkill.FARMING))
+                        RawResource
+                                .getResources(GatheringSkill.FARMING)
+                                .stream()
+                                .filter(r -> l.getResources().has(r))
+                                .forEach(r -> l.getResources().decrease(r, l.getResources().get(r)));
+
+                    //Set and update Weather
+                    l.setWeather(target);
                     l.updateWeather();
                 });
     }
