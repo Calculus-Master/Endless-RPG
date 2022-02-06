@@ -11,28 +11,30 @@ import static com.calculusmaster.endlessrpg.gameplay.enums.RPGClass.*;
 
 public enum SpellData
 {
-    STRIKE("DEFAULT_ATTACK", StrikeSpell::new,
+    STRIKE("DEFAULT_ATTACK", 1, StrikeSpell::new,
             new RPGCharacterRequirements()
     ),
-    FORTIFY("FORTIFY_DEFENSE", FortifySpell::new,
+    FORTIFY("FORTIFY_DEFENSE", 1, FortifySpell::new,
             new RPGCharacterRequirements()
                     .addClass(TANK)
                     .addClass(KNIGHT)
                     .addClass(DARK_KNIGHT)
     ),
-    STRENGTHEN("STRENGTHEN_ATTACK", StrengthenSpell::new,
+    STRENGTHEN("STRENGTHEN_ATTACK", 1, StrengthenSpell::new,
                new RPGCharacterRequirements()
                        .addClass(WARRIOR)
                        .addClass(KNIGHT)
     );
 
     private final String ID;
+    private final int tier;
     private final Supplier<Spell> supplier;
     private final RPGCharacterRequirements spellRequirements;
 
-    SpellData(String ID, Supplier<Spell> supplier, RPGCharacterRequirements spellRequirements)
+    SpellData(String ID, int tier, Supplier<Spell> supplier, RPGCharacterRequirements spellRequirements)
     {
         this.ID = ID;
+        this.tier = tier;
         this.supplier = supplier;
         this.spellRequirements = spellRequirements;
     }
@@ -40,6 +42,11 @@ public enum SpellData
     public String getID()
     {
         return this.ID;
+    }
+
+    public int getTier()
+    {
+        return this.tier;
     }
 
     public Spell getInstance()

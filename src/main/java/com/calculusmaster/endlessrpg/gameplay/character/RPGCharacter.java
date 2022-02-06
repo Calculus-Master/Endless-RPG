@@ -68,7 +68,7 @@ public class RPGCharacter
         c.setSkillLevel();
         c.setSkillExperience();
         c.setEquipment();
-        c.setSpells();
+        c.setSpells(List.of(SpellData.STRIKE.getID()));
         c.setCoreElementalDamage();
         c.setCoreElementalDefense();
         c.setResources();
@@ -483,33 +483,56 @@ public class RPGCharacter
         this.spells.add(spellID);
     }
 
-    public void removeSpell(String spellID)
-    {
-        this.spells.remove(spellID);
-    }
-
-    public boolean knowsSpell(String spellID)
-    {
-        return this.spells.contains(spellID);
-    }
-
-    public List<SpellData> availableSpells()
-    {
-        //TODO: Should include owned spells only
-        List<SpellData> out = new ArrayList<>();
-        for(SpellData spell : SpellData.values()) if(spell.getRequirements().check(this)) out.add(spell);
-        return out;
-    }
-
     public void setSpells(List<String> spells)
     {
-        this.spells = spells;
+        this.spells = new ArrayList<>(List.copyOf(spells));
     }
 
-    public void setSpells()
+    public int getNextSpellLevel()
     {
-        this.spells = new ArrayList<>();
-        this.spells.add(SpellData.STRIKE.getID());
+        return (int)(5 * Math.pow(2, this.spells.size() - 1));
+    }
+
+    public List<String> generateNextAvailableSpells()
+    {
+        int currentTier = this.spells.size();
+        List<SpellData> masterPool = Arrays.stream(SpellData.values())
+                .filter(d -> !this.spells.contains(d.getID())) //Filter out already learned spells
+                .filter(d -> d.getTier() <= currentTier + 2) //Filter out Spells that are more than 2 tiers higher than the character
+                .collect(Collectors.toList());
+
+        Collections.shuffle(masterPool);
+
+        List<SpellData> weightedPool = new ArrayList<>();
+
+        for(SpellData spell : masterPool)
+        {
+            int weight;
+            
+            if(spell.getTier() < currentTier) weight = 7;
+            else if(spell.getTier() == currentTier) weight = 10;
+            else if(spell.getTier() == currentTier + 1) weight = 4;
+            else if(spell.getTier() == currentTier + 2) weight = 3;
+            else weight = 0;
+
+            for(int i = 0; i < weight; i++) weightedPool.add(spell);
+        }
+
+        Collections.shuffle(weightedPool);
+        int count = Math.min(5, weightedPool.size());
+
+        List<SpellData> display = new ArrayList<>();
+
+        do
+        {
+            SpellData pull = weightedPool.get(0);
+            weightedPool.remove(0);
+
+            if(display.stream().filter(d -> d.getID().equals(pull.getID())).count() <= 2) display.add(pull);
+        }
+        while(display.size() < count);
+
+        return display.stream().distinct().map(SpellData::getID).toList();
     }
 
     //Equipment

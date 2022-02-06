@@ -5,6 +5,7 @@ import com.calculusmaster.endlessrpg.command.character.*;
 import com.calculusmaster.endlessrpg.command.economy.*;
 import com.calculusmaster.endlessrpg.command.loot.*;
 import com.calculusmaster.endlessrpg.command.misc.CommandDeveloper;
+import com.calculusmaster.endlessrpg.command.spell.CommandLearn;
 import com.calculusmaster.endlessrpg.command.spell.CommandSpellInfo;
 import com.calculusmaster.endlessrpg.command.spell.CommandSpells;
 import com.calculusmaster.endlessrpg.command.world.CommandGather;
@@ -124,6 +125,9 @@ public class CommandHandler
 
         register("gather", "mine", "chop", "fish", "hunt", "forage", "farm")
                 .setCommand(CommandGather::new);
+
+        register("learn")
+                .setCommand(CommandLearn::new);
 
         register("dev")
                 .setCommand(CommandDeveloper::new);

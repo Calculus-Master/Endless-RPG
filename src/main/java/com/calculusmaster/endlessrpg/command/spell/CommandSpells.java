@@ -3,10 +3,18 @@ package com.calculusmaster.endlessrpg.command.spell;
 import com.calculusmaster.endlessrpg.command.core.Command;
 import com.calculusmaster.endlessrpg.gameplay.character.RPGCharacter;
 import com.calculusmaster.endlessrpg.gameplay.spell.Spell;
+import com.calculusmaster.endlessrpg.gameplay.spell.SpellData;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
 
 public class CommandSpells extends Command
 {
+    public static final Map<String, List<String>> SPELL_REQUESTS = new HashMap<>();
+
     public CommandSpells(MessageReceivedEvent event, String msg)
     {
         super(event, msg);
@@ -17,26 +25,38 @@ public class CommandSpells extends Command
     {
         RPGCharacter active = this.playerData.getActiveCharacter();
 
-        StringBuilder current = new StringBuilder();
+        StringJoiner current = new StringJoiner("\n");
         for(int i = 0; i < active.getSpells().size(); i++)
         {
             Spell s = active.getSpell(i);
-            current.append(i + 1).append(": ").append(s.getName()).append(" - ").append(s.getDescription()).append("\n");
+            current.add((i + 1) + ": " + s.getName() + " - " + s.getDescription());
         }
-        current.deleteCharAt(current.length() - 1);
 
-        this.embed.addField("Active Spells", current.toString(), false);
+        StringJoiner learn = new StringJoiner("\n");
 
-        StringBuilder available = new StringBuilder();
-        for(int i = 0; i < active.availableSpells().size(); i++)
+        learn.add(active.getName() + " will be able to learn new spells at Level " + active.getNextSpellLevel() + "!");
+
+        if(active.getNextSpellLevel() <= active.getLevel())
         {
-            Spell s = active.availableSpells().get(i).getInstance();
-            if(active.getSpells().stream().noneMatch(spell -> spell.getName().equals(s.getName()))) available.append("*").append(s.getName()).append("* - ").append(s.getDescription()).append("\n");
-        }
-        if(!available.isEmpty()) available.deleteCharAt(available.length() - 1);
-        else available.append("None");
+            learn = new StringJoiner("\n");
 
-        this.embed.addField("Available Spells", available.toString(), false);
+            if(!SPELL_REQUESTS.containsKey(active.getCharacterID())) SPELL_REQUESTS.put(active.getCharacterID(), active.generateNextAvailableSpells());
+
+            List<SpellData> spells = SPELL_REQUESTS.get(active.getCharacterID()).stream().map(SpellData::dataFromID).toList();
+
+            learn.add("*You are able to learn a new Spell! Use p!learn <number>, where <number> is the number of the Spell in the list below.*\n");
+
+            for(int i = 0; i < spells.size(); i++)
+            {
+                Spell s = spells.get(i).getInstance();
+                learn.add((i + 1) + ": " + s.getName() + " – " + s.getDescription());
+            }
+        }
+
+        this.embed
+                .setTitle(active.getName() + "'s Active Spells")
+                .setDescription(current.toString())
+                .addField("New Spells", learn.toString(), false);
 
         return this;
     }
