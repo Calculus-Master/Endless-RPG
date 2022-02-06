@@ -125,6 +125,20 @@ public abstract class Spell
                         elementalDEF *= 1.1;
                     }
                 }
+                case AIR -> {
+                    if(weather.equals(Weather.WINDY))
+                    {
+                        elementalATK *= 1.25;
+                        elementalDEF *= 1.25;
+                    }
+                }
+                case EARTH -> {
+                    if(weather.equals(Weather.WINDY))
+                    {
+                        elementalATK *= 0.95;
+                        elementalDEF *= 0.95;
+                    }
+                }
             }
 
             damage += Math.max(0, elementalATK - elementalDEF);

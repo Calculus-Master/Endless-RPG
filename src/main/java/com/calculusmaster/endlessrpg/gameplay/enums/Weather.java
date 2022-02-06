@@ -13,7 +13,8 @@ public enum Weather
     FOG(5, "Light Damage is reduced by 20%", "Light Defense is reduced by 15%", "Damage has a 25% chance to be reduced by 15%"),
     RAIN(10, "Water Damage is boosted by 10%", "Water Defense is boosted by 20%", "Light Damage is reduced by 10%", "Light Defense is reduced by 10%"),
     HARSH_SUN(2, "Light Damage is boosted by 20%", "Light Defense is boosted by 20%", "Fire Damage is boosted by 10%", "Fire Defense is boosted by 10%", "Water Damage is reduced by 10%", "Water Defense is reduced by 30%"),
-    DROUGHT(2, "Water Damage is reduced by 70%", "Water Defense is reduced by 100%", "Any Farming Resources will be decimated.");
+    DROUGHT(2, "Water Damage is reduced by 70%", "Water Defense is reduced by 100%", "Any Farming Resources will be decimated."),
+    WINDY(7, "Air Damage is boosted by 25%", "Air Defense is boosted by 25%", "Earth Damage is reduced by 5%", "Earth Defense is reduced by 5%");
 
     private final String effects;
     private final int weight;
